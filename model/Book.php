@@ -9,14 +9,14 @@ class Book
 {
     // La classe book ha come variabili d'istanza i parametri di un libro, ne possiamo aggiungere altri successivamente
     private $id;
-    private $titolo;
-    private $autore;
-    private $prezzo;
+    private $title;
+    private $author;
+    private $price;
     private $img;
     private $link;
-    private $editore;
+    private $editor;
 
-    // Costruttore
+    // Constructor
     public function __construct(
         string $title,
         string $author,
@@ -27,12 +27,12 @@ class Book
     )
     {
         $this->id = 0;
-        $this->titolo = $title;
-        $this->autore = $author;
-        $this->prezzo = $price;
+        $this->title = $title;
+        $this->author = $author;
+        $this->price = $price;
         $this->img = $image;
         $this->link = $link;
-        $this->editore = $editor;
+        $this->editor = $editor;
     }
 
     // getters
@@ -43,17 +43,17 @@ class Book
 
     public function getTitle(): string
     {
-        return $this->titolo;
+        return $this->title;
     }
 
     public function getAuthor(): string
     {
-        return $this->autore;
+        return $this->author;
     }
 
     public function getPrice(): float
     {
-        return $this->prezzo;
+        return $this->price;
     }
 
     public function getImg(): string
@@ -68,7 +68,7 @@ class Book
 
     public function getEditor(): string
     {
-        return $this->editore;
+        return $this->editor;
     }
 
     // setters
@@ -79,17 +79,17 @@ class Book
 
     public function setTitle(string $title)
     {
-        $this->titolo = $title;
+        $this->title = $title;
     }
 
     public function setAuthor(string $author)
     {
-        $this->autore = $author;
+        $this->author = $author;
     }
 
     public function setPrice(float $price)
     {
-        $this->prezzo = $price;
+        $this->price = $price;
     }
 
     public function setImg(string $img)
@@ -110,12 +110,12 @@ class Book
     public function __toString(): string
     {
         $desc = "ID: $this->id";
-        $desc .= "<br />Titolo: $this->titolo";
-        $desc .= "<br />Autore: $this->autore";
-        $desc .= "<br />Prezzo: $this->prezzo";
-        $desc .= "<br />Immmagine: $this->img";
+        $desc .= "<br />Title: $this->title";
+        $desc .= "<br />Author: $this->author";
+        $desc .= "<br />Price: $this->price";
+        $desc .= "<br />Imagine: $this->img";
         $desc .= "<br />Link: $this->link";
-        $desc .= "<br />Editore: $this->editore";
+        $desc .= "<br />Editor: $this->editor";
         $desc .= "<hr />";
 
         return $desc;
