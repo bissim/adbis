@@ -11,7 +11,7 @@ class AmazonWrapper
     // variables
     private $bookScraper;
     private $queries;
-    private $baseUrl = 'https://www.amazon.it/s/ref=nb_sb_noss?__mk_it_IT=%C3%85M%C3%85%C5%BD%C3%95%C3%91&url=node%3D827182031&field-keywords=';
+    private $baseUrl = 'https://www.amazon.it/s/?url=node%3D827182031&field-keywords=';
 
     public function __construct()
     {
@@ -29,7 +29,8 @@ class AmazonWrapper
 
     public function getBooks(String $keyword): array
     {
-        return $this->bookScraper->getBooks($this->baseUrl, $keyword, '');
+        // return $this->bookScraper->getBooks($this->baseUrl, $keyword, '');
+        $this->bookScraper->retrieveLinks($this->baseUrl, $keyword, '');
     }
 
     public function getQueries(): array
