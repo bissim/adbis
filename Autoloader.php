@@ -55,6 +55,11 @@ class Autoloader
     protected static $fileIterator = null;
 
     /**
+     * Array of paths to exclude from traversal.
+     */
+    // protected static $excludes = array();
+
+    /**
      * Autoload function for registration with spl_autoload_register
      *
      * Looks recursively through project directory and loads class files based on
@@ -64,22 +69,64 @@ class Autoloader
      */
     public static function loader($className)
     {
-        $directory = new RecursiveDirectoryIterator(static::$pathTop, RecursiveDirectoryIterator::SKIP_DOTS);
+        echo "loading {$className}...<br />";
+        // echo "excluded paths: " . var_dump(self::$excludes) . "<br />";
+        echo 'recursively retrieve all classes...<br />';
+        $directory = new RecursiveDirectoryIterator(static::$pathTop);
+        $filter = new class($directory) extends RecursiveFilterIterator {
+            public function accept() {
+                $filename = $this->current()->getFilename();
+                // Skip hidden files and directories.
+                if ($name[0] === '.') {
+                  return FALSE;
+                }
+              }
+        };
 
         if (is_null(static::$fileIterator)) {
 
-            static::$fileIterator = new RecursiveIteratorIterator($directory, RecursiveIteratorIterator::LEAVES_ONLY);
+            static::$fileIterator = new RecursiveIteratorIterator($filter, RecursiveIteratorIterator::LEAVES_ONLY);
 
         }
 
         $filename = $className . static::$fileExt;
+        echo "{$className} location is {$filename}<br />";
 
-        foreach (static::$fileIterator as $file) {
+        $dump = var_dump(static::$fileIterator);
+        echo "about to iterate over {$dump}<br />";
+        $skipInclusion = false;
+        foreach (static::$fileIterator as $file)
+        {
+            // echo "analazing " . var_dump($file);
+            // foreach ($exludes as $excludedPath)
+            // {
+            //     echo "checking for $excludedPath...<br />";
+            //     if ($pos = strpos($file->getPathname(), $excludedPath) != 0)
+            //     {
+            //         echo "position $pos<br />";
+            //         echo "not exploring $file->getPathname()<br />";
+            //         $skipInclusion = true;
+            //     }
+            //     else
+            //     {
+            //         echo "exploring $file->getPathname()";
+            //     }
+            // }
 
+            // if ($skipInclusion)
+            // {
+            //     echo 'not iterating over file' . var_dump($file) . "<br />";
+            //     continue;
+            // }
+            // else
+            // {
+            //     echo 'iterating over file' . var_dump($file) . "<br />";
+            // }
             if (strtolower($file->getFilename()) === strtolower($filename)) {
 
                 if ($file->isReadable()) {
 
+                    echo "found class $file->getPathname()<br />";
                     include_once $file->getPathname();
 
                 }
@@ -87,6 +134,7 @@ class Autoloader
 
             }
 
+            echo '<hr />';
         }
 
     }
@@ -112,9 +160,17 @@ class Autoloader
         static::$pathTop = $path;
     }
 
+    public static function setExclude($path)
+    {
+        array_push(static::$excludes, $path);
+    }
+
 }
 
 Autoloader::setFileExt('.php');
+// Autoloader::setExclude('.git');
+// Autoloader::setExclude('test');
+echo 'Calling autoloader class...<br />';
 spl_autoload_register('Autoloader::loader');
 
 // EOF
