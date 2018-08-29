@@ -1,0 +1,19 @@
+{
+    "name": "bissim/adbis",
+    "description": "",
+    "homepage": "https://github.com/bissim/adbis",
+    "license": "",
+    "keywords": [],
+    "authors": [
+        {
+            "name": "Antonio Addeo"
+        },
+        {
+            "name": "Simone Bisogno",
+            "email": "s.bisogno10@studenti.unisa.it"
+        }
+    ],
+    "require": {
+        "spatie/crawler": "^4.1"
+    }
+}
