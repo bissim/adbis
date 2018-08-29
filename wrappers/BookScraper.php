@@ -1,7 +1,7 @@
 <?php
 namespace wrappers;
 
-require '..\model\Book.php';
+require '../model/Book.php';
 
 use \model\Book;
 use \DOMDocument;
