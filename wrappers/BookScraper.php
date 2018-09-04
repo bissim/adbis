@@ -3,27 +3,15 @@ namespace wrappers;
 
 require_once '../vendor/autoload.php';
 require '../model/Book.php';
-require 'CrawlAmazonBooksProfile.php';
-require 'ScraperCrawlObserver.php';
 
 use \model\Book;
 use \DOMDocument;
 use \DOMXPath;
-use \Spatie\Crawler\Crawler;
-use \wrappers\CrawlAmazonBooksProfile;
-use \wrappers\ScraperCrawlObserver;
 
 class BookScraper
 {
 
     private $queries;
-    private $scrapedUrls;
-    private $keyword;
-
-    public function __construct()
-    {
-        $this->scrapedUrls = array();
-    }
 
     public function getQueries(): array
     {
@@ -33,16 +21,6 @@ class BookScraper
     public function setQueries(array $queries)
     {
         $this->queries = $queries;
-    }
-
-    public function addUrl($url)
-    {
-        array_push($this->scrapedUrls, $url);
-    }
-
-    public function getKeyword(): string
-    {
-        return $this->keyword;
     }
 
     public function getBooks(string $url, string $keyword, string $urlSuffix): array
@@ -64,11 +42,11 @@ class BookScraper
 
         // put retrieved links into array
         $links = array();
-        // foreach ($entries as $entryLink)
-        for ($i = 0; $i < 1; $i++) // TODO test ebook retrieval
+        foreach ($entries as $entryLink)
+//        for ($i = 0; $i < 1; $i++) // TODO test ebook retrieval
         {
-            // $l = $entryLink->firstChild->nodeValue;
-            $l = $entries[$i]->firstChild->nodeValue;
+            $l = $entryLink->firstChild->nodeValue;
+//            $l = $entries[$i]->firstChild->nodeValue;
             array_push($links, $l);
         }
 
@@ -79,31 +57,12 @@ class BookScraper
         return $books;
     }
 
-    public function retrieveLinks(string $baseUrl, string $keyword, string $urlSuffix) // TODO make private
-    {
-        $this->keyword = $keyword;
-        $url = $baseUrl . $keyword. $urlSuffix;
-
-        Crawler::create()
-            ->setCrawlProfile(new CrawlAmazonBooksProfile($url))
-            ->setCrawlObserver(new ScraperCrawlObserver($this))
-            ->setConcurrency(20)
-            ->setMaximumDepth(1)
-//            ->setMaximumCrawlCount(100)
-            ->startCrawling($url);
-    }
-
     private function createDOMXPath(string $url): DOMXPath
     {
         // load page
-        // $page = file_get_contents($url);
         $curl = curl_init($url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        $headers = array(
-			"Accept-Language: en-US,en;q=0.8,it;q=0.6",
-			"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"
-		);
-		curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Android 7.0; Mobile; rv:57.0) Gecko/57.0 Firefox/57.0');
         $page = curl_exec($curl);
         if (curl_errno($curl)) // check for execution errors
         {
@@ -114,13 +73,9 @@ class BookScraper
 
         // create DOM
         $dom = new DOMDocument;
-        // libxml_use_internal_errors(true);
+        libxml_use_internal_errors(true);
         $dom->loadHTML($page);
-        // foreach (libxml_get_errors() as $error) {
-            // TODO log errors into file
-            // $errors .= $error->message."<br/>";
-        // }
-        // libxml_clear_errors();
+        libxml_clear_errors();
 
         // create XPath from DOM
         $xpath = new DOMXPath($dom);
@@ -162,6 +117,8 @@ class BookScraper
         $entries = $xpath->query($query);
         $attribute = $entries[0]->nodeValue;
 
+        if (empty($attribute))
+            return '';
         return $attribute;
     }
 }

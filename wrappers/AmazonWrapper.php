@@ -11,6 +11,7 @@ class AmazonWrapper
     // variables
     private $bookScraper;
     private $queries;
+    private $baseMobileUrl = 'https://www.amazon.it/gp/aw/s/?rh=p_n_binding_browse-bin%3A1462592031&keywords=';
     private $baseUrl = 'https://www.amazon.it/s/?url=node%3D827182031&field-keywords=';
 
     public function __construct()
@@ -22,20 +23,18 @@ class AmazonWrapper
             'price' => '//table[@class="a-lineitem a-spacing-micro"]//tr[@class="kindle-price"]/td[2]',
             'editor' => '//div[@id="detail_bullets_id"]/table//tr/td[@class="bucket"]/div/ul/li[4]/text()',
             'image' => '//div[@id="leftCol"]/div[1]/div/div[2]/div/div/div/div/img/attribute::src',
-        );
+        ); // TODO rewrite queries for $baseMobileUrl
         $this->bookScraper = new BookScraper;
         $this->bookScraper->setQueries($this->queries);
     }
 
     public function getBooks(String $keyword): array
     {
-        // return $this->bookScraper->getBooks($this->baseUrl, $keyword, '');
-        $this->bookScraper->retrieveLinks($this->baseUrl, $keyword, '');
+         return $this->bookScraper->getBooks($this->baseMobileUrl, $keyword, '');
     }
 
     public function getQueries(): array
     {
-        // return $this->queries;
-        return $this->bookScraper->getQueries();
+        return $this->queries;
     }
 }
