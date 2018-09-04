@@ -17,13 +17,13 @@ class AmazonWrapper
     public function __construct()
     {
         $this->queries = array(
-            'links' => '//div[@class="a-row a-spacing-small"]/div[@class="a-row a-spacing-none"]/a/attribute::href',
+            'links' => '/html/body/form[3]/a/attribute::href',
             'title' => '//div[@id="centerCol"]/div/div/h1/span[@id="ebooksProductTitle"]/text()',
             'author' => '//div[@id="centerCol"]/div[@id="booksTitle"]/div[@id="bylineInfo"]/span/span[@class="a-declarative"]/a[1]/text()',
             'price' => '//table[@class="a-lineitem a-spacing-micro"]//tr[@class="kindle-price"]/td[2]',
             'editor' => '//div[@id="detail_bullets_id"]/table//tr/td[@class="bucket"]/div/ul/li[4]/text()',
             'image' => '//div[@id="leftCol"]/div[1]/div/div[2]/div/div/div/div/img/attribute::src',
-        ); // TODO rewrite queries for $baseMobileUrl
+        );
         $this->bookScraper = new BookScraper;
         $this->bookScraper->setQueries($this->queries);
     }
