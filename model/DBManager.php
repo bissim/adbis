@@ -14,7 +14,6 @@ class DBManager
     private $dbname;
     private $conn;
 
-
     public function __construct(
         string $server,
         string $user,
@@ -28,12 +27,14 @@ class DBManager
         $this->dbname = $db;
     }
 
+    // Connessione al database
     private function connect()
     {
         return mysqli_connect($this->servername, $this->username,
                                         $this->password, $this->dbname);
      }
 
+    // Aggiunge i libri nell'array passato come parametro nel database
     public function addBooks(array $books)
     {
         $mysqli = $this->connect();
@@ -49,6 +50,7 @@ class DBManager
         mysqli_close($mysqli);
     }
 
+    // Restituisce i libri con un certo titolo
     public function getBooksByTitle(string $title) : array
     {
         $mysqli = $this->connect();
@@ -59,6 +61,7 @@ class DBManager
         return $this->buildBooksArray($result);
     }
 
+    // Restituisce i libri di un certo autore
     public function getBooksByAuthor(string $author) : array
     {
         $mysqli = $this->connect();
@@ -69,6 +72,8 @@ class DBManager
         return $this->buildBooksArray($result);
     }
 
+    // Per ogni record nella tabella Book del database, crea un oggetto di tipi Book,
+    // restituendo l'array di tali oggetti
     private function buildBooksArray ($result) : array
     {
         $books = array();
@@ -84,12 +89,18 @@ class DBManager
                 array_push($books, new Book($t, $a, $p, $i, $l, $e));
             }
         }
-        else return NULL;
-
         return $books;
-
     }
 
+    // Rimuove tutti i record con un timestamp più vecchio di 30 giorni
+    private function updateDB()
+    {
+        $mysqli = $this->connect();
+        $query = "DELETE FROM Book
+                    WHERE DATE_SUB(CURDATE(), INTERVAL 30 DAY) > Book.TIMESTAMP";
+        mysqli_query ($mysqli, $query);
+        mysqli_close($mysqli);        
+    }
 }
 
 ?>
