@@ -11,18 +11,19 @@ class AmazonWrapper
     // variables
     private $bookScraper;
     private $queries;
-    private $baseMobileUrl = 'https://www.amazon.it/gp/aw/s/?rh=p_n_binding_browse-bin%3A1462592031&keywords=';
-    private $baseUrl = 'https://www.amazon.it/s/?url=node%3D827182031&field-keywords=';
+    private $domain = 'https://www.amazon.it';
+    private $queryUrl = '/gp/aw/s/?rh=n%3A411663031%2Cp_n_binding_browse-bin%3A1462592031&keywords=';
 
     public function __construct()
     {
         $this->queries = array(
-            'links' => '/html/body/form[3]/a/attribute::href',
-            'title' => '//div[@id="centerCol"]/div/div/h1/span[@id="ebooksProductTitle"]/text()',
-            'author' => '//div[@id="centerCol"]/div[@id="booksTitle"]/div[@id="bylineInfo"]/span/span[@class="a-declarative"]/a[1]/text()',
-            'price' => '//table[@class="a-lineitem a-spacing-micro"]//tr[@class="kindle-price"]/td[2]',
-            'editor' => '//div[@id="detail_bullets_id"]/table//tr/td[@class="bucket"]/div/ul/li[4]/text()',
-            'image' => '//div[@id="leftCol"]/div[1]/div/div[2]/div/div/div/div/img/attribute::src',
+            'links' => '//ul[@id="resultItems"]/li[1]/a/attribute::href',
+            'title' => '//span[@id="ebooksTitle"]/text()',
+            'author' => '//div[@id="bylineInfo"]/span/a/text()',
+            'price' => '//div[@id="ebooksPrice_feature_div"]/div/div[2]/div[2]/span/text()',
+            'editor' => '//div[@id="detailBullets_feature_div"]/div/ul/li[2]/span/span[2]/text()',
+            'image' => '//img[@id="ebooksImgBlkFront"]/attribute::src',
+            'link' => '//div[@id="swf-sheet-copy"]/a[@id="swf-sheet-network-link"]/attribute::href'
         );
         $this->bookScraper = new BookScraper;
         $this->bookScraper->setQueries($this->queries);
@@ -30,7 +31,7 @@ class AmazonWrapper
 
     public function getBooks(String $keyword): array
     {
-         return $this->bookScraper->getBooks($this->baseMobileUrl, $keyword, '');
+         return $this->bookScraper->getBooks($this->domain, $this->queryUrl, $keyword, '');
     }
 
     public function getQueries(): array
