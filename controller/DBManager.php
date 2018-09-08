@@ -1,18 +1,18 @@
 <?php
 
-namespace model;
+namespace controller;
 
-require_once 'Book.php';
+require_once '../model/Book.php';
 
 use \model\Book;
 
 class DBManager
 {
-    private $servername;
+    private $serverName;
     private $username;
     private $password;
-    private $dbname;
-    private $conn;
+    private $dbName;
+//    private $conn;
 
     public function __construct(
         string $server,
@@ -21,17 +21,21 @@ class DBManager
         string $db
     )
     {
-        $this->servername = $server;
+        $this->serverName = $server;
         $this->username = $user;
         $this->password = $pass;
-        $this->dbname = $db;
+        $this->dbName = $db;
     }
 
     // Connessione al database
     private function connect()
     {
-        return mysqli_connect($this->servername, $this->username,
-                                        $this->password, $this->dbname);
+        return mysqli_connect(
+            $this->serverName,
+            $this->username,
+            $this->password,
+            $this->dbName
+        );
      }
 
     // Aggiunge i libri nell'array passato come parametro nel database
@@ -72,21 +76,26 @@ class DBManager
         return $this->buildBooksArray($result);
     }
 
-    // Per ogni record nella tabella Book del database, crea un oggetto di tipi Book,
+    // Per ogni record nella tabella Book del database
+    // crea un oggetto di tipi Book
     // restituendo l'array di tali oggetti
     private function buildBooksArray ($result) : array
     {
         $books = array();
 
         if (mysqli_num_rows($result) > 0) {
-            while($row = mysqli_fetch_assoc($result)) {
-                $t = $row["Title"];
-                $a = $row["Author"];
-                $p = $row["Price"];
-                $i = $row["Image"];
-                $l = $row["Link"];
-                $e = $row["Editor"];
-                array_push($books, new Book($t, $a, $p, $i, $l, $e));
+            while ($row = mysqli_fetch_assoc($result)) {
+                $title = $row["Title"];
+                $author = $row["Author"];
+                $price = $row["Price"];
+                $image = $row["Image"];
+                $link = $row["Link"];
+                $editor = $row["Editor"];
+
+                array_push(
+                    $books,
+                    new Book($title, $author, $price, $image, $link, $editor)
+                );
             }
         }
         return $books;
@@ -102,5 +111,3 @@ class DBManager
         mysqli_close($mysqli);        
     }
 }
-
-?>

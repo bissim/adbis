@@ -74,13 +74,12 @@ class Review
         return $this->content;
     }
 
-    public function getPleasentness(): float
+    public function getPleasantness(): float
     {
-        return $this->pleasentness;
+        return $this->pleasantness;
     }
 
     // setters
-
     public function setTitle(string $title)
     {
         $this->title = $title;
@@ -115,21 +114,21 @@ class Review
         $this->content = $content;
     }
 
-    public function setPleasentness(float $pleasantness)
+    public function setPleasantness(float $pleasantness)
     {
-        $this->pleasentness = $pleasantness;
+        $this->pleasantness = $pleasantness;
     }
 
     public function __toString(): string
     {
-        $desc .= "<br />Title: $this->title";
+        $desc = "<br />Title: $this->title";
         $desc .= "<br />Author: $this->author";
         $desc .= "<br />Plot: $this->plot";
         $desc .= "<br />Text: $this->text";
         $desc .= "<br />Avg: $this->avg";
         $desc .= "<br />Style: $this->style";
         $desc .= "<br />Content: $this->content";
-        $desc .= "<br />Pleasentness: $this->pleasentness";
+        $desc .= "<br />Pleasentness: $this->pleasantness";
         $desc .= "<hr />";
 
         return $desc;
