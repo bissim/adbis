@@ -61,8 +61,8 @@ class ReviewScraper
             CURLOPT_HEADER         => false,  // don't return headers
             CURLOPT_FOLLOWLOCATION => true,   // follow redirects
             CURLOPT_MAXREDIRS      => 10,     // stop after 10 redirects
-            CURLOPT_ENCODING       => "",     // handle compressed
-            CURLOPT_USERAGENT      => "adbis", // name of client
+            CURLOPT_ENCODING       => '',     // handle compressed
+            CURLOPT_USERAGENT      => 'Mozilla/5.0 (Android 7.0; Mobile; rv:57.0) Gecko/57.0 Firefox/57.0', // name of client
             CURLOPT_AUTOREFERER    => true,   // set referrer on redirect
             CURLOPT_CONNECTTIMEOUT => 120,    // time-out on connect
             CURLOPT_TIMEOUT        => 120,    // time-out on response

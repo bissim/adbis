@@ -24,7 +24,7 @@ class ReviewWrapper
             'avg' => '//div[@class="ratingInfo"]/table/tr[1]/td[@class="rating_value"]/text()',
             'style' => '//div[@class="ratingInfo"]/table/tr[2]/td[@class="rating_value"]/text()',
             'content' => '//div[@class="ratingInfo"]/table/tr[3]/td[@class="rating_value"]/text()',
-            'pleasentness' => '//div[@class="ratingInfo"]/table/tr[4]/td[@class="rating_value"]/text()'
+            'pleasantness' => '//div[@class="ratingInfo"]/table/tr[4]/td[@class="rating_value"]/text()'
         );
         $this->reviewScraper = new ReviewScraper;
         $this->reviewScraper->setQueries($this->queries);
