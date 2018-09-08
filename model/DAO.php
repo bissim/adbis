@@ -9,10 +9,10 @@
 namespace model;
 
 
-interface CRUD
+interface DAO
 {
     public function create(object $entity): object;
     public function retrieve(object $entity): object;
     public function update(object $entity): object;
-    public function delete(object $entity): object;
+    public function delete(object $entity): void;
 }
