@@ -1,10 +1,10 @@
 <?php
-namespace wrappers;
+namespace util;
 
 require_once '../vendor/autoload.php';
 require '../model/Review.php';
 
-use \model\Book;
+use \model\Review;
 use \DOMDocument;
 use \DOMXPath;
 
@@ -55,7 +55,7 @@ class ReviewScraper
         return $reviews;
     }
 
-    private function get_web_page(string $url) {
+    private function getWebPage(string $url) {
         $options = array(
             CURLOPT_RETURNTRANSFER => true,   // return web page
             CURLOPT_HEADER         => false,  // don't return headers
@@ -81,7 +81,7 @@ class ReviewScraper
 
     private function createDOMXPath(string $url): DOMXPath
     {
-        $page = $this->get_web_page($url);
+        $page = $this->getWebPage($url);
 
         // create DOM
         $dom = new DOMDocument;
@@ -122,7 +122,7 @@ class ReviewScraper
                 $content,
                 $pleasantness
             );
-            array_push($booksFound, $book);
+            array_push($reviewsFound, $review);
         }
 
         return $reviewsFound;

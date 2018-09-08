@@ -2,9 +2,9 @@
 
 namespace wrappers;
 
-require 'ReviewScraper.php';
+require '../util/ReviewScraper.php';
 
-use \wrappers\ReviewScraper;
+use \util\ReviewScraper;
 
 class ReviewWrapper
 {
@@ -38,6 +38,6 @@ class ReviewWrapper
     public function getQueries(): array
     {
         // return $this->queries;
-        return $this->reviewsScraper->getQueries();
+        return $this->reviewScraper->getQueries();
     }
 }

@@ -1,5 +1,5 @@
 <?php
-    namespace wrappers;
+    namespace util;
 
     require_once '../vendor/autoload.php';
     require '../model/Book.php';

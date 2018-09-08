@@ -2,9 +2,9 @@
 
 namespace wrappers;
 
-require 'BookScraper.php';
+require '../util/BookScraper.php';
 
-use \wrappers\BookScraper;
+use \util\BookScraper;
 
 class AmazonWrapper
 {
