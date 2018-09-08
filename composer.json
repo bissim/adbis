@@ -16,7 +16,6 @@
     "require": {
         "ext-dom": "20031129",
         "ext-curl": "^7.2",
-        "spatie/crawler": "^4.1",
         "ext-libxml": "^7.2"
     }
 }
