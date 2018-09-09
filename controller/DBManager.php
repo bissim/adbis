@@ -12,7 +12,7 @@ class DBManager
     private $username;
     private $password;
     private $dbName;
-//    private $conn;
+    private $conn;
 
     public function __construct(
         string $server,
@@ -28,15 +28,20 @@ class DBManager
     }
 
     // Connessione al database
-    private function connect()
+    public function connect()
     {
-        return mysqli_connect(
+        $this->conn = mysqli_connect(
             $this->serverName,
             $this->username,
             $this->password,
             $this->dbName
         );
-     }
+    }
+
+    public function disconnect()
+    {
+        mysqli_close($this->conn);
+    }
 
     // Aggiunge i libri nell'array passato come parametro nel database
     public function addBooks(array $books)
