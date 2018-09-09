@@ -18,7 +18,9 @@ set_error_handler(array(new ErrorHandler(), 'errorHandler'));
 
 $reviewWrapper = new ReviewWrapper;
 
-$reviews = $reviewWrapper->getReviews('il signore degli anelli');
+// $reviews = $reviewWrapper->getReviews('il signore degli anelli');
+
+$reviews = $reviewWrapper->getReviews('harry potter');
 
 // check parameters for every review
 foreach ($reviews as $review)

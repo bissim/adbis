@@ -44,7 +44,7 @@ class ReviewScraper
         $links = array();
         foreach ($entries as $entryLink)
         {
-            $l = $entryLink->firstChild->nodeValue;
+            $l = strstr($entryLink->firstChild->nodeValue, 'https://');
             array_push($links, $l);
         }
 
@@ -70,11 +70,8 @@ class ReviewScraper
     
         $ch = curl_init($url);
         curl_setopt_array($ch, $options);
-    
-        $content  = curl_exec($ch);
-    
-        curl_close($ch);
-    
+        $content  = curl_exec($ch);    
+        curl_close($ch);    
         return $content;
     }
     
