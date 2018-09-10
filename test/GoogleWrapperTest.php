@@ -12,6 +12,9 @@ $googleWrapper = new GoogleWrapper;
 $books = $googleWrapper->getBooks('tolkien');
 
 $mng = new DBManager('localhost','phpmyadmin','pass','progettoDB');
+
+$mng->addBooks($books);
+
 $title = 'anelli';
 $author = 'Tolkien';
 $booksByTitle = $mng->getBooksByTitle($title);

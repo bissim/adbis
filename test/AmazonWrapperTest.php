@@ -10,18 +10,13 @@ require '../wrappers/AmazonWrapper.php';
 use \util\ErrorHandler;
 use \wrappers\AmazonWrapper;
 
+set_error_handler(array(new ErrorHandler(), 'errorHandler'));
+
 function microtime_float()
 {
     list($usec, $sec) = explode(" ", microtime());
     return ((float)$usec + (float)$sec);
 }
-
-set_error_handler(array(new ErrorHandler(), 'errorHandler'));
-
-// set the default timezone to use. Available since PHP 5.1
-date_default_timezone_set('UTC');
-
-//$keyword = 'il signore degli anelli';
 
 $inizio = microtime_float();
 
