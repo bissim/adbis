@@ -14,7 +14,6 @@ class Book
     private $price;
     private $img;
     private $link;
-    private $editor;
 
     // Constructor
     public function __construct(
@@ -22,8 +21,7 @@ class Book
         string $author,
         float $price,
         string $image,
-        string $link,
-        string $editor
+        string $link
     )
     {
         $this->id = 0;
@@ -32,7 +30,6 @@ class Book
         $this->price = $price;
         $this->img = $image;
         $this->link = $link;
-        $this->editor = $editor;
     }
 
     // getters
@@ -66,11 +63,6 @@ class Book
         return $this->link;
     }
 
-    public function getEditor(): string
-    {
-        return $this->editor;
-    }
-
     // setters
     public function setId(int $id)
     {
@@ -102,11 +94,6 @@ class Book
         $this->link = $link;
     }
 
-    public function setEditor(string $editor)
-    {
-        $this->editor = $editor;
-    }
-
     public function __toString(): string
     {
         $desc = "ID: $this->id";
@@ -115,7 +102,6 @@ class Book
         $desc .= "<br />Price: $this->price";
         $desc .= "<br />Imagine: $this->img";
         $desc .= "<br />Link: $this->link";
-        $desc .= "<br />Editor: $this->editor";
         $desc .= "<hr />";
 
         return $desc;
