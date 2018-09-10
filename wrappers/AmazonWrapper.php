@@ -17,7 +17,7 @@ class AmazonWrapper
     public function __construct()
     {
         $this->queries = array(
-            'links' => '//ul[@id="resultItems"]/li[1]/a/attribute::href',
+            'links' => '//ul[@id="resultItems"]/li/a/attribute::href',
             'title' => '//span[@id="ebooksTitle"]/text()',
             'author' => '//div[@id="bylineInfo"]/span/a/text()',
             'price' => '//div[@id="ebooksPrice_feature_div"]/div/div[2]/div[2]/span/text()',

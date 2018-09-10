@@ -42,6 +42,8 @@
             $entries = $xpath->query($this->queries['links']);
 //        print_r($entries); // TODO remove
 
+            // print_r($entries[0]->firstChild->nodeValue . "<br>");
+
             // put retrieved links into array
             $links = array();
 //        echo '<br /><br />'; // TODO remove
@@ -50,10 +52,13 @@
             {
                 $l = $entryLink->firstChild->nodeValue;
 //            $l = $entries[$i]->firstChild->nodeValue;
-//            print_r($domain . $l); // TODO remove
-//            echo '<br /><br />';
+        //    print_r($domain . $l); // TODO remove
+        //    echo '<br /><br />';
                 array_push($links, $domain . $l);
             }
+
+            // foreach ($links as $link)
+            //     print_r($link . "<br>");
 
             // retrieve books from links
             // as array of Book objects
@@ -99,24 +104,16 @@
             // explore every link
             foreach ($links as $link)
             {
-                $title = $this->extractAttribute($link, $this->queries['title']);
-                $author = $this->extractAttribute($link, $this->queries['author']);
-                $stringPrice = \substr($this->extractAttribute($link, $this->queries['price']), 5); // remove EUR from price
-                $stringPrice = str_replace(',', '.', $stringPrice);
-//                echo "<br />String price: $stringPrice<br />";
-                $price = (float) \floatval($stringPrice);
-                $editor = $this->extractAttribute($link, $this->queries['editor']);
-                $image = $this->extractAttribute($link, $this->queries['image']);
-                $shortLink = $this->extractAttribute($link, $this->queries['link']);
+                $attributes = $this->extractAttributes($link);
 
                 // create a Book object and put it in array
                 $book = new Book(
-                    $title,
-                    $author,
-                    $price,
-                    $image,
-                    $shortLink,
-                    $editor
+                    $attributes['title'],
+                    $attributes['author'],
+                    $attributes['price'],
+                    $attributes['image'],
+                    $attributes['shortLink'],
+                    $attributes['editor']
                 );
                 array_push($booksFound, $book);
             }
@@ -124,21 +121,56 @@
             return $booksFound;
         }
 
-        private function extractAttribute(string $link, string $query): string
+        private function checkEmpty($value)
+        {
+            return empty($value) ? '' : $value;
+        }
+
+        private function extractAttributes(string $link): array
         {
 //        echo "<br />execute $query";
             $xpath = $this->createDOMXPath($link);
-            $entries = $xpath->query($query);
-            $attribute = $entries[0]->nodeValue;
 
-            if (empty($attribute))
-            {
-//            echo '<br />empty attribute!<br /><hr />';
-                return '';
-            }
+            $attributes = array();
+
+            $entriesTitle = $xpath->query($this->queries['title']);
+            $title = $this->checkEmpty($entriesTitle[0]->nodeValue);
+
+            $entriesAuthor = $xpath->query($this->queries['author']);
+            $author = $this->checkEmpty($entriesAuthor[0]->nodeValue);
+
+            $entriesPrice = $xpath->query($this->queries['price']);
+            $stringPrice = $entriesPrice[0]->nodeValue;
+            $stringPrice = \substr($stringPrice,5);
+            $stringPrice = str_replace(',', '.', $stringPrice);
+            $price = empty($stringPrice) ? 0.0 : (float) \floatval($stringPrice);
+
+            $entriesEditor = $xpath->query($this->queries['editor']);
+            $editor = $this->checkEmpty($entriesEditor[0]->nodeValue);
+
+            $entriesImage = $xpath->query($this->queries['image']);
+            $image = $this->checkEmpty($entriesImage[0]->nodeValue);
+
+            $entriesLink = $xpath->query($this->queries['link']);
+            $shortLink = $this->checkEmpty($entriesLink[0]->nodeValue);
+
+            $attributes = array(
+                "title" => $title,
+                "author" => $author,
+                "price" => $price,
+                "editor" => $editor,
+                "image" => $image,
+                "shortLink" => $shortLink
+            );
+
+        //     if (empty($attribute))
+        //     {
+        //    echo '<br />empty attribute!<br /><hr />';
+        //         return '';
+        //     }
 //            echo "<br />Attribute: ";
 //            print_r($attribute); // TODO remove
 //            echo "<hr />";
-            return $attribute;
+            return $attributes;
         }
     }
