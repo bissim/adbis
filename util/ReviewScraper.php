@@ -100,17 +100,7 @@ class ReviewScraper
         foreach ($links as $link)
         {
             $attributes = $this->extractAttributes($link);
-
-
-            // $title = $this->extractAttribute($link, $this->queries['title']);
-            // $author = $this->extractAttribute($link, $this->queries['author']);
-            // $plot = $this->extractAttribute($link, $this->queries['plot']);
-            // $text = $this->extractAttribute($link, $this->queries['text']);
-            // $avg = \floatval($this->extractAttribute($link, $this->queries['avg']));
-            // $style = \floatval($this->extractAttribute($link, $this->queries['style']));
-            // $content = \floatval($this->extractAttribute($link, $this->queries['content']));
-            // $pleasantness = \floatval($this->extractAttribute($link, $this->queries['pleasantness']));
-
+            
             // create a Review object and put it in array
             $review = new Review(
                 $attributes['title'],
@@ -133,7 +123,6 @@ class ReviewScraper
         return empty($value) ? '' : $value;
     }
 
-    // private function extractAttribute(string $link, string $query): string
     private function extractAttributes(string $link): array
     {
         $xpath = $this->createDOMXPath($link);
@@ -148,26 +137,23 @@ class ReviewScraper
         $plot = $this->checkEmpty($entriesPlot[0]->nodeValue);
 
         $entriesText = $xpath->query($this->queries['text']);
-        $text = $this->checkEmpty($entriesText[0]->nodeValue);        
+        $text = $this->checkEmpty($entriesText[0]->nodeValue);
 
         $entriesAvg = $xpath->query($this->queries['avg']);
-        $stringAvg = $entriesPrice[0]->nodeValue;
-        // $stringAvg = \substr($stringAvg,5);
-        // $stringAvg = str_replace(',', '.', $stringAvg);
-        // $avg = empty($stringAvg) ? 0.0 : (float) \floatval($stringAvg);        
+        $stringAvg = $entriesAvg[0]->nodeValue;       
         $avg = (float) \floatval($stringAvg);
 
         $entriesStyle = $xpath->query($this->queries['style']);
-        $stringStyle = $entriesStylee[0]->nodeValue;
+        $stringStyle = $entriesStyle[0]->nodeValue;
         $style = (float) \floatval($stringStyle);
 
         $entriesContent = $xpath->query($this->queries['content']);
         $stringContent = $entriesContent[0]->nodeValue;
         $content = (float) \floatval($stringContent);
 
-        $entriesPleasentness = $xpath->query($this->queries['pleasantness']);
-        $stringPleasentness = $entriesStylee[0]->nodeValue;
-        $pleasentness = (float) \floatval($stringPleasentness);
+        $entriesPleasantness = $xpath->query($this->queries['pleasantness']);
+        $stringPleasantness = $entriesPleasantness[0]->nodeValue;
+        $pleasantness = (float) \floatval($stringPleasantness);
 
         $attributes = array(
             "title" => $title,
@@ -181,9 +167,5 @@ class ReviewScraper
         );
 
         return $attributes;
-
-        // if (empty($attribute))
-        //     return '';
-        // return $attribute;
     }
 }

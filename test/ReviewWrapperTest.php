@@ -20,7 +20,7 @@ $reviewWrapper = new ReviewWrapper;
 
 // $reviews = $reviewWrapper->getReviews('il signore degli anelli');
 
-$reviews = $reviewWrapper->getReviews('harry potter');
+$reviews = $reviewWrapper->getReviews('dan brown');
 
 // check parameters for every review
 foreach ($reviews as $review)
