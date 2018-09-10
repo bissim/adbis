@@ -27,10 +27,10 @@ create table if not exists book (
   title VARCHAR(30) not null,
   author VARCHAR(30) not null,
   price FLOAT not null,
-  image VARCHAR(50),
+  imge VARCHAR(50),
   link VARCHAR(50) not null,
   editor VARCHAR(30),
-  timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  expiration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 # review table
@@ -41,12 +41,12 @@ create table if not exists review(
   title VARCHAR(30) not null,
   author VARCHAR(30) not null,
   plot text not null,
-  text text not null,
+  txt text not null,
   average FLOAT,
   style FLOAT,
   content FLOAT,
   pleasentness FLOAT,
-  timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  expiration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 #
