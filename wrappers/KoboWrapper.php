@@ -2,26 +2,27 @@
 
 namespace wrappers;
 
-require 'BookScraper.php';
+require '../util/BookScraper.php';
 
-use \wrappers\BookScraper;
+use \util\BookScraper;
 
 class KoboWrapper
 {
     // variables
     private $bookScraper;
     private $queries;
-    private $baseUrl = 'https://www.kobo.com/it/it/search?Query=';
+    private $queryUrl = 'https://www.kobo.com/it/it/search?Query=';
 
     public function __construct()
     {
         $this->queries = array(
-            'links' => '//div[@class="item-info"]/p[@class="title product-field"]/a/attribute::href',
-            'title' => '//div[@class="item-info"]/h1/span/text()',
-            'author' => '//div[@class="item-info"]/div/h2/span/span[@class="visible-contributors"]/a[1]/text()',
-            'price' => '//div[@class="primary-right-container"]/div/div/div/div/div/span/text()',
-            'editor' => '//div[@class="BookItemDetailSecondaryMetadataWidget"]/div/div/div/ul/li/a[@class="description-anchor"]/span/text()',
-            'image' => '//div[@class="primary-left-container"]/div/div/div/div/div/img/attribute::src',
+            // 'links' => '//div[@class="item-info"]/p[@class="title product-field"]/a/attribute::href',
+            'link' => '//section//div/ul/li/div/div[2]/p/a/attribute::href',
+            'title' => '//section//div/ul/li/div/div[2]/p/a/text()',
+            'author' => '//section//div/ul/li/div/div[2]/p/span[2]/a/text()',
+            'price' => '//section//div/ul/li/div/div[2]/p[@class="product-field price"]/span/span/text()',
+            // 'editor' => '//div[@class="BookItemDetailSecondaryMetadataWidget"]/div/div/div/ul/li/a[@class="description-anchor"]/span/text()',
+            'image' => '//section//div/ul/li/div/div[1]/div/a/div/img/attribute::src',
         );
         $this->bookScraper = new BookScraper;
         $this->bookScraper->setQueries($this->queries);
@@ -29,7 +30,7 @@ class KoboWrapper
 
     public function getBooks(String $keyword): array
     {
-        return $this->bookScraper->getBooks($this->baseUrl, $keyword, '&fclanguages=it');
+        return $this->bookScraper->getBooks('', $this->queryUrl, $keyword, '&fclanguages=it');
     }
 
     public function getQueries(): array
