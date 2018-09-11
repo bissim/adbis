@@ -7,6 +7,7 @@ namespace model;
  */
 class Review
 {
+    private $id;
     private $title;
     private $author;
     private $plot;
@@ -28,6 +29,7 @@ class Review
         float $pleasantness
     )
     {
+        $this->id = 0;
         $this->title = $title;
         $this->author = $author;
         $this->plot = $plot;
@@ -39,6 +41,11 @@ class Review
     }
 
     // getters
+    public function getId(): int
+    {
+        return $this->id;
+    }
+    
     public function getTitle(): string
     {
         return $this->title;
@@ -54,7 +61,7 @@ class Review
         return $this->plot;
     }
 
-    public function getText(): float
+    public function getText(): string
     {
         return $this->text;
     }
@@ -80,6 +87,11 @@ class Review
     }
 
     // setters
+    public function setId(int $id)
+    {
+        $this->id = $id;
+    }
+    
     public function setTitle(string $title)
     {
         $this->title = $title;
