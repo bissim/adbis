@@ -51,3 +51,22 @@ create table if not exists review(
 #
 # PROCEDURES CREATION
 #
+delimiter //
+create procedure prune()
+  begin
+    delete from book
+    where TIMESTAMPDIFF(DAY, `expiration_date`, NOW()) > 30;
+
+    delete from review
+    where TIMESTAMPDIFF(DAY, `expiration_date`, NOW()) > 30;
+  end//
+
+delimiter ;
+
+#
+# EVENTS CREATION
+#
+create event if not exists pruner
+  on schedule every 30 second
+do
+  call prune();
