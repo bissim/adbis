@@ -12,7 +12,14 @@ require '../controller/DBManager.php';
 
 use controller\DBManager;
 
-$dbMan = new DBManager('localhost', 'adbis', '123456', 'adbis_db', '3306');
+$host = 'localhost';
+$user = 'phpmyadmin';
+$password = 'pass';
+$database = 'adbis_db';
+$port = '3306';
+
+// $dbMan = new DBManager('localhost', 'adbis', '123456', 'adbis_db', '3306');
+$dbMan = new DBManager($host, $user, $password, $database, $port);
 echo "$dbMan<br />";
 try {
     $dbMan->connect();
