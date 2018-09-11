@@ -3,14 +3,14 @@
 namespace controller;
 
 require '../model/DAO.php';
-require_once '../model/Book.php';
+require_once '../model/Review.php';
 require '../controller/DBManager.php';
 
 use model\DAO;
-use model\Book;
+use model\Review;
 use controller\DBManager;
 
-class BookDAO implements DAO
+class ReviewDAO implements DAO
 {
 
     private $dbMan;
@@ -37,32 +37,35 @@ class BookDAO implements DAO
     public function create(object $entity): object
     {
         // check whether object is instance of book
-        if (!($entity instanceof Book))
+        if (!($entity instanceof Review))
         {
-            throw new \Exception('Object not instance of Book!');
+            throw new \Exception('Object not instance of Review!');
         }
 
         // connect to database
         $this->connect();
 
-        $book = $entity;
+        $review = $entity;
 
         $instruction = "
-            INSERT INTO book (title, author, price, image, link)
-            VALUES (:title, :author, :price, :image, :link)
+            INSERT INTO review (title, author, plot, txt, average, style, content, pleasantness)
+            VALUES (:title, :author, :plot, :txt, :average, :style, :content, :pleasantness)
         ";
         $params = array(
-            ':title' => $book->getTitle(),
-            ':author' => $book->getAuthor(),
-            ':price' => $book->getPrice(),
-            ':image' => $book->getImg(),
-            ':link' => $book->getLink()
+            ':title' => $review->getTitle(),
+            ':author' => $review->getAuthor(),
+            ':plot' => $review->getPlot(),
+            ':txt' => $review->getText(),
+            ':average' => $review->getAvg(),
+            ':style' => $review->getStyle(),
+            ':content' => $review->getContent(),
+            ':pleasantness' => $review->getPleasantness()
         );
         $this->dbMan->execute($instruction, $params);
         $this->dbMan->disconnect();
 
         // return persisted object
-        return $book;
+        return $review;
     }
 
     /**
@@ -75,21 +78,21 @@ class BookDAO implements DAO
     public function retrieve(object $entity): object
     {
         // check whether object is instance of book
-        if (!($entity instanceof Book))
+        if (!($entity instanceof Review))
         {
-            throw new \Exception('Object not instance of Book!');
+            throw new \Exception('Object not instance of Review!');
         }
 
         // connect to database
         $this->connect();
 
         // persist book into database
-        $book = $entity;
+        $review = $entity;
         $instruction = "
-            SELECT * FROM book WHERE id = :id
+            SELECT * FROM review WHERE id = :id
         ";
         $params = array(
-            ':id' => $book->getId()
+            ':id' => $review->getId()
         );
         $results = $this->dbMan->query($instruction, $params);
         $this->dbMan->disconnect();
@@ -97,18 +100,21 @@ class BookDAO implements DAO
         // return persisted object
         if (!$results[0]) // TODO check
         {
-            throw new \Exception("Book with id {$book->getId()} not found!");
+            throw new \Exception("Review with id {$review->getId()} not found!");
         }
 
-        $book = new Book (
+        $review = new Review (
             $results[0]["title"],
             $results[0]["author"],
-            $results[0]["price"],
-            $results[0]["image"],
-            $results[0]["link"]
+            $results[0]["plot"],
+            $results[0]["txt"],
+            $results[0]["average"],
+            $results[0]["content"],
+            $results[0]["style"],
+            $results[0]["pleasantness"]
         );
         
-        return $book;
+        return $review;
     }
 
     public function update(object $entity): object

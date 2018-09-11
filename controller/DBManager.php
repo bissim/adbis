@@ -126,7 +126,7 @@ class DBManager
     }
 
     // Per ogni record nella tabella Book del database
-    // crea un oggetto di tipi Book
+    // crea un oggetto di tipo Book
     // restituendo l'array di tali oggetti
     private function buildBooksArray ($result) : array
     {
