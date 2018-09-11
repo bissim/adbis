@@ -12,51 +12,95 @@ class DBManager
     private $username;
     private $password;
     private $dbName;
-    private $conn;
+    private $port;
+    private $pdo;
 
     public function __construct(
         string $server,
         string $user,
         string $pass,
-        string $db
+        string $db,
+        string $port
     )
     {
         $this->serverName = $server;
         $this->username = $user;
         $this->password = $pass;
         $this->dbName = $db;
+        $this->port = $port;
     }
 
     // Connessione al database
-    public function connect()
+    public function isConnected(): bool
     {
-        $this->conn = mysqli_connect(
-            $this->serverName,
-            $this->username,
-            $this->password,
-            $this->dbName
+        return $this->pdo ? true : false;
+    }
+
+    /**
+     * @throws \PDOException
+     */
+    public function connect(): void
+    {
+
+        $pdoOptions = array(
+            \PDO::ATTR_EMULATE_PREPARES   => false, // turn off emulation mode for "real" prepared statements
+            \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION, //turn on errors in the form of exceptions
+            \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC, //make the default fetch be an associative array
+            \PDO::ATTR_PERSISTENT => true // make connections reusable
         );
-    }
 
-    public function disconnect()
-    {
-        mysqli_close($this->conn);
-    }
-
-    // Aggiunge i libri nell'array passato come parametro nel database
-    public function addBooks(array $books)
-    {
-        $mysqli = $this->connect();
-
-        foreach ($books as $book)
-        {
-            $query = "INSERT INTO Book (Title, Author, Price, Image, Link, Editor)
-                        VALUES ('" . $book->getTitle() . "','" . $book->getAuthor() . "'," .
-                                $book->getPrice() . ",'" . $book->getImg() . "','" .
-                                $book->getLink() . "','" . $book->getEditor() . "')";
-            mysqli_query($mysqli, $query);            
+        try {
+            $this->pdo = new \PDO(
+                "mysql:host=$this->serverName;" .
+                "dbname=$this->dbName",
+                $this->username,
+                $this->password,
+                $pdoOptions
+            );
         }
-        mysqli_close($mysqli);
+        catch (\PDOException $pdoe)
+        {
+            error_log("A database error occurred: $pdoe->getMessage().");
+        }
+        catch (\Exception $e)
+        {
+            error_log("An error occurred: $e->getMessage().");
+        }
+    }
+
+    public function disconnect(): void
+    {
+        $this->pdo = null;
+    }
+
+    public function execute(string $instruction, array $params): void
+    {
+        // execute instruction
+        $stmt = $this->pdo->prepare($instruction);
+        $stmt->execute($params);
+
+        // dismiss statement
+        $stmt = null;
+    }
+
+    public function query(string $instruction, array $params): array
+    {
+        // execute query
+        $stmt = $this->pdo->prepare($instruction);
+        $stmt->execute($params);
+
+        // retrieve results
+        $results = $stmt->fetchAll();
+
+        // dismiss statement
+        $stmt = null;
+
+        return $results;
+    }
+
+    public function __toString()
+    {
+        return $this->pdo ? "Connected to $this->username@$this->serverName." : "Not connected.";
     }
 
     // Restituisce i libri con un certo titolo
