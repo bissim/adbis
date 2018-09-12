@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8" />
+<title>Prova</title>
+
+<body>
+    
+<p id="demo"></p>
+
+<script>
+var obj, dbParam, xmlhttp, myObj, x, txt = "";
+obj = { "table":"book"};
+dbParam = JSON.stringify(obj);
+xmlhttp = new XMLHttpRequest();
+xmlhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        myObj = JSON.parse(this.responseText);
+        for (x in myObj) {
+            txt += myObj[x].author + "<br>";
+        }
+        document.getElementById("demo").innerHTML = txt;
+    }
+};
+xmlhttp.open("GET", "Mediator.php", true);
+xmlhttp.send();
+</script>
+
+</body>
+
+</html>
