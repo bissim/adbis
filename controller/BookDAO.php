@@ -64,7 +64,6 @@ class BookDAO implements DAO
      * @return object
      * @throws \Exception
      */
-    
     public function retrieveById(object $entity): object
     {
         // check whether object is instance of book
@@ -140,14 +139,19 @@ class BookDAO implements DAO
         return $results;
     }
 
-
     public function update(object $entity): object
     {
+        // check whether object is instance of book
+        if (!($entity instanceof Book))
+        {
+            throw new \Exception('Object not instance of Book!');
+        }
 
+        // TODO implement method
     }
 
     public function delete(object $entity): void
     {
-        return;
+        return; // TODO implement method
     }
 }

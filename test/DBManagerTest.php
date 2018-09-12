@@ -12,8 +12,6 @@ require '../controller/DBManager.php';
 
 use controller\DBManager;
 
-
-// $dbMan = new DBManager('localhost', 'adbis', '123456', 'adbis_db', '3306');
 $dbMan = new DBManager;
 echo "$dbMan<br />";
 try {
@@ -23,5 +21,5 @@ try {
 }
 catch (\Exception $e)
 {
-    error_log("An exception occurred: $e->getMessage().");
+    error_log("An exception occurred: {$e->getMessage()}.");
 }
