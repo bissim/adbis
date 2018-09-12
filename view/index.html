@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8" />
+<title>Prova</title>
+
+<body>
+    
+<p id="demo"></p>
+
+<script>
+function searchAuthor()
+{
+    var author = document.forms["authorForm"]["author"].value;
+    var obj, dbParam, xmlhttp, books, b, txt = "";
+    obj = {"author":author};
+    dbParam = JSON.stringify(obj);
+
+    xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            books = JSON.parse(this.responseText);
+            for (b in books) {
+                txt += "Titolo: " + books[b].title + ", " +
+                    "Author: " + books[b].author + ", " +
+                    "Price: " + books[b].price + ", " +
+                    "Image: " + books[b].image + ", " +
+                    "Link: " + books[b].link + "<br>";
+            }
+        document.getElementById("demo").innerHTML = txt;
+        }
+    };
+xmlhttp.open("GET", "../controller/Mediator.php?x=" + dbParam, true);
+xmlhttp.send();
+}
+
+function searchTitle()
+{
+    var title = document.forms["titleForm"]["title"].value;
+    var obj, dbParam, xmlhttp, books, b, txt = "";
+    obj = { "title":title };
+    dbParam = JSON.stringify(obj);
+
+    xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            books = JSON.parse(this.responseText);
+            for (b in books) {
+                txt += "Titolo: " + books[b].title + ", " +
+                    "Author: " + books[b].author + ", " +
+                    "Price: " + books[b].price + ", " +
+                    "Image: " + books[b].image + ", " +
+                    "Link: " + books[b].link + "<br>";
+            }
+                document.getElementById("demo").innerHTML = txt;
+        }
+    };
+xmlhttp.open("GET", "../controller/Mediator.php?x=" + dbParam, true);
+xmlhttp.send();
+}
+
+</script>
+
+<form name="authorForm">
+Digita il nome di un autore <input type="text" name="author"><br>
+<input type="button" onclick="searchAuthor()" value="Invia">
+</form>
+
+<form name="titleForm">
+Digita il titolo di un libro <input type="text" name="title"><br>
+<input type="button" onclick="searchTitle()" value="Invia">
+</form>
+
+</body>
+
+</html>
