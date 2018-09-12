@@ -17,13 +17,7 @@ class ReviewDAO implements DAO
 
     private function connect()
     {
-        $this->dbMan = new DBManager(
-            'localhost',
-            'phpmyadmin',
-            'pass',
-            'adbis_db',
-            '3306'
-        );
+        $this->dbMan = new DBManager;
         $this->dbMan->connect();
     }
 

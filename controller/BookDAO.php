@@ -17,13 +17,7 @@ class BookDAO implements DAO
 
     private function connect()
     {
-        $this->dbMan = new DBManager(
-            'localhost',
-            'phpmyadmin',
-            'pass',
-            'adbis_db',
-            '3306'
-        );
+        $this->dbMan = new DBManager;
         $this->dbMan->connect();
     }
 
@@ -33,7 +27,6 @@ class BookDAO implements DAO
      * @return object
      * @throws \Exception
      */
-
     public function create(object $entity): object
     {
         // check whether object is instance of book

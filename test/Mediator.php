@@ -15,11 +15,8 @@ use controller\ReviewDAO;
 
 $bookDao = new BookDAO;
 $bookReturned = $bookDao->retrieveByAuthor('aut');
-echo json_encode($bookReturned);
+//echo json_encode($bookReturned);
 
 $reviewDao = new ReviewDAO;
 $reviewReturned = $reviewDao->retrieveByAuthor('aut');
 echo json_encode($reviewReturned);
-
-
-?>
