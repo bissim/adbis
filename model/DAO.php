@@ -12,7 +12,9 @@ namespace model;
 interface DAO
 {
     public function create(object $entity): object;
-    public function retrieve(object $entity): object;
+    public function retrieveById(object $entity): object;
+    public function retrieveByTitle(string $title): array;
+    public function retrieveByAuthor(string $author): array;
     public function update(object $entity): object;
     public function delete(object $entity): void;
 }

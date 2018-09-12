@@ -2,9 +2,9 @@
 
 namespace controller;
 
-require '../model/DAO.php';
+require_once '../model/DAO.php';
 require_once '../model/Book.php';
-require '../controller/DBManager.php';
+require_once '../controller/DBManager.php';
 
 use model\DAO;
 use model\Book;
@@ -72,7 +72,7 @@ class BookDAO implements DAO
      * @throws \Exception
      */
     
-    public function retrieve(object $entity): object
+    public function retrieveById(object $entity): object
     {
         // check whether object is instance of book
         if (!($entity instanceof Book))
@@ -110,6 +110,43 @@ class BookDAO implements DAO
         
         return $book;
     }
+
+    public function retrieveByTitle(string $title): array
+    {
+        $this->connect();
+
+        $title = "%" . $title . "%";
+        
+        $instruction = "
+            SELECT * FROM book WHERE title LIKE :title
+        ";
+        $params = array(
+            ':title' => $title
+        );
+        $results = $this->dbMan->query($instruction, $params);
+        $this->dbMan->disconnect();
+
+        return $results;
+    }
+
+    public function retrieveByAuthor(string $author): array
+    {
+        $this->connect();
+
+        $author = '%' . $author . '%';
+        
+        $instruction = "
+            SELECT * FROM book WHERE author LIKE :author
+        ";
+        $params = array(
+            ':author' => $author
+        );
+        $results = $this->dbMan->query($instruction, $params);
+        $this->dbMan->disconnect();
+
+        return $results;
+    }
+
 
     public function update(object $entity): object
     {
