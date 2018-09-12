@@ -18,6 +18,7 @@
         "ext-curl": "^7.2",
         "ext-libxml": "^7.2",
         "ext-mysqli": "^7.2",
-        "ext-PDO": "^7.2"
+        "ext-PDO": "^7.2",
+        "ext-json": "^1.6"
     }
 }
