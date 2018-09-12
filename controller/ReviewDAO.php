@@ -27,7 +27,6 @@ class ReviewDAO implements DAO
      * @return object
      * @throws \Exception
      */
-
     public function create(object $entity): object
     {
         // check whether object is instance of book
@@ -68,7 +67,6 @@ class ReviewDAO implements DAO
      * @return object
      * @throws \Exception
      */
-    
     public function retrieveById(object $entity): object
     {
         // check whether object is instance of book
@@ -149,11 +147,17 @@ class ReviewDAO implements DAO
 
     public function update(object $entity): object
     {
+        // check whether object is instance of book
+        if (!($entity instanceof Review))
+        {
+            throw new \Exception('Object not instance of Review!');
+        }
 
+        // TODO implement method
     }
 
     public function delete(object $entity): void
     {
-        return;
+        return; // TODO implement method
     }
 }
