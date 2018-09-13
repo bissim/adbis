@@ -1,30 +1,43 @@
 <?php
-header("Content-Type: application/json; charset=UTF-8");
+// header("Content-Type: application/json; charset=UTF-8");
 
 require_once '../model/Book.php';
-require '../controller/BookDAO.php';
-
 require_once '../model/Review.php';
-require '../controller/ReviewDAO.php';
+
+require '../util/ErrorHandler.php';
+
+require 'BookWrapper.php';
+require 'DAOManager.php';
 
 use model\Book;
-use controller\BookDAO;
-
 use model\Review;
-use controller\ReviewDAO;
 
+use \util\ErrorHandler;
+
+use BookWrapper;
+use DAOManager;
+
+// Decodifa l'oggetto JSON
 $obj = json_decode($_GET["x"], false);
 
-$bookDao = new BookDAO;
-$bookReturned;
-
+// Il tipo di ricerca (per autore o titolo)
 $search = $obj->search;
+// La chiave della ricerca (nome dell'autore o titolo del libro)
+$keyword = $obj->keyword;
 
-switch ($search) {
-    case 'author': $bookReturned = $bookDao->retrieveByAuthor($obj->keyword); break;
-    case 'title' : $bookReturned = $bookDao->retrieveByTitle($obj->keyword);
+// Cerca i libri presenti in cache
+$daoMng = new DAOManager();
+$books = $daoMng->getBooks($search, $keyword);
+
+// Se nel database non sono presenti libri attenenti alla ricerca, si effettua
+// l'estrazione con i wrapper, salvando in cache i risultati dell'estrazione
+if (empty($books))
+{
+    $bookWrapper = new BookWrapper();
+    $daoMng->addBooks($bookWrapper->getBooks($keyword));
+    $books = $daoMng->getBooks($search, $keyword);
 }
 
-echo json_encode($bookReturned);
+echo json_encode($books);
 
 ?>
