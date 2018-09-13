@@ -16,11 +16,15 @@ use controller\ReviewDAO;
 $obj = json_decode($_GET["x"], false);
 
 $bookDao = new BookDAO;
+$bookReturned;
 
-$bookReturned = $bookDao->retrieveByTitle($obj->title);
+$search = $obj->search;
+
+switch ($search) {
+    case 'author': $bookReturned = $bookDao->retrieveByAuthor($obj->keyword); break;
+    case 'title' : $bookReturned = $bookDao->retrieveByTitle($obj->keyword);
+}
+
 echo json_encode($bookReturned);
-
-// $bookReturned = $bookDao->retrieveByAuthor($obj->author);
-// echo json_encode($bookReturned);
 
 ?>
