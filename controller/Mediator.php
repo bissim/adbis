@@ -32,27 +32,32 @@ $daoMng = new DAOManager();
 $books;
 $reviews;
 
-if (strcmp($table,'book')==0)
+try
 {
-    $books = $daoMng->getBooks($search, $keyword);
-    if (empty($books))
+    if (strcmp($table,'book')==0)
     {
-        $wrapperMng = new WrapperManager();
-        $daoMng->addBooks($wrapperMng->getBooks($keyword));
         $books = $daoMng->getBooks($search, $keyword);
+        if (empty($books))
+        {
+            $wrapperMng = new WrapperManager();
+            $daoMng->addBooks($wrapperMng->getBooks($keyword));
+            $books = $daoMng->getBooks($search, $keyword);
+        }
+        echo json_encode($books);
     }
-    echo json_encode($books);
-}
-
-else if (strcmp($table,'review')==0)
-{
-    $reviews = $daoMng->getReviews($search, $keyword);
-    if (empty($reviews))
+    else if (strcmp($table,'review')==0)
     {
-        $wrapperMng = new WrapperManager();
-        $daoMng->addReviews($wrapperMng->getReviews($keyword));
         $reviews = $daoMng->getReviews($search, $keyword);
+        if (empty($reviews))
+        {
+            $wrapperMng = new WrapperManager();
+            $daoMng->addReviews($wrapperMng->getReviews($keyword));
+            $reviews = $daoMng->getReviews($search, $keyword);
+        }
+        echo json_encode($reviews);
     }
-    echo json_encode($reviews);
 }
-
+catch (\Throwable $t)
+{
+    error_log("An error occurred: {$t->getMessage()}.");
+}
