@@ -30,7 +30,7 @@ class ReviewWrapper
         $this->reviewScraper->setQueries($this->queries);
     }
 
-    public function getReviews(String $keyword): array
+    public function getReviews(string $keyword): array
     {
         return $this->reviewScraper->getReviews($this->baseUrl, $keyword, '');
     }
