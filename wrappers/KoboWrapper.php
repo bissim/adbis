@@ -2,7 +2,7 @@
 
 namespace wrappers;
 
-require '../util/BookScraper.php';
+require_once '../util/BookScraper.php';
 
 use \util\BookScraper;
 

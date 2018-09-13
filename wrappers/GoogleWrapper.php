@@ -2,7 +2,7 @@
 
 namespace wrappers;
 
-require '../model/Book.php';
+require_once '../model/Book.php';
 
 use \model\Book;
 
