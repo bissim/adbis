@@ -7,11 +7,13 @@
 <title>Prova</title>
 
 <body>
-    
+
+<!-- Qui saranno posizionaati i risultati della ricerca -->
 <p id="demo"></p>
 
 <script>
 $(document).ready(function(){
+    // Si distingue il caso di ricerca per autore e ricerca per titolo
     $('input[type=button]').click(function(){
         var id = $(this).attr("id");
         var keyword, search;
@@ -22,34 +24,42 @@ $(document).ready(function(){
             case 'titBtn': keyword = $('input[name=title]').val();
                             search = 'title'
         }
+        // Il json che si invia alla pagina php la parola chiave per la ricerca e
+        // il tipo di ricerca (per autore o titolo)
         obj = { "keyword":keyword, "search":search };
         dbParam = JSON.stringify(obj);
+        // Si effettua la chiamata AJAX
         $.ajax({
             type : "GET",
             url : "../controller/Mediator.php?x=" + dbParam,
             dataType : "json",
+            // Si stampano i risultati ottenuti
             success : function (res) {
                 var txt = "";
                 $.each( res, function( i, value ) {
-                    txt += value.title + ", " + value.author + ", " +
-                            value.price + ", " + value.image + ", " +
-                            value.link + "<br>";
+                    txt += "Titolo: " + value.title + "<br>" + 
+                            "Autore: " + value.author + "<br>" +
+                            "Prezzo: " + value.price + "<br>" + 
+                            "Immagine: " + value.image + "<br>" +
+                            "Link: " + value.link + "<hr>";
                 });
                 $("#demo").html(txt);
             },
             error : function (richiesta,stato,errori) {
-                alert("E' evvenuto un errore. Lo stato della chiamata: "+stato);
+                alert("E' evvenuto un errore. stato della chiamata: "+stato);
             }
         });
     });
 });
 </script>
 
+<!-- Il form per la ricerca dei libri in base all'autore -->
 <form name="authorForm">
     Digita il nome di un autore <input type="text" name="author"><br>
     <input id="autBtn" type="button" value="Invia">
 </form>
 
+<!-- Il form per la ricerca dei libri in base al titolo -->
 <form name="titleForm">
     Digita il titolo di un libro <input type="text" name="title"><br>
     <input id="titBtn" type="button" value="Invia">
