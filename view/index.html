@@ -2,6 +2,7 @@
 <html>
 
 <head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <meta charset="utf-8" />
 <title>Prova</title>
 
@@ -10,66 +11,48 @@
 <p id="demo"></p>
 
 <script>
-function searchAuthor()
-{
-    var author = document.forms["authorForm"]["author"].value;
-    var obj, dbParam, xmlhttp, books, b, txt = "";
-    obj = {"author":author};
-    dbParam = JSON.stringify(obj);
-
-    xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            books = JSON.parse(this.responseText);
-            for (b in books) {
-                txt += "Titolo: " + books[b].title + ", " +
-                    "Author: " + books[b].author + ", " +
-                    "Price: " + books[b].price + ", " +
-                    "Image: " + books[b].image + ", " +
-                    "Link: " + books[b].link + "<br>";
-            }
-        document.getElementById("demo").innerHTML = txt;
+$(document).ready(function(){
+    $('input[type=button]').click(function(){
+        var id = $(this).attr("id");
+        var keyword, search;
+        switch (id) {
+            case 'autBtn': keyword = $('input[name=author]').val();
+                            search = 'author';
+            break;
+            case 'titBtn': keyword = $('input[name=title]').val();
+                            search = 'title'
         }
-    };
-xmlhttp.open("GET", "../controller/Mediator.php?x=" + dbParam, true);
-xmlhttp.send();
-}
-
-function searchTitle()
-{
-    var title = document.forms["titleForm"]["title"].value;
-    var obj, dbParam, xmlhttp, books, b, txt = "";
-    obj = { "title":title };
-    dbParam = JSON.stringify(obj);
-
-    xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            books = JSON.parse(this.responseText);
-            for (b in books) {
-                txt += "Titolo: " + books[b].title + ", " +
-                    "Author: " + books[b].author + ", " +
-                    "Price: " + books[b].price + ", " +
-                    "Image: " + books[b].image + ", " +
-                    "Link: " + books[b].link + "<br>";
+        obj = { "keyword":keyword, "search":search };
+        dbParam = JSON.stringify(obj);
+        $.ajax({
+            type : "GET",
+            url : "../controller/Mediator.php?x=" + dbParam,
+            dataType : "json",
+            success : function (res) {
+                var txt = "";
+                $.each( res, function( i, value ) {
+                    txt += value.title + ", " + value.author + ", " +
+                            value.price + ", " + value.image + ", " +
+                            value.link + "<br>";
+                });
+                $("#demo").html(txt);
+            },
+            error : function (richiesta,stato,errori) {
+                alert("E' evvenuto un errore. Lo stato della chiamata: "+stato);
             }
-                document.getElementById("demo").innerHTML = txt;
-        }
-    };
-xmlhttp.open("GET", "../controller/Mediator.php?x=" + dbParam, true);
-xmlhttp.send();
-}
-
+        });
+    });
+});
 </script>
 
 <form name="authorForm">
-Digita il nome di un autore <input type="text" name="author"><br>
-<input type="button" onclick="searchAuthor()" value="Invia">
+    Digita il nome di un autore <input type="text" name="author"><br>
+    <input id="autBtn" type="button" value="Invia">
 </form>
 
 <form name="titleForm">
-Digita il titolo di un libro <input type="text" name="title"><br>
-<input type="button" onclick="searchTitle()" value="Invia">
+    Digita il titolo di un libro <input type="text" name="title"><br>
+    <input id="titBtn" type="button" value="Invia">
 </form>
 
 </body>
