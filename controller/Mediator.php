@@ -24,20 +24,35 @@ $obj = json_decode($_GET["x"], false);
 $search = $obj->search;
 // La chiave della ricerca (nome dell'autore o titolo del libro)
 $keyword = $obj->keyword;
+// La tabella in cui effettuare la ricerca
+$table = $obj->table;
 
-// Cerca i libri presenti in cache
 $daoMng = new DAOManager();
-$books = $daoMng->getBooks($search, $keyword);
 
-// Se nel database non sono presenti libri attenenti alla ricerca, si effettua
-// l'estrazione con i wrapper, salvando in cache i risultati dell'estrazione
-if (empty($books))
+$books;
+$reviews;
+
+if (strcmp($table,'book')==0)
 {
-    $wrapperMng = new WrapperManager();
-    $daoMng->addBooks($wrapperMng->getBooks($keyword));
     $books = $daoMng->getBooks($search, $keyword);
+    if (empty($books))
+    {
+        $wrapperMng = new WrapperManager();
+        $daoMng->addBooks($wrapperMng->getBooks($keyword));
+        $books = $daoMng->getBooks($search, $keyword);
+    }
+    echo json_encode($books);
 }
 
-echo json_encode($books);
+else if (strcmp($table,'review')==0)
+{
+    $reviews = $daoMng->getReviews($search, $keyword);
+    if (empty($reviews))
+    {
+        $wrapperMng = new WrapperManager();
+        $daoMng->addReviews($wrapperMng->getReviews($keyword));
+        $reviews = $daoMng->getReviews($search, $keyword);
+    }
+    echo json_encode($reviews);
+}
 
-?>
