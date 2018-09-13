@@ -2,7 +2,7 @@
     namespace util;
 
     require_once '../vendor/autoload.php';
-    require '../model/Book.php';
+    require_once '../model/Book.php';
 
     use \model\Book;
     use \DOMDocument;
