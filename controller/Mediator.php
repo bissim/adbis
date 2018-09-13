@@ -6,7 +6,7 @@ require_once '../model/Review.php';
 
 require '../util/ErrorHandler.php';
 
-require 'BookWrapper.php';
+require 'WrapperManager.php';
 require 'DAOManager.php';
 
 use model\Book;
@@ -14,7 +14,7 @@ use model\Review;
 
 use \util\ErrorHandler;
 
-use BookWrapper;
+use WrapperManager;
 use DAOManager;
 
 // Decodifa l'oggetto JSON
@@ -33,8 +33,8 @@ $books = $daoMng->getBooks($search, $keyword);
 // l'estrazione con i wrapper, salvando in cache i risultati dell'estrazione
 if (empty($books))
 {
-    $bookWrapper = new BookWrapper();
-    $daoMng->addBooks($bookWrapper->getBooks($keyword));
+    $wrapperMng = new WrapperManager();
+    $daoMng->addBooks($wrapperMng->getBooks($keyword));
     $books = $daoMng->getBooks($search, $keyword);
 }
 
