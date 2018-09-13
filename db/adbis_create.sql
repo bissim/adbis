@@ -24,11 +24,11 @@ drop table if exists book;
 
 create table if not exists book (
   id integer(4) auto_increment unique,
-  title VARCHAR(30) not null,
-  author VARCHAR(30) not null,
+  title VARCHAR(150) not null,
+  author VARCHAR(150) not null,
   price FLOAT not null,
-  image VARCHAR(50),
-  link VARCHAR(50) not null,
+  image VARCHAR(250),
+  link VARCHAR(250) not null,
   expiration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -37,8 +37,8 @@ drop table if exists review;
 
 create table if not exists review(
   id integer(4) auto_increment unique,
-  title VARCHAR(30) not null,
-  author VARCHAR(30) not null,
+  title VARCHAR(150) not null,
+  author VARCHAR(150) not null,
   plot text not null,
   txt text not null,
   average FLOAT,
