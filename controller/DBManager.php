@@ -46,7 +46,7 @@ class DBManager
         $dsn = "mysql:host={$this->serverName};dbname={$this->dbName}";
         $user = $this->username;
         $pwd = $this->password;
-        user_error("User {$user} is trying to connect to {$this->serverName}...");
+        // user_error("User {$user} is trying to connect to {$this->serverName}...");
         try {
             $this->pdo = new \PDO(
                 $dsn,
