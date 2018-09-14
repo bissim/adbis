@@ -47,8 +47,8 @@ $(document).ready(function(){
                     txt += "Titolo: " + value.title + "<br>" + 
                             "Autore: " + value.author + "<br>" +
                             "Trama: " + value.plot + "<br>" + 
-                            "Testo: " + value.text + "<br>" +
-                            "Media: " + value.avg + "<br>" +
+                            "Testo: " + value.txt + "<br>" +
+                            "Media: " + value.average + "<br>" +
                             "Stile: " + value.style + "<br>" +
                             "Contenuto: " + value.content + "<br>" +
                             "Piacevolezza: " + value.pleasantness + "<hr>";
