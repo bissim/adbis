@@ -40,7 +40,7 @@ class DAOManager {
         $reviews;
         switch ($search) {
             case 'author': $reviews = $this->reviewDAO->retrieveByAuthor($keyword); break;
-            case 'title' : $reviews = $this->reviewkDAO->retrieveByTitle($keyword);
+            case 'title' : $reviews = $this->reviewDAO->retrieveByTitle($keyword);
         }
         return $reviews;
     }
