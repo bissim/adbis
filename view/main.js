@@ -56,8 +56,11 @@ $(document).ready(function(){
             }
             $("#demo").html(txt);
             },
-            error : function (richiesta,stato,errori) {
-                alert("E' avvenuto un errore. stato della chiamata: "+stato);
+            error : function (richiesta, stato, errori) {
+                console.error(
+                    "An error occurred for request: " + richiesta.toString() +
+                    ": " + errori + " (status " + stato + ")."
+                );
             }
         });
     });
