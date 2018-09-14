@@ -20,22 +20,24 @@ use DAOManager;
 // Decodifa l'oggetto JSON
 $obj = json_decode($_GET["x"], false);
 
+// La tabella in cui effettuare la ricerca
+$table = $obj->table;
 // Il tipo di ricerca (per autore o titolo)
 $search = $obj->search;
 // La chiave della ricerca (nome dell'autore o titolo del libro)
 $keyword = $obj->keyword;
-// La tabella in cui effettuare la ricerca
-$table = $obj->table;
 
-$daoMng = new DAOManager();
-
-$books;
-$reviews;
-
-try
+switch($table)
 {
-    if (strcmp($table,'book')==0)
+    case 'book': jsonEncodeBooks($search, $keyword); break;
+    case 'review': jsonEncodeReviews($search, $keyword);
+}
+
+function jsonEncodeBooks (string $search, string $keyword)
+{
+    try
     {
+        $daoMng = new DAOManager();
         $books = $daoMng->getBooks($search, $keyword);
         if (empty($books))
         {
@@ -43,10 +45,19 @@ try
             $daoMng->addBooks($wrapperMng->getBooks($keyword));
             $books = $daoMng->getBooks($search, $keyword);
         }
-        echo json_encode($books);
+        echo json_encode($books);        
     }
-    else if (strcmp($table,'review')==0)
+    catch (\Throwable $t)
     {
+        error_log("An error occurred: {$t->getMessage()}.");
+    }
+}
+
+function jsonEncodeReviews(string $search, string $keyword)
+{
+    try
+    {
+        $daoMng = new DAOManager();
         $reviews = $daoMng->getReviews($search, $keyword);
         if (empty($reviews))
         {
@@ -56,8 +67,39 @@ try
         }
         echo json_encode($reviews);
     }
+    catch (\Throwable $t)
+    {
+        error_log("An error occurred: {$t->getMessage()}.");
+    }
 }
-catch (\Throwable $t)
-{
-    error_log("An error occurred: {$t->getMessage()}.");
-}
+
+
+// try
+// {
+//     if (strcmp($table,'book')==0)
+//     {
+//         $books = $daoMng->getBooks($search, $keyword);
+//         if (empty($books))
+//         {
+//             $wrapperMng = new WrapperManager();
+//             $daoMng->addBooks($wrapperMng->getBooks($keyword));
+//             $books = $daoMng->getBooks($search, $keyword);
+//         }
+//         echo json_encode($books);
+//     }
+//     else if (strcmp($table,'review')==0)
+//     {
+//         $reviews = $daoMng->getReviews($search, $keyword);
+//         if (empty($reviews))
+//         {
+//             $wrapperMng = new WrapperManager();
+//             $daoMng->addReviews($wrapperMng->getReviews($keyword));
+//             $reviews = $daoMng->getReviews($search, $keyword);
+//         }
+//         echo json_encode($reviews);
+//     }
+// }
+// catch (\Throwable $t)
+// {
+//     error_log("An error occurred: {$t->getMessage()}.");
+// }
