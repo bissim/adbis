@@ -19,6 +19,7 @@
         "ext-libxml": "^7.2",
         "ext-mysqli": "^7.2",
         "ext-PDO": "^7.2",
-        "ext-json": "^1.6"
+        "ext-json": "^1.6",
+        "mikecao/flight": "^1.3"
     }
 }
