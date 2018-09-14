@@ -9,14 +9,6 @@ require '../util/ErrorHandler.php';
 require 'WrapperManager.php';
 require 'DAOManager.php';
 
-use model\Book;
-use model\Review;
-
-use \util\ErrorHandler;
-
-use WrapperManager;
-use DAOManager;
-
 // Decodifa l'oggetto JSON
 $obj = json_decode($_GET["x"], false);
 
@@ -30,7 +22,8 @@ $keyword = $obj->keyword;
 switch($table)
 {
     case 'book': jsonEncodeBooks($search, $keyword); break;
-    case 'review': jsonEncodeReviews($search, $keyword);
+    case 'review': jsonEncodeReviews($search, $keyword); break;
+    default: user_error("unknown table $table.");
 }
 
 function jsonEncodeBooks (string $search, string $keyword)
