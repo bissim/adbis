@@ -53,14 +53,14 @@ namespace view;
     </nav>
 
     <!-- Page Header -->
-    <header class="masthead" style="background-image: url('img/home-bg.jpg')">
+    <header class="masthead" style="background-image: url('img/reviews-bg.jpg')">
       <div class="overlay"></div>
       <div class="container">
         <div class="row">
           <div class="col-lg-8 col-md-10 mx-auto">
-            <div class="site-heading">
-              <h1>AdBis</h1>
-              <span class="subheading">AdBis - Academic project for data integration course held by Prof. G. Costagliola</span>
+            <div class="post-heading">
+              <h1>Trova la recensione di un libro</h1>
+              <h2 class="subheading">Il giudizio di appassionati di lettura a tua disposizione</h2>
             </div>
           </div>
         </div>
@@ -68,6 +68,42 @@ namespace view;
     </header>
 
     <!-- Main Content -->
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <form name="sentMessage" id="contactForm" novalidate>
+          <p>Trova recensioni in base al nome di un autore</p>
+            <div class="control-group">
+              <div class="form-group floating-label-form-group controls">
+                <label>Autore</label>
+                <input type="text" class="form-control" placeholder="Autore" id="autore">
+                <p class="help-block text-danger"></p>
+              </div>
+            </div>
+            <br>
+            <div id="success"></div>
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary" id="sendMessageButton">Invia</button>
+            </div>
+          </form>
+          <form name="sentMessage" id="contactForm" novalidate>
+          <p>Trova recensioni in base al titolo di un libro</p>
+            <div class="control-group">
+              <div class="form-group floating-label-form-group controls">
+                <label>Titolo</label>
+                <input type="text" class="form-control" placeholder="Titolo" id="titolo">
+                <p class="help-block text-danger"></p>
+              </div>
+            </div>
+            <br>
+            <div id="success"></div>
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary" id="sendMessageButton">Invia</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
 
 
     <hr>
