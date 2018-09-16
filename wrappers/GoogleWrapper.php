@@ -1,62 +1,60 @@
 <?php
+    namespace wrappers;
 
-namespace wrappers;
+    require_once './model/Book.php';
 
-require_once '../model/Book.php';
+    use \model\Book;
 
-use \model\Book;
-
-class GoogleWrapper
-{
-    private $baseurl = 'https://www.googleapis.com/books/v1/volumes?q=';
-
-    public function __construct()
+    class GoogleWrapper
     {
+        private $baseUrl = 'https://www.googleapis.com/books/v1/volumes?q=';
 
-    }
+        public function __construct()
+        {}
 
-    public function getBooks(string $keyword) : array
-    {
-        $keyword = str_replace(' ', '', strtolower(trim($keyword)));
-        $urlSearch = $this->baseurl . $keyword;
+        public function getBooks(string $keyword): array
+        {
+            $keyword = str_replace(
+                ' ',
+                '',
+                strtolower(trim($keyword))
+            );
+            $urlSearch = $this->baseUrl . $keyword;
 
-        $response = file_get_contents($urlSearch);
-        $decoded = json_decode($response, TRUE);
+            $response = file_get_contents($urlSearch);
+            $decoded = json_decode($response, true);
 
-        $books = array();
+            $books = array();
 
-        foreach ($decoded['items'] as $item)	{
-            $lng = $item['volumeInfo']['language'];
-            $abl = $item['saleInfo']['saleability'];
+            foreach ($decoded['items'] as $item)
+            {
+                $lng = $item['volumeInfo']['language'];
+                $abl = $item['saleInfo']['saleability'];
 
-            if ($lng != 'it' || $abl != 'FOR_SALE')
-                continue;
+                if ($lng != 'it' || $abl != 'FOR_SALE')
+                {
+                    continue;
+                }
 
-            $t = $item['volumeInfo']['title'];
-            $a = $item['volumeInfo']['authors'][0];
-            $p = $item['saleInfo']['listPrice']['amount'];
-            $i = $item['volumeInfo']['imageLinks']['smallThumbnail'];
-            $l = $item['volumeInfo']['infoLink'];
-            $e = $item['volumeInfo']['publisher'];
-            
-            array_push($books, new Book($t, $a, $p, $i, $l, $e));
+                $title = $item['volumeInfo']['title'];
+                $author = $item['volumeInfo']['authors'][0];
+                $price = $item['saleInfo']['listPrice']['amount'];
+                $image = $item['volumeInfo']['imageLinks']['smallThumbnail'];
+                $link = $item['volumeInfo']['infoLink'];
+//                $e = $item['volumeInfo']['publisher'];
+
+                array_push(
+                    $books,
+                    new Book(
+                        $title,
+                        $author,
+                        $price,
+                        $image,
+                        $link
+                    )
+                );
+            }
+
+            return $books;
         }
-
-        return $books;
     }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-?>
