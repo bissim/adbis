@@ -14,7 +14,7 @@
 
     <body>
         <!-- Qui saranno posizionati i risultati della ricerca -->
-        <p id="demo"></p>
+        <p id="demo"><?php echo $result; ?></p>
 
         <h2>Libri</h2>
         <!-- Il form per la ricerca dei libri in base all'autore -->

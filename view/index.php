@@ -9,10 +9,10 @@
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="Academic project for data integration course held by Prof. G. Costagliola">
+    <meta name="author" content="Antonio Addeo and Simone Bisogno">
 
-    <title>AdBis - Academic project for data integration course held by Prof. G. Costagliola</title>
+    <title>AdBis</title>
 
     <!-- Bootstrap core CSS -->
     <link href="./view/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -24,6 +24,7 @@
 
     <!-- Custom styles for this template -->
     <link href="./view/css/clean-blog.min.css" rel="stylesheet">
+    <link href='./view/img/book.png' rel='shortcut icon' type='image/png' />
 
   </head>
 

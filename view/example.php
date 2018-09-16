@@ -6,8 +6,11 @@
      * Time: 17:10
      */
 
-//    echo "Results: {$result}";
-    foreach ($result as $book)
-    {
-        echo $book;
-    }
+    echo "Results: {$result}";
+//    if ($result)
+//    {
+//        foreach ($result as $book)
+//        {
+//            echo $book;
+//        }
+//    }
