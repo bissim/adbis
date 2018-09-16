@@ -1,98 +1,84 @@
 <?php
-// header("Content-Type: application/json; charset=UTF-8");
+    namespace controller;
 
-require_once '../model/Book.php';
-require_once '../model/Review.php';
+    require_once './model/Book.php';
+    require_once './model/Review.php';
 
-require '../util/ErrorHandler.php';
+    require './util/ErrorHandler.php';
 
-require 'WrapperManager.php';
-require 'DAOManager.php';
+    require './controller/WrapperManager.php';
+    require './controller/DAOManager.php';
 
-// Decodifa l'oggetto JSON
-$obj = json_decode($_GET["x"], false);
+    class Mediator {
 
-// La tabella in cui effettuare la ricerca
-$table = $obj->table;
-// Il tipo di ricerca (per autore o titolo)
-$search = $obj->search;
-// La chiave della ricerca (nome dell'autore o titolo del libro)
-$keyword = $obj->keyword;
+        public function __construct()
+        {}
 
-switch($table)
-{
-    case 'book': jsonEncodeBooks($search, $keyword); break;
-    case 'review': jsonEncodeReviews($search, $keyword); break;
-    default: user_error("unknown table $table.");
-}
-
-function jsonEncodeBooks (string $search, string $keyword)
-{
-    try
-    {
-        $daoMng = new DAOManager();
-        $books = $daoMng->getBooks($search, $keyword);
-        if (empty($books))
+        /**
+         * @param string $table
+         * @param string $search
+         * @param string $keyword
+         *
+         * @return string
+         * @throws \Throwable
+         */
+        public function retrieve(string $table, string $search, string $keyword): string
         {
-            $wrapperMng = new WrapperManager();
-            $daoMng->addBooks($wrapperMng->getBooks($keyword));
+            switch ($table)
+            {
+                case 'book':
+                    try
+                    {
+                        $result = $this->jsonEncodeBooks($search, $keyword);
+                    }
+                    catch (\Throwable $th)
+                    {
+                        throw $th;
+                    }
+                    break;
+                case 'review':
+                    try
+                    {
+                        $result = $this->jsonEncodeReviews($search, $keyword);
+                    }
+                    catch (\Throwable $th)
+                    {
+                        throw $th;
+                    }
+                    break;
+                default:
+                    throw new \Exception("unknown table $table.");
+                    break;
+            }
+
+            return $result;
+        }
+
+        private function jsonEncodeBooks(string $search, string $keyword): string
+        {
+            $daoMng = new DAOManager();
             $books = $daoMng->getBooks($search, $keyword);
-        }
-        echo json_encode($books);        
-    }
-    catch (\Throwable $t)
-    {
-        error_log("An error occurred: {$t->getMessage()}.");
-    }
-}
+            if (empty($books))
+            {
+                $wrapperMng = new WrapperManager();
+                $daoMng->addBooks($wrapperMng->getBooks($keyword));
+                $books = $daoMng->getBooks($search, $keyword);
+            }
 
-function jsonEncodeReviews(string $search, string $keyword)
-{
-    try
-    {
-        $daoMng = new DAOManager();
-        $reviews = $daoMng->getReviews($search, $keyword);
-        if (empty($reviews))
+            return json_encode($books);
+        }
+
+        private function jsonEncodeReviews(string $search, string $keyword): string
         {
-            $wrapperMng = new WrapperManager();
-            $daoMng->addReviews($wrapperMng->getReviews($keyword));
+            $daoMng = new DAOManager();
             $reviews = $daoMng->getReviews($search, $keyword);
+            if (empty($reviews))
+            {
+                $wrapperMng = new WrapperManager();
+                $daoMng->addReviews($wrapperMng->getReviews($keyword));
+                $reviews = $daoMng->getReviews($search, $keyword);
+            }
+
+            return json_encode($reviews);
         }
-        echo json_encode($reviews);
     }
-    catch (\Throwable $t)
-    {
-        error_log("An error occurred: {$t->getMessage()}.");
-    }
-}
-
-
-// try
-// {
-//     if (strcmp($table,'book')==0)
-//     {
-//         $books = $daoMng->getBooks($search, $keyword);
-//         if (empty($books))
-//         {
-//             $wrapperMng = new WrapperManager();
-//             $daoMng->addBooks($wrapperMng->getBooks($keyword));
-//             $books = $daoMng->getBooks($search, $keyword);
-//         }
-//         echo json_encode($books);
-//     }
-//     else if (strcmp($table,'review')==0)
-//     {
-//         $reviews = $daoMng->getReviews($search, $keyword);
-//         if (empty($reviews))
-//         {
-//             $wrapperMng = new WrapperManager();
-//             $daoMng->addReviews($wrapperMng->getReviews($keyword));
-//             $reviews = $daoMng->getReviews($search, $keyword);
-//         }
-//         echo json_encode($reviews);
-//     }
-// }
-// catch (\Throwable $t)
-// {
-//     error_log("An error occurred: {$t->getMessage()}.");
-// }

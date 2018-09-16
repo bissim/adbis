@@ -1,163 +1,162 @@
 <?php
+    namespace controller;
 
-namespace controller;
+    require_once './model/DAO.php';
+    require_once './model/Review.php';
+    require_once './controller/DBManager.php';
 
-require_once '../model/DAO.php';
-require_once '../model/Review.php';
-require_once '../controller/DBManager.php';
+    use model\DAO;
+    use model\Review;
+    use controller\DBManager;
 
-use model\DAO;
-use model\Review;
-use controller\DBManager;
-
-class ReviewDAO implements DAO
-{
-
-    private $dbMan;
-
-    private function connect()
+    class ReviewDAO implements DAO
     {
-        $this->dbMan = new DBManager;
-        $this->dbMan->connect();
-    }
 
-    /**
-     * @param object $entity
-     *
-     * @return object
-     * @throws \Exception
-     */
-    public function create(object $entity): object
-    {
-        // check whether object is instance of book
-        if (!($entity instanceof Review))
+        private $dbMan;
+
+        private function connect()
         {
-            throw new \Exception('Object not instance of Review!');
+            $this->dbMan = new DBManager;
+            $this->dbMan->connect();
         }
 
-        // connect to database
-        $this->connect();
-
-        $review = $entity;
-
-        $instruction = "
-            INSERT INTO review (title, author, plot, txt, average, style, content, pleasantness)
-            VALUES (:title, :author, :plot, :txt, :average, :style, :content, :pleasantness)
-        ";
-        $params = array(
-            ':title' => $review->getTitle(),
-            ':author' => $review->getAuthor(),
-            ':plot' => $review->getPlot(),
-            ':txt' => $review->getText(),
-            ':average' => $review->getAvg(),
-            ':style' => $review->getStyle(),
-            ':content' => $review->getContent(),
-            ':pleasantness' => $review->getPleasantness()
-        );
-        $this->dbMan->execute($instruction, $params);
-        $this->dbMan->disconnect();
-
-        // return persisted object
-        return $review;
-    }
-
-    /**
-     * @param object $entity
-     *
-     * @return object
-     * @throws \Exception
-     */
-    public function retrieveById(object $entity): object
-    {
-        // check whether object is instance of book
-        if (!($entity instanceof Review))
+        /**
+         * @param object $entity
+         *
+         * @return object
+         * @throws \Exception
+         */
+        public function create(object $entity): object
         {
-            throw new \Exception('Object not instance of Review!');
+            // check whether object is instance of book
+            if (!($entity instanceof Review))
+            {
+                throw new \Exception('Object not instance of Review!');
+            }
+
+            // connect to database
+            $this->connect();
+
+            $review = $entity;
+
+            $instruction = "
+                INSERT INTO review (title, author, plot, txt, average, style, content, pleasantness)
+                VALUES (:title, :author, :plot, :txt, :average, :style, :content, :pleasantness)
+            ";
+            $params = array(
+                ':title' => $review->getTitle(),
+                ':author' => $review->getAuthor(),
+                ':plot' => $review->getPlot(),
+                ':txt' => $review->getText(),
+                ':average' => $review->getAvg(),
+                ':style' => $review->getStyle(),
+                ':content' => $review->getContent(),
+                ':pleasantness' => $review->getPleasantness()
+            );
+            $this->dbMan->execute($instruction, $params);
+            $this->dbMan->disconnect();
+
+            // return persisted object
+            return $review;
         }
 
-        // connect to database
-        $this->connect();
-
-        // persist book into database
-        $review = $entity;
-        $instruction = "
-            SELECT * FROM review WHERE id = :id
-        ";
-        $params = array(
-            ':id' => $review->getId()
-        );
-        $results = $this->dbMan->query($instruction, $params);
-        $this->dbMan->disconnect();
-
-        // return persisted object
-        if (!$results[0]) // TODO check
+        /**
+         * @param object $entity
+         *
+         * @return object
+         * @throws \Exception
+         */
+        public function retrieveById(object $entity): object
         {
-            throw new \Exception("Review with id {$review->getId()} not found!");
+            // check whether object is instance of book
+            if (!($entity instanceof Review))
+            {
+                throw new \Exception('Object not instance of Review!');
+            }
+
+            // connect to database
+            $this->connect();
+
+            // persist book into database
+            $review = $entity;
+            $instruction = "
+                SELECT * FROM review WHERE id = :id
+            ";
+            $params = array(
+                ':id' => $review->getId()
+            );
+            $results = $this->dbMan->query($instruction, $params);
+            $this->dbMan->disconnect();
+
+            // return persisted object
+            if (!$results[0]) // TODO check
+            {
+                throw new \Exception("Review with id {$review->getId()} not found!");
+            }
+
+            $review = new Review (
+                $results[0]["title"],
+                $results[0]["author"],
+                $results[0]["plot"],
+                $results[0]["txt"],
+                $results[0]["average"],
+                $results[0]["content"],
+                $results[0]["style"],
+                $results[0]["pleasantness"]
+            );
+
+            return $review;
         }
 
-        $review = new Review (
-            $results[0]["title"],
-            $results[0]["author"],
-            $results[0]["plot"],
-            $results[0]["txt"],
-            $results[0]["average"],
-            $results[0]["content"],
-            $results[0]["style"],
-            $results[0]["pleasantness"]
-        );
-        
-        return $review;
-    }
-
-    public function retrieveByTitle(string $title): array
-    {
-        $this->connect();
-
-        $title = "%" . $title . "%";
-        
-        $instruction = "
-            SELECT * FROM review WHERE title LIKE :title
-        ";
-        $params = array(
-            ':title' => $title
-        );
-        $results = $this->dbMan->query($instruction, $params);
-        $this->dbMan->disconnect();
-
-        return $results;
-    }
-
-    public function retrieveByAuthor(string $author): array
-    {
-        $this->connect();
-
-        $author = '%' . $author . '%';
-        
-        $instruction = "
-            SELECT * FROM review WHERE author LIKE :author
-        ";
-        $params = array(
-            ':author' => $author
-        );
-        $results = $this->dbMan->query($instruction, $params);
-        $this->dbMan->disconnect();
-
-        return $results;
-    }
-
-    public function update(object $entity): object
-    {
-        // check whether object is instance of book
-        if (!($entity instanceof Review))
+        public function retrieveByTitle(string $title): array
         {
-            throw new \Exception('Object not instance of Review!');
+            $this->connect();
+
+            $title = "%" . $title . "%";
+
+            $instruction = "
+                SELECT * FROM review WHERE title LIKE :title
+            ";
+            $params = array(
+                ':title' => $title
+            );
+            $results = $this->dbMan->query($instruction, $params);
+            $this->dbMan->disconnect();
+
+            return $results;
         }
 
-        // TODO implement method
-    }
+        public function retrieveByAuthor(string $author): array
+        {
+            $this->connect();
 
-    public function delete(object $entity): void
-    {
-        return; // TODO implement method
+            $author = '%' . $author . '%';
+
+            $instruction = "
+                SELECT * FROM review WHERE author LIKE :author
+            ";
+            $params = array(
+                ':author' => $author
+            );
+            $results = $this->dbMan->query($instruction, $params);
+            $this->dbMan->disconnect();
+
+            return $results;
+        }
+
+        public function update(object $entity): object
+        {
+            // check whether object is instance of book
+            if (!($entity instanceof Review))
+            {
+                throw new \Exception('Object not instance of Review!');
+            }
+
+            // TODO implement method
+        }
+
+        public function delete(object $entity): void
+        {
+            return; // TODO implement method
+        }
     }
-}
