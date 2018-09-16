@@ -1,114 +1,113 @@
 <?php
+    namespace model;
 
-namespace model;
-
-/**
- *
- */
-class Book
-{
-    // La classe book ha come variabili d'istanza i parametri di un libro, ne possiamo aggiungere altri successivamente
-    private $id;
-    private $title;
-    private $author;
-    private $price;
-    private $img;
-    private $link;
-
-    // Constructor
-    public function __construct(
-        string $title,
-        string $author,
-        float $price,
-        string $image,
-        string $link
-    )
+    /**
+     *
+     */
+    class Book
     {
-        $this->id = 0;
-        $this->title = $title;
-        $this->author = $author;
-        $this->price = $price;
-        $this->img = $image;
-        $this->link = $link;
-    }
+        // La classe book ha come variabili d'istanza i parametri di un libro, ne possiamo aggiungere altri successivamente
+        private $id;
+        private $title;
+        private $author;
+        private $price;
+        private $img;
+        private $link;
 
-    // getters
-    public function getId(): int
-    {
-        return $this->id;
-    }
+        // Constructor
+        public function __construct(
+            string $title,
+            string $author,
+            float $price,
+            string $image,
+            string $link
+        )
+        {
+            $this->id = 0;
+            $this->title = $title;
+            $this->author = $author;
+            $this->price = $price;
+            $this->img = $image;
+            $this->link = $link;
+        }
 
-    public function getTitle(): string
-    {
-        return $this->title;
-    }
+        // getters
+        public function getId(): int
+        {
+            return $this->id;
+        }
 
-    public function getAuthor(): string
-    {
-        return $this->author;
-    }
+        public function getTitle(): string
+        {
+            return $this->title;
+        }
 
-    public function getPrice(): float
-    {
-        return $this->price;
-    }
+        public function getAuthor(): string
+        {
+            return $this->author;
+        }
 
-    public function getImg(): string
-    {
-        return $this->img;
-    }
+        public function getPrice(): float
+        {
+            return $this->price;
+        }
 
-    public function getLink(): string
-    {
-        return $this->link;
-    }
+        public function getImg(): string
+        {
+            return $this->img;
+        }
 
-    // setters
-    public function setId(int $id)
-    {
-        $this->id = $id;
-    }
+        public function getLink(): string
+        {
+            return $this->link;
+        }
 
-    public function setTitle(string $title)
-    {
-        $this->title = $title;
-    }
+        // setters
+        public function setId(int $id)
+        {
+            $this->id = $id;
+        }
 
-    public function setAuthor(string $author)
-    {
-        $this->author = $author;
-    }
+        public function setTitle(string $title)
+        {
+            $this->title = $title;
+        }
 
-    public function setPrice(float $price)
-    {
-        $this->price = $price;
-    }
+        public function setAuthor(string $author)
+        {
+            $this->author = $author;
+        }
 
-    public function setImg(string $img)
-    {
-        $this->img = $img;
-    }
+        public function setPrice(float $price)
+        {
+            $this->price = $price;
+        }
 
-    public function setLink(string $link)
-    {
-        $this->link = $link;
-    }
+        public function setImg(string $img)
+        {
+            $this->img = $img;
+        }
 
-    public function __toString(): string
-    {
-        $desc = "ID: $this->id";
-        $desc .= "<br />Title: $this->title";
-        $desc .= "<br />Author: $this->author";
-        $desc .= "<br />Price: $this->price";
-        $desc .= "<br />Imagine: $this->img";
-        $desc .= "<br />Link: $this->link";
-        $desc .= "<hr />";
+        public function setLink(string $link)
+        {
+            $this->link = $link;
+        }
 
-        return $desc;
-    }
+        public function __toString(): string
+        {
+            $desc = "ID: $this->id";
+            $desc .= "<br />Title: $this->title";
+            $desc .= "<br />Author: $this->author";
+            $desc .= "<br />Price: $this->price";
+            $desc .= "<br />Imagine: $this->img";
+            $desc .= "<br />Link: $this->link";
+            $desc .= "<hr />";
 
-    public function __clone()
-    {
-        $this->id = 0;
+            return $desc;
+        }
+
+        public function __clone()
+        {
+            $this->id = 0;
+        }
     }
-}
