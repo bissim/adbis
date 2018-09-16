@@ -1,171 +1,170 @@
 <?php
-namespace util;
+    namespace util;
 
-require_once '../vendor/autoload.php';
-require_once '../model/Review.php';
+    require_once './model/Review.php';
 
-use \model\Review;
-use \DOMDocument;
-use \DOMXPath;
+    use \model\Review;
+    use \DOMDocument;
+    use \DOMXPath;
 
-class ReviewScraper
-{
-
-    private $queries;
-
-    public function getQueries(): array
+    class ReviewScraper
     {
-        return $this->queries;
-    }
 
-    public function setQueries(array $queries)
-    {
-        $this->queries = $queries;
-    }
+        private $queries;
 
-    public function getReviews(string $url, string $keyword, string $urlSuffix): array
-    {
-        // create search URL
-        $keyword = str_replace(' ', '+', strtolower(trim($keyword)));
-        $urlSearch = $url . $keyword;
-        $urlSuffix = trim($urlSuffix);
-        if (!empty($urlSuffix))
+        public function getQueries(): array
         {
-            $urlSearch .= $urlSuffix;
+            return $this->queries;
         }
 
-        // create DOMXPath object for XPath queries
-        $xpath = $this->createDOMXPath($urlSearch);
-
-        // query results page
-        $entries = $xpath->query($this->queries['links']);
-
-        // put retrieved links into array
-        $links = array();
-        foreach ($entries as $entryLink)
+        public function setQueries(array $queries)
         {
-            $l = strstr($entryLink->firstChild->nodeValue, 'https://');
-            array_push($links, $l);
+            $this->queries = $queries;
         }
 
-        // retrieve reviews from links
-        // as array of Review objects
-        $reviews = $this->searchReviews($links);
-
-        return $reviews;
-    }
-
-    private function getWebPage(string $url) {
-        $options = array(
-            CURLOPT_RETURNTRANSFER => true,   // return web page
-            CURLOPT_HEADER         => false,  // don't return headers
-            CURLOPT_FOLLOWLOCATION => true,   // follow redirects
-            CURLOPT_MAXREDIRS      => 10,     // stop after 10 redirects
-            CURLOPT_ENCODING       => '',     // handle compressed
-            CURLOPT_USERAGENT      => 'Mozilla/5.0 (Android 7.0; Mobile; rv:57.0) Gecko/57.0 Firefox/57.0', // name of client
-            CURLOPT_AUTOREFERER    => true,   // set referrer on redirect
-            CURLOPT_CONNECTTIMEOUT => 120,    // time-out on connect
-            CURLOPT_TIMEOUT        => 120,    // time-out on response
-        );
-    
-        $ch = curl_init($url);
-        curl_setopt_array($ch, $options);
-        $content  = curl_exec($ch);    
-        curl_close($ch);    
-        return $content;
-    }
-    
-
-    private function createDOMXPath(string $url): DOMXPath
-    {
-        $page = $this->getWebPage($url);
-
-        // create DOM
-        $dom = new DOMDocument;
-        libxml_use_internal_errors(true);
-        $dom->loadHTML($page);
-        libxml_clear_errors();
-
-        // create XPath from DOM
-        $xpath = new DOMXPath($dom);
-
-        return $xpath;
-    }
-
-    private function searchReviews(array $links): array
-    {
-        $reviewsFound = array();
-
-        // explore every link
-        foreach ($links as $link)
+        public function getReviews(string $url, string $keyword, string $urlSuffix): array
         {
-            $attributes = $this->extractAttributes($link);
-            
-            // create a Review object and put it in array
-            $review = new Review(
-                $attributes['title'],
-                $attributes['author'],
-                $attributes['plot'],
-                $attributes['text'],
-                $attributes['avg'],
-                $attributes['style'],
-                $attributes['content'],
-                $attributes['pleasantness']
+            // create search URL
+            $keyword = str_replace(' ', '+', strtolower(trim($keyword)));
+            $urlSearch = $url . $keyword;
+            $urlSuffix = trim($urlSuffix);
+            if (!empty($urlSuffix))
+            {
+                $urlSearch .= $urlSuffix;
+            }
+
+            // create DOMXPath object for XPath queries
+            $xpath = $this->createDOMXPath($urlSearch);
+
+            // query results page
+            $entries = $xpath->query($this->queries['links']);
+
+            // put retrieved links into array
+            $links = array();
+            foreach ($entries as $entryLink)
+            {
+                $l = strstr($entryLink->firstChild->nodeValue, 'https://');
+                array_push($links, $l);
+            }
+
+            // retrieve reviews from links
+            // as array of Review objects
+            $reviews = $this->searchReviews($links);
+
+            return $reviews;
+        }
+
+        private function getWebPage(string $url) {
+            $options = array(
+                CURLOPT_RETURNTRANSFER => true,   // return web page
+                CURLOPT_HEADER         => false,  // don't return headers
+                CURLOPT_FOLLOWLOCATION => true,   // follow redirects
+                CURLOPT_MAXREDIRS      => 10,     // stop after 10 redirects
+                CURLOPT_ENCODING       => '',     // handle compressed
+                CURLOPT_USERAGENT      => 'Mozilla/5.0 (Android 7.0; Mobile; rv:57.0) Gecko/57.0 Firefox/57.0', // name of client
+                CURLOPT_AUTOREFERER    => true,   // set referrer on redirect
+                CURLOPT_CONNECTTIMEOUT => 120,    // time-out on connect
+                CURLOPT_TIMEOUT        => 120,    // time-out on response
             );
-            array_push($reviewsFound, $review);
+
+            $ch = curl_init($url);
+            curl_setopt_array($ch, $options);
+            $content  = curl_exec($ch);
+            curl_close($ch);
+            return $content;
         }
 
-        return $reviewsFound;
+
+        private function createDOMXPath(string $url): DOMXPath
+        {
+            $page = $this->getWebPage($url);
+
+            // create DOM
+            $dom = new DOMDocument;
+            libxml_use_internal_errors(true);
+            $dom->loadHTML($page);
+            libxml_clear_errors();
+
+            // create XPath from DOM
+            $xpath = new DOMXPath($dom);
+
+            return $xpath;
+        }
+
+        private function searchReviews(array $links): array
+        {
+            $reviewsFound = array();
+
+            // explore every link
+            foreach ($links as $link)
+            {
+                $attributes = $this->extractAttributes($link);
+
+                // create a Review object and put it in array
+                $review = new Review(
+                    $attributes['title'],
+                    $attributes['author'],
+                    $attributes['plot'],
+                    $attributes['text'],
+                    $attributes['avg'],
+                    $attributes['style'],
+                    $attributes['content'],
+                    $attributes['pleasantness']
+                );
+                array_push($reviewsFound, $review);
+            }
+
+            return $reviewsFound;
+        }
+
+        private function checkEmpty($value)
+        {
+            return empty($value) ? '' : $value;
+        }
+
+        private function extractAttributes(string $link): array
+        {
+            $xpath = $this->createDOMXPath($link);
+
+            $entriesTitle = $xpath->query($this->queries['title']);
+            $title = $this->checkEmpty($entriesTitle[0]->nodeValue);
+
+            $entriesAuthor = $xpath->query($this->queries['author']);
+            $author = $this->checkEmpty($entriesAuthor[0]->nodeValue);
+
+            $entriesPlot = $xpath->query($this->queries['plot']);
+            $plot = $this->checkEmpty($entriesPlot[0]->nodeValue);
+
+            $entriesText = $xpath->query($this->queries['text']);
+            $text = $this->checkEmpty($entriesText[0]->nodeValue);
+
+            $entriesAvg = $xpath->query($this->queries['avg']);
+            $stringAvg = $entriesAvg[0]->nodeValue;
+            $avg = (float) \floatval($stringAvg);
+
+            $entriesStyle = $xpath->query($this->queries['style']);
+            $stringStyle = $entriesStyle[0]->nodeValue;
+            $style = (float) \floatval($stringStyle);
+
+            $entriesContent = $xpath->query($this->queries['content']);
+            $stringContent = $entriesContent[0]->nodeValue;
+            $content = (float) \floatval($stringContent);
+
+            $entriesPleasantness = $xpath->query($this->queries['pleasantness']);
+            $stringPleasantness = $entriesPleasantness[0]->nodeValue;
+            $pleasantness = (float) \floatval($stringPleasantness);
+
+            $attributes = array(
+                "title" => $title,
+                "author" => $author,
+                "plot" => $plot,
+                "text" => $text,
+                "avg" => $avg,
+                "style" => $style,
+                "content" => $content,
+                "pleasantness" => $pleasantness
+            );
+
+            return $attributes;
+        }
     }
-
-    private function checkEmpty($value)
-    {
-        return empty($value) ? '' : $value;
-    }
-
-    private function extractAttributes(string $link): array
-    {
-        $xpath = $this->createDOMXPath($link);
-
-        $entriesTitle = $xpath->query($this->queries['title']);
-        $title = $this->checkEmpty($entriesTitle[0]->nodeValue);
-
-        $entriesAuthor = $xpath->query($this->queries['author']);
-        $author = $this->checkEmpty($entriesAuthor[0]->nodeValue);
-
-        $entriesPlot = $xpath->query($this->queries['plot']);
-        $plot = $this->checkEmpty($entriesPlot[0]->nodeValue);
-
-        $entriesText = $xpath->query($this->queries['text']);
-        $text = $this->checkEmpty($entriesText[0]->nodeValue);
-
-        $entriesAvg = $xpath->query($this->queries['avg']);
-        $stringAvg = $entriesAvg[0]->nodeValue;       
-        $avg = (float) \floatval($stringAvg);
-
-        $entriesStyle = $xpath->query($this->queries['style']);
-        $stringStyle = $entriesStyle[0]->nodeValue;
-        $style = (float) \floatval($stringStyle);
-
-        $entriesContent = $xpath->query($this->queries['content']);
-        $stringContent = $entriesContent[0]->nodeValue;
-        $content = (float) \floatval($stringContent);
-
-        $entriesPleasantness = $xpath->query($this->queries['pleasantness']);
-        $stringPleasantness = $entriesPleasantness[0]->nodeValue;
-        $pleasantness = (float) \floatval($stringPleasantness);
-
-        $attributes = array(
-            "title" => $title,
-            "author" => $author,
-            "plot" => $plot,
-            "text" => $text,
-            "avg" => $avg,
-            "style" => $style,
-            "content" => $content,
-            "pleasantness" => $pleasantness
-        );
-
-        return $attributes;
-    }
-}

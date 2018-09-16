@@ -1,8 +1,7 @@
 <?php
     namespace util;
 
-    require_once '../vendor/autoload.php';
-    require_once '../model/Book.php';
+    require_once './model/Book.php';
 
     use \model\Book;
     use \DOMDocument;
@@ -116,4 +115,4 @@
             $value = str_replace(',', '.', $value);
             return empty($value) ? 0.0 : (float) \floatval($value);
         }
-}
+    }
