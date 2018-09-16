@@ -18,10 +18,13 @@
 
     use \controller\SearchController;
 
+    // Flight configuration
     Flight::set('flight.log_errors', true);
     Flight::set('flight.views.path', './view');
+    Flight::set('flight.base_url', './');
 
-    Flight::map('error', function(\Throwable $th) {
+    // handle errors
+    Flight::map('error', function (\Throwable $th) {
         // Handle error
     //    echo $th->getTraceAsString();
         echo "An error occurred in {$th->getFile()}, check server logs";
@@ -33,13 +36,28 @@
         );
     });
 
-    Flight::route('/', function() {
+    // redirect non-existing page to main page
+    Flight::map('notFound', function () {
+//        echo 'Whoops! Seems like there\'s no page like that!';
+//        \sleep(5);
+//        Flight::redirect('/');
+    });
+
+    // Flight routes
+    Flight::route('/', function () {
         Flight::render('index.php');
     });
 
-    Flight::route('/search', function(){
+    Flight::route('/search', function () {
         // retrieve request
         $request = Flight::request();
+
+        // check whether it's an AJAX request
+        if ($request->ajax)
+        {
+            // TODO handle AJAX request
+//            echo 'This is an AJAX request!';
+        }
 
         // extract data from request
         $table = $request->query['table'];
@@ -54,14 +72,14 @@
         }
         else
         {
-            Flight::render('index.php');
+            Flight::redirect('/');
         }
     });
 
-    Flight::route('/test', function() {
+    Flight::route('/test', function () {
         try {
             $request = Flight::request();
-            $keyword = $request->query['x'];
+            $keyword = $request->query['k'];
             echo "GET request: {$keyword}";
         }
         catch (\Exception $ex)
@@ -78,4 +96,5 @@
         }
     });
 
+    // run Fight router
     Flight::start();
