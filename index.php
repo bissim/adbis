@@ -21,10 +21,10 @@
     // Flight configuration
     Flight::set('flight.log_errors', true);
     Flight::set('flight.views.path', './view');
-    Flight::set('flight.base_url', './');
+//    Flight::set('flight.base_url', './');
 
     // handle errors
-    Flight::map('error', function (\Throwable $th) {
+    Flight::map('error', function (Throwable $th) {
         // Handle error
     //    echo $th->getTraceAsString();
         echo "An error occurred in {$th->getFile()}, check server logs";
@@ -37,15 +37,23 @@
     });
 
     // redirect non-existing page to main page
-    Flight::map('notFound', function () {
+//    Flight::map('notFound', function () {
 //        echo 'Whoops! Seems like there\'s no page like that!';
 //        \sleep(5);
 //        Flight::redirect('/');
-    });
+//    });
 
     // Flight routes
     Flight::route('/', function () {
         Flight::render('index.php');
+    });
+
+    Flight::route('/ebooks', function () {
+        Flight::render('ebooks.php');
+    });
+
+    Flight::route('/reviews', function () {
+        Flight::render('reviews.php');
     });
 
     Flight::route('/search', function () {
