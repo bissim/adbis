@@ -1,61 +1,55 @@
-<!DOCTYPE html>
-
 <?php
-
-// These lines are for DEVELOPMENT only.  You should never display errors
-// in a production environment.
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
-
-// import autoloader
-include '../Autoloader.php';
-
+    namespace view;
 ?>
 
+<!DOCTYPE html>
+
 <html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Prova</title>
+        <script src="./view/vendor/jquery/jquery.min.js"></script>
+        <script type="text/javascript" src="./view/main.js"></script>
+    </head>
 
-<head>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<meta charset="utf-8" />
-<title>Prova</title>
+    <body>
+        <!-- Qui saranno posizionati i risultati della ricerca -->
+        <p id="demo"></p>
 
-<body>
+        <h2>Libri</h2>
+        <!-- Il form per la ricerca dei libri in base all'autore -->
+        <form name="authorForm">
+            <p>Digita il nome di un autore</p>
+            <label for="bookAut">Autore: </label>
+            <input type="text" id="bookAut" name="author">
+            <input id="bookAutBtn" type="button" value="Invia">
+        </form>
 
-<!-- Qui saranno posizionaati i risultati della ricerca -->
-<p id="demo"></p>
+        <!-- Il form per la ricerca dei libri in base al titolo -->
+        <form name="titleForm">
+            <p>Digita il titolo di un libro</p>
+            <label for="bookTit">Titolo: </label>
+            <input type="text" id="bookTit" name="title">
+            <input id="bookTitBtn" type="button" value="Invia">
+        </form>
 
-<script type="text/javascript" src="main.js"></script>
+        <hr />
 
-<h2>Libri</h2>
-<!-- Il form per la ricerca dei libri in base all'autore -->
-<form name="authorForm">
-    Digita il nome di un autore <input type="text" id="bookAut" name="author"><br>
-    <input id="bookAutBtn" type="button" value="Invia">
-</form>
+        <h2>Recensioni</h2>
+        <!-- Il form per la ricerca delle recensioni in base all'autore -->
+        <form name="authorForm">
+            <p>Digita il nome di un autore</p>
+            <label for="reviewAut">Autore: </label>
+            <input type="text" id="reviewAut" name="author">
+            <input id="reviewAutBtn" type="button" value="Invia">
+        </form>
 
-<!-- Il form per la ricerca dei libri in base al titolo -->
-<form name="titleForm">
-    Digita il titolo di un libro <input type="text" id="bookTit" name="title"><br>
-    <input id="bookTitBtn" type="button" value="Invia">
-</form>
-
-<hr />
-
-<h2>Recensioni</h2>
-<!-- Il form per la ricerca delle recensioni in base all'autore -->
-<form name="authorForm">
-        Digita il nome di un autore <input type="text" id="reviewAut" name="author"><br>
-        <input id="reviewAutBtn" type="button" value="Invia">
-    </form>
-    
-    <!-- Il form per la ricerca delle recensioni in base al titolo -->
-    <form name="titleForm">
-        Digita il titolo di un libro <input type="text" id="reviewTit" name="title"><br>
-        <input id="reviewTitBtn" type="button" value="Invia">
-    </form>
-
-</body>
-
+        <!-- Il form per la ricerca delle recensioni in base al titolo -->
+        <form name="titleForm">
+            <p>Digita il titolo di un libro</p>
+            <label for="reviewTit"></label>
+            <input type="text" id="reviewTit" name="title">
+            <input id="reviewTitBtn" type="button" value="Invia">
+        </form>
+    </body>
 </html>
-
-
