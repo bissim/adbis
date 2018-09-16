@@ -1,6 +1,6 @@
 .idea/
 .vscode/
 .settings/
-vendor/
+/vendor/
 
-db/dbconfig.ini
+/db/dbconfig.ini
