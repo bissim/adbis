@@ -47,57 +47,77 @@ $(document).ready(function () {
         // dbParam = JSON.stringify(obj);
 
         // Si effettua la chiamata AJAX
-        $.ajax({
-            // url : "../controller/Mediator.php?x=" + dbParam,
-            url : searchUrl,
-            data : {
-                'table': table,
-                'search': search,
-                'keyword': keyword
-            },
-            // Si stampano i risultati ottenuti
-            success : showResult,
-            error : ajaxError
-        });
+        if (table === "book") {
+            $.ajax({
+                // url : "../controller/Mediator.php?x=" + dbParam,
+                url : searchUrl,
+                data : {
+                    'table': table,
+                    'search': search,
+                    'keyword': keyword
+                },
+                // Si stampano i risultati ottenuti
+                success : showBooks,
+                error : ajaxError
+            });
+        }
+        else if (table === "review") {
+            $.ajax({
+                url : searchUrl,
+                data : {
+                    'table': table,
+                    'search': search,
+                    'keyword': keyword
+                },
+                success : showReviews,
+                error : ajaxError
+            });
+        }
     });
 });
 
-function showResult(res) {
+function showBooks(res) {
     let txt = "";
+    let json = JSON.parse(res);
 
     console.debug("Object received: " + res);
-    return;
+    // return;
 
-    if (table === "book") {
-        try {
-            $.each(res, function (i, value) {
-                txt += "Titolo: " + value.title + "<br />";
-                txt += "Autore: " + value.author + "<br />";
-                txt += "Prezzo: " + value.price + "<br />";
-                txt += "Immagine: " + value.image + "<br />";
-                txt += "Link: " + value.link + "<hr />";
-            });
-        } catch (e) {
-            console.error("An error occurred!\n" + e);
-        }
+    try {
+        $.each(json, function (i, value) {
+            txt += "Titolo: " + value.title + "<br />";
+            txt += "Autore: " + value.author + "<br />";
+            txt += "Prezzo: " + value.price + "<br />";
+            txt += "Immagine: " + value.image + "<br />";
+            txt += "Link: " + value.link + "<hr />";
+        });
+    } catch (e) {
+        console.error("An error occurred!\n" + e);
     }
-    else if (table === "review") {
-        try {
-            $.each(res, function (i, value) {
-                txt += "Titolo: " + value.title + "<br />";
-                txt += "Autore: " + value.author + "<br />";
-                txt += "Trama: " + value.plot + "<br />";
-                txt += "Testo: " + value.txt + "<br />";
-                txt += "Media: " + value.average + "<br />";
-                txt += "Stile: " + value.style + "<br />";
-                txt += "Contenuto: " + value.content + "<br />";
-                txt += "Piacevolezza: " + value.pleasantness + "<hr />";
-            });
-        } catch (e) {
-            console.error("An error occurred!\n" + e);
-        }
-    } else {
-        console.error("Unknown table " + table);
+
+    $("#demo").html(txt);
+}
+
+function showReviews(res) {
+    let txt = "";
+    let json = JSON.parse(res);
+
+    console.debug("Object received: " + res);
+    // return;
+
+    try {
+        $.each(json, function (i, value) {
+            txt += "Titolo: " + value.title + "<br />";
+            txt += "Autore: " + value.author + "<br />";
+            txt += "Trama: " + value.plot + "<br />";
+            txt += "Testo: " + value.txt + "<br />";
+            txt += "Media: " + value.average + "<br />";
+            txt += "Stile: " + value.style + "<br />";
+            txt += "Contenuto: " + value.content + "<br />";
+            txt += "Piacevolezza: " + value.pleasantness + "<hr />";
+        });
+    } catch (e) {
+        console.error("An error occurred!\n" + e);
     }
 
     $("#demo").html(txt);

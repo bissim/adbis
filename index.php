@@ -37,11 +37,11 @@
     });
 
     // redirect non-existing page to main page
-//    Flight::map('notFound', function () {
+    Flight::map('notFound', function () {
 //        echo 'Whoops! Seems like there\'s no page like that!';
 //        \sleep(5);
-//        Flight::redirect('/');
-//    });
+        Flight::redirect('/');
+    });
 
     // Flight routes
     Flight::route('/', function () {
@@ -76,12 +76,16 @@
         if ($table && $search && $keyword)
         {
             $controller = new SearchController;
-            $controller->search($table, $search, $keyword);
+            $controller->search($table, $search, $keyword, $request->ajax);
         }
         else
         {
             Flight::redirect('/');
         }
+    });
+
+    Flight::route('/old', function () {
+        Flight::render('oldIndex.php');
     });
 
     Flight::route('/test', function () {

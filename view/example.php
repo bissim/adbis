@@ -11,6 +11,6 @@
 //    {
 //        foreach ($result as $book)
 //        {
-//            echo $book;
+//            echo "$book<br />";
 //        }
 //    }

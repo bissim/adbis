@@ -14,7 +14,7 @@
 
     <body>
         <!-- Qui saranno posizionati i risultati della ricerca -->
-        <p id="demo"><?php echo $result; ?></p>
+        <p id="demo"></p>
 
         <h2>Libri</h2>
         <!-- Il form per la ricerca dei libri in base all'autore -->
@@ -47,7 +47,7 @@
         <!-- Il form per la ricerca delle recensioni in base al titolo -->
         <form name="titleForm">
             <p>Digita il titolo di un libro</p>
-            <label for="reviewTit"></label>
+            <label for="reviewTit">Titolo: </label>
             <input type="text" id="reviewTit" name="title">
             <input id="reviewTitBtn" type="button" value="Invia">
         </form>

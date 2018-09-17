@@ -16,7 +16,7 @@
 
     class SearchController
     {
-        public function search(string $table, string $search, string $keyword)
+        public function search(string $table, string $search, string $keyword, bool $ajax)
         {
             // use mediator
             $result = '';
@@ -35,13 +35,20 @@
             }
 
             // show result in view
-            Flight::view()->set('result', $result);
-            Flight::render('example');
-//            Flight::render(
-//                'example.php',
-//                array(
-//                    'result' => $result
-//                )
-//            );
+            if ($ajax)
+            {
+                echo $result;
+            }
+            else
+            {
+                Flight::view()->set('result', $result);
+                Flight::render('example');
+//                Flight::render(
+//                    'example.php',
+//                    array(
+//                        'result' => $result
+//                    )
+//                );
+            }
         }
     }
