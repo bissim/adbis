@@ -33,6 +33,8 @@
 
             try
             {
+                // $reviews = $reviewWrapper->getReviews('harry potter');
+
                 $reviews = $reviewWrapper->getReviews('il signore degli anelli');
             }
             catch (\Throwable $th)
