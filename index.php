@@ -64,13 +64,6 @@
         // retrieve request
         $request = Flight::request();
 
-        // check whether it's an AJAX request
-        if ($request->ajax)
-        {
-            // TODO handle AJAX request
-//            echo 'This is an AJAX request!';
-        }
-
         // extract data from request
         $table = $request->query['table'];
         $search = $request->query['search'];
@@ -81,6 +74,46 @@
         {
             $controller = new SearchController;
             $controller->search($table, $search, $keyword, $request->ajax);
+        }
+        else
+        {
+            Flight::redirect('/');
+        }
+    });
+
+    Flight::route('/search/book', function () {
+        // retrieve request
+        $request = Flight::request();
+
+        // extract data from request
+        $search = $request->query['search'];
+        $keyword = $request->query['keyword'];
+
+        // manage data if they exist
+        if ($search && $keyword)
+        {
+            $controller = new SearchController;
+            $controller->searchBook($search, $keyword, $request->ajax);
+        }
+        else
+        {
+            Flight::redirect('/');
+        }
+    });
+
+    Flight::route('/search/review', function () {
+        // retrieve request
+        $request = Flight::request();
+
+        // extract data from request
+        $search = $request->query['search'];
+        $keyword = $request->query['keyword'];
+
+        // manage data if they exist
+        if ($search && $keyword)
+        {
+            $controller = new SearchController;
+            $controller->searchReview($search, $keyword, $request->ajax);
         }
         else
         {
