@@ -1,40 +1,52 @@
 <?php
-/**
-     * Created by PhpStorm.
-     * User: bisim
-     * Date: 09/09/2018
-     * Time: 01:02
-     */
+    /**
+         * Created by PhpStorm.
+         * User: bisim
+         * Date: 09/09/2018
+         * Time: 01:02
+         */
 
-namespace test;
+    namespace test;
 
-require '../util/ErrorHandler.php';
-require '../wrappers/ReviewWrapper.php';
+    require_once './wrappers/ReviewWrapper.php';
 
-use util\ErrorHandler;
-use wrappers\ReviewWrapper;
+    use util\ErrorHandler;
+    use wrappers\ReviewWrapper;
 
-set_error_handler(array(new ErrorHandler(), 'errorHandler'));
+    set_error_handler(array(new ErrorHandler(), 'errorHandler'));
 
-function microtime_float()
-{
-    list($usec, $sec) = explode(" ", microtime());
-    return ((float)$usec + (float)$sec);
-}
+    class ReviewWrapperTest
+    {
+        private function microtime_float()
+        {
+            list($usec, $sec) = explode(" ", microtime());
+            return ((float)$usec + (float)$sec);
+        }
 
-$inizio = microtime_float();
+        public function test()
+        {
+            $inizio = $this->microtime_float();
 
-$reviewWrapper = new ReviewWrapper;
+            $reviewWrapper = new ReviewWrapper;
 
-// $reviews = $reviewWrapper->getReviews('il signore degli anelli');
+            // $reviews = $reviewWrapper->getReviews('il signore degli anelli');
 
-$reviews = $reviewWrapper->getReviews('il signore degli anelli');
+            try
+            {
+                $reviews = $reviewWrapper->getReviews('il signore degli anelli');
+            }
+            catch (\Throwable $th)
+            {
+                \error_log($th->getMessage());
+            }
 
-// check parameters for every review
-foreach ($reviews as $review)
-    print $review;
+            // check parameters for every review
+            foreach ($reviews as $review)
+                print $review;
 
-$fine = microtime_float();
-$tempo_impiegato = $fine - $inizio;
-$tempo = number_format($tempo_impiegato,5,',','.');
-echo "Tempo impiegato dallo script: $tempo secondi";
+            $fine = $this->microtime_float();
+            $tempo_impiegato = $fine - $inizio;
+            $tempo = \number_format($tempo_impiegato,5,',','.');
+            echo "Tempo impiegato dallo script: $tempo secondi";
+        }
+    }

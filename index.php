@@ -15,6 +15,7 @@
 
     require './vendor/autoload.php';
     require './controller/SearchController.php';
+    require './test/ReviewWrapperTest.php';
 
     use \controller\SearchController;
 
@@ -106,6 +107,11 @@
         {
             error_log("A weird and mysterious error happened: {$t->getMessage()}");
         }
+    });
+
+    // tests
+    Flight::route('/test/review', function () {
+        (new \test\ReviewWrapperTest())->test();
     });
 
     // run Fight router
