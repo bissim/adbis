@@ -43,7 +43,7 @@
             $links = array();
             foreach ($entries as $entryLink)
             {
-                $l = strstr($entryLink->firstChild->nodeValue, 'https://');
+                $l = $entryLink->firstChild->nodeValue;
                 array_push($links, $l);
             }
 
@@ -61,7 +61,7 @@
                 CURLOPT_FOLLOWLOCATION => true,   // follow redirects
                 CURLOPT_MAXREDIRS      => 10,     // stop after 10 redirects
                 CURLOPT_ENCODING       => '',     // handle compressed
-                CURLOPT_USERAGENT      => 'Mozilla/5.0 (Android 7.0; Mobile; rv:57.0) Gecko/57.0 Firefox/57.0', // name of client
+                CURLOPT_USERAGENT      => 'adbis', // name of client
                 CURLOPT_AUTOREFERER    => true,   // set referrer on redirect
                 CURLOPT_CONNECTTIMEOUT => 120,    // time-out on connect
                 CURLOPT_TIMEOUT        => 120,    // time-out on response
@@ -78,7 +78,7 @@
         private function createDOMXPath(string $url): DOMXPath
         {
             $page = $this->getWebPage($url);
-
+            // $page = file_get_contents($url);
             // create DOM
             $dom = new DOMDocument;
             libxml_use_internal_errors(true);
@@ -117,9 +117,24 @@
             return $reviewsFound;
         }
 
-        private function checkEmpty($value)
+        private function checkEmpty($entriesValue)
         {
-            return empty($value) ? '' : $value;
+            if ($entriesValue->length > 0)
+            {
+                $value = $entriesValue[0]->nodeValue;
+                return empty($value) ? '' : $value;
+            }
+            return '';
+        }
+
+        private function checkNum($entriesValue)
+        {
+            if ($entriesValue->length > 0)
+            {
+                $value = $entriesValue[0]->nodeValue;
+                return (float) \floatval($value);
+            }
+            else return 0;
         }
 
         private function extractAttributes(string $link): array
@@ -127,32 +142,28 @@
             $xpath = $this->createDOMXPath($link);
 
             $entriesTitle = $xpath->query($this->queries['title']);
-            $title = $this->checkEmpty($entriesTitle[0]->nodeValue);
+            $title = $this->checkEmpty($entriesTitle);
 
             $entriesAuthor = $xpath->query($this->queries['author']);
-            $author = $this->checkEmpty($entriesAuthor[0]->nodeValue);
+            $author = $this->checkEmpty($entriesAuthor);
 
             $entriesPlot = $xpath->query($this->queries['plot']);
-            $plot = $this->checkEmpty($entriesPlot[0]->nodeValue);
+            $plot = $this->checkEmpty($entriesPlot);
 
             $entriesText = $xpath->query($this->queries['text']);
-            $text = $this->checkEmpty($entriesText[0]->nodeValue);
+            $text = $this->checkEmpty($entriesText);
 
             $entriesAvg = $xpath->query($this->queries['avg']);
-            $stringAvg = $entriesAvg[0]->nodeValue;
-            $avg = (float) \floatval($stringAvg);
+            $avg = $this->checkNum($entriesAvg);
 
             $entriesStyle = $xpath->query($this->queries['style']);
-            $stringStyle = $entriesStyle[0]->nodeValue;
-            $style = (float) \floatval($stringStyle);
+            $style = $this->checkNum($entriesStyle);
 
             $entriesContent = $xpath->query($this->queries['content']);
-            $stringContent = $entriesContent[0]->nodeValue;
-            $content = (float) \floatval($stringContent);
+            $content = $this->checkNum($entriesContent);
 
             $entriesPleasantness = $xpath->query($this->queries['pleasantness']);
-            $stringPleasantness = $entriesPleasantness[0]->nodeValue;
-            $pleasantness = (float) \floatval($stringPleasantness);
+            $pleasantness = $this->checkNum($entriesPleasantness);
 
             $attributes = array(
                 "title" => $title,
