@@ -10,12 +10,12 @@
         // variables
         private $reviewScraper;
         private $queries;
-        private $baseUrl = 'https://www.google.it/search?q=site%3Aqlibri.it+';
+        private $baseUrl = 'https://www.startpage.com/do/search?language=italiano&query=site%3Aqlibri.it+';
 
         public function __construct()
         {
             $this->queries = array(
-                'links' => '//h3[@class="r"]/a/attribute::href',
+                'links' => '//h3[@class="clk"]/a/attribute::href',
                 'title' => '//div[@id="system"]/article/div/div/h1/span[@class="fn"]/text()',
                 'author' => '//div[@class="jr_customFields"]/div/div[@class="fieldRow jr_autorestr"]/div/a/text()',
                 'plot' => '//div[@class="contentFulltext"]/text()',
