@@ -1,29 +1,35 @@
 <?php
+    namespace test;
 
-namespace test;
+    require_once './wrappers/GoogleWrapper.php';
 
-require '../wrappers/GoogleWrapper.php';
-require '../model/DBManager.php';
+    use \util\ErrorHandler;
+    use \wrappers\GoogleWrapper;
 
-use \wrappers\GoogleWrapper;
-use \model\DBManager;
+    set_error_handler(array(new ErrorHandler(), 'errorHandler'));
 
-$googleWrapper = new GoogleWrapper;
-$books = $googleWrapper->getBooks('tolkien');
+    class GoogleWrapperTest
+    {
+        private function microtime_float()
+        {
+            list($usec, $sec) = explode(" ", microtime());
+            return ((float) $usec + (float) $sec);
+        }
 
-$mng = new DBManager('localhost','phpmyadmin','pass','progettoDB');
+        public function test()
+        {
+            $inizio = $this->microtime_float();
 
-$mng->addBooks($books);
+            $googleWrapper = new GoogleWrapper;
+            $books = $googleWrapper->getBooks('tolkien');
 
-$title = 'anelli';
-$author = 'Tolkien';
-$booksByTitle = $mng->getBooksByTitle($title);
-$booksByAuthor = $mng->getBooksByAuthor($author);
+            // check parameters for every book
+            foreach ($books as $book)
+                print $book;
 
-print "<h2>Libri con '" . $title . "'</h2>";
-foreach($booksByTitle as $bookByTitle)
-    print $bookByTitle;
-print "<h2>Libri di " . $author . "</h2>";
-foreach($booksByAuthor as $bookByAuthor)
-    print $bookByAuthor;
-?>
+            $fine = $this->microtime_float();
+            $tempo_impiegato = $fine - $inizio;
+            $tempo = number_format($tempo_impiegato, 5, ',', '.');
+            echo "Tempo impiegato dallo script: $tempo secondi";
+        }
+    }

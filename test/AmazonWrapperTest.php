@@ -1,34 +1,36 @@
 <?php
+    namespace test;
 
-namespace test;
+    require_once './wrappers/AmazonWrapper.php';
 
-require '../util/ErrorHandler.php';
-require '../wrappers/AmazonWrapper.php';
-// require '../Autoloader.php';
+    use \util\ErrorHandler;
+    use \wrappers\AmazonWrapper;
 
-// use Autoloader;
-use \util\ErrorHandler;
-use \wrappers\AmazonWrapper;
+    set_error_handler(array(new ErrorHandler(), 'errorHandler'));
 
-set_error_handler(array(new ErrorHandler(), 'errorHandler'));
+    class AmazonWrapperTest
+    {
+        private function microtime_float()
+        {
+            list($usec, $sec) = explode(" ", microtime());
+            return ((float) $usec + (float) $sec);
+        }
 
-function microtime_float()
-{
-    list($usec, $sec) = explode(" ", microtime());
-    return ((float)$usec + (float)$sec);
-}
+        public function test()
+        {
+            $inizio = $this->microtime_float();
 
-$inizio = microtime_float();
+            $amazonWrapper = new AmazonWrapper;
+            // var_dump($amazonWrapper->getQueries());
+            $books = $amazonWrapper->getBooks('harry potter');
 
-$amazonWrapper = new AmazonWrapper;
-// var_dump($amazonWrapper->getQueries());
-$books = $amazonWrapper->getBooks('harry potter');
+            // check parameters for every book
+            foreach ($books as $book)
+                print $book;
 
-// check parameters for every book
- foreach ($books as $book)
-     print $book;
-
-$fine = microtime_float();
-$tempo_impiegato = $fine - $inizio;
-$tempo = number_format($tempo_impiegato,5,',','.');
-echo "Tempo impiegato dallo script: $tempo secondi";
+            $fine = $this->microtime_float();
+            $tempo_impiegato = $fine - $inizio;
+            $tempo = number_format($tempo_impiegato, 5, ',', '.');
+            echo "Tempo impiegato dallo script: $tempo secondi";
+        }
+    }

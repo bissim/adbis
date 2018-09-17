@@ -16,6 +16,9 @@
     require './vendor/autoload.php';
     require './controller/SearchController.php';
     require './test/ReviewWrapperTest.php';
+    require './test/AmazonWrapperTest.php';
+    require './test/GoogleWrapperTest.php';
+    require './test/KoboWrapperTest.php';
 
     use \controller\SearchController;
 
@@ -111,7 +114,19 @@
 
     // tests
     Flight::route('/test/review', function () {
-        (new \test\ReviewWrapperTest())->test();
+        (new \test\ReviewWrapperTest)->test();
+    });
+
+    Flight::route('/test/amazonbook', function () {
+        (new \test\AmazonWrapperTest)->test();
+    });
+
+    Flight::route('/test/googlebook', function () {
+        (new \test\GoogleWrapperTest)->test();
+    });
+
+    Flight::route('/test/kobobook', function () {
+        (new \test\KoboWrapperTest)->test();
     });
 
     // run Fight router
