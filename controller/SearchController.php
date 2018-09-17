@@ -16,10 +16,21 @@
 
     class SearchController
     {
+
+        public function searchBook(string $search, string $keyword, bool $ajax)
+        {
+            $this->search('book', $search, $keyword, $ajax);
+        }
+
+        public function searchReview(string $search, string $keyword, bool $ajax)
+        {
+            $this->search('review', $search, $keyword, $ajax);
+        }
+
         public function search(string $table, string $search, string $keyword, bool $ajax)
         {
-            // use mediator
             $result = '';
+
             try
             {
                 $result = (new Mediator())->retrieve($table, $search, $keyword);
@@ -41,14 +52,12 @@
             }
             else
             {
-                Flight::view()->set('result', $result);
-                Flight::render('example');
-//                Flight::render(
-//                    'example.php',
-//                    array(
-//                        'result' => $result
-//                    )
-//                );
+                Flight::render(
+                    'index',
+                    array(
+                        'result' => $result
+                    )
+                );
             }
         }
     }
