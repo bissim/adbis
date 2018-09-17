@@ -3,7 +3,8 @@
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+
+<html lang="it">
 
   <head>
 
@@ -160,7 +161,7 @@
     <script src="./view/js/clean-blog.min.js"></script>
 
     <!-- Custom user scripts -->
-    <script src="main.js"></script>
+    <script src="./view/js/main.js"></script>
 
   </body>
 

@@ -3,15 +3,38 @@
  * after page has been loaded
  */
 $(document).ready(function () {
-    try {
-        $('input[type = button]').click(search);
-    } catch (e) {
-        console.error("An error occurred!\n" + e);
-    }
+    // assign events to radio
+    $("input[type = radio]#searchByTitle").click(swapSearch);
+    $("input[type = radio]#searchByAuthor").click(swapSearch);
+    // $("input[type = button]#sendMessageButton").click(searchBooks);
+    $("form#contactForm").submit(searchBooks);
+
+    // assign click event
+    // to Search button
+    // TODO activate
+    // try {
+    //     $('input[type = button]').click(search);
+    // } catch (e) {
+    //     console.error("An error occurred!\n" + e);
+    // }
 });
 
+/**
+ *
+ */
 function swapSearch() {
+    let isAuthorRadio = $('#searchByAuthor').prop("checked");
+    let isTitleRadio = $('#searchByTitle').prop("checked");
 
+    if (isAuthorRadio) {
+        console.debug("Author selected");
+        $("#keyword").prop("placeholder", "Autore");
+    } else if (isTitleRadio) {
+        console.debug("Title selected");
+        $("#keyword").prop("placeholder", "Titolo");
+    } else {
+        console.error("wat");
+    }
 }
 
 /**
@@ -90,28 +113,13 @@ function search() {
  * Specific function to search for books.
  */
 function searchBooks() {
-    let id = $(this).attr("id");
-
-    let keyword, search;
-    switch (id) {
-        case 'bookAutBtn':
-            search = 'author';
-            keyword = $('input[id = bookAut]').val();
-            break;
-
-        case 'bookTitBtn':
-            search = 'title';
-            keyword = $('input[id = bookTit]').val();
-            break;
-
-        default:
-            console.error('Unknown button ID!');
-            break;
-    }
+    let search = $("input[name = search]:selected, #sentMessage");
+    let keyword = $("input#keyword").val();
+    console.debug("Searching for " + search.toString() + " " + keyword.toString() + "...");
 
     // AJAX call
-    let table = "book";
-    let searchUrl = baseSearchUrl + "/" + table;
+    let searchUrl = baseSearchUrl + "book";
+    console.debug("GET " + searchUrl + "...");
     $.ajax({
         url: searchUrl,
         data: {
@@ -127,30 +135,11 @@ function searchBooks() {
  * Specific function to search for reviews.
  */
 function searchReviews() {
-    let id = $(this).attr("id");
-
-    let keyword, search;
-    switch (id) {
-        case 'reviewAutBtn':
-            keyword = $('input[id = reviewAut]').val();
-            search = 'author';
-            table = 'review';
-            break;
-
-        case 'reviewTitBtn':
-            keyword = $('input[id = reviewTit]').val();
-            search = 'title';
-            table = 'review';
-            break;
-
-        default:
-            console.error('Unknown button ID!');
-            break;
-    }
+    let search = $("input[name = search]:selected");
+    let keyword = $("input#keyword").val();
 
     // AJAX call
-    let table = "review";
-    let searchUrl = baseSearchUrl + "/" + table;
+    let searchUrl = baseSearchUrl + "review";
     $.ajax({
         url: searchUrl,
         data: {
@@ -187,7 +176,7 @@ function showBooks(res) {
         throw e;
     }
 
-    $("#demo").html(txt);
+    $("#results").html(txt);
 }
 
 /**
