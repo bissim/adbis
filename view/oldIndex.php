@@ -9,7 +9,7 @@
         <meta charset="utf-8" />
         <title>Prova</title>
         <script src="./view/vendor/jquery/jquery.min.js"></script>
-        <script type="text/javascript" src="./view/main.js"></script>
+        <script type="text/javascript" src="main.js"></script>
     </head>
 
     <body>

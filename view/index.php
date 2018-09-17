@@ -71,7 +71,7 @@
     <!-- Main Content -->
 
 
-    <hr>
+    <hr />
 
     <!-- Footer -->
     <footer>

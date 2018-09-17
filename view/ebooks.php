@@ -12,7 +12,7 @@
     <meta name="description" content="Academic project for data integration course held by Prof. G. Costagliola">
     <meta name="author" content="Antonio Addeo and Simone Bisogno">
 
-    <title>AdBis</title>
+    <title>AdBis - Ebooks</title>
 
     <!-- Bootstrap core CSS -->
     <link href="./view/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -73,41 +73,47 @@
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <form name="sentMessage" id="contactForm" novalidate>
-          <p>Trova ebooks in base al nome di un autore</p>
-            <div class="control-group">
-              <div class="form-group floating-label-form-group controls">
-                <label>Autore</label>
-                <input type="text" class="form-control" placeholder="Autore" id="autore">
-                <p class="help-block text-danger"></p>
-              </div>
-            </div>
-            <br>
-            <div id="success"></div>
-            <div class="form-group">
-              <button type="submit" class="btn btn-primary" id="sendMessageButton">Invia</button>
-            </div>
-          </form>
-          <form name="sentMessage" id="contactForm" novalidate>
-          <p>Trova ebooks in base al titolo di un libro</p>
+            <p>Trova ebook in base al titolo di un libro o al nome di un autore</p>
             <div class="control-group">
               <div class="form-group floating-label-form-group controls">
                 <label>Titolo</label>
-                <input type="text" class="form-control" placeholder="Titolo" id="titolo">
+                <input id="keyword" type="text" class="form-control" placeholder="Titolo" id="title">
                 <p class="help-block text-danger"></p>
               </div>
+              <input type="radio" id="searchByTitle" name="search" value="titolo" checked>&nbsp;Titolo
+              <input type="radio" id="searchByAuthor" name="search" value="autore">&nbsp;Autore
+              <input type="checkbox" name="both" value="both" disabled>&nbsp;Cerca le recensioni associate
             </div>
             <br>
-            <div id="success"></div>
+            <div id="success"></div><!-- TODO show success message -->
             <div class="form-group">
-              <button type="submit" class="btn btn-primary" id="sendMessageButton">Invia</button>
+              <button type="submit" class="btn btn-primary" id="sendMessageButton">Cerca</button>
             </div>
           </form>
+          <form name="sentMessage" id="contactForm" novalidate style="display: none;">
+              <p>Trova ebook in base al nome di un autore</p>
+              <div class="control-group">
+                  <div class="form-group floating-label-form-group controls">
+                      <label>Autore</label>
+                      <input type="text" class="form-control" placeholder="Autore" id="autore">
+                      <p class="help-block text-danger"></p>
+                  </div>
+              </div>
+              <br>
+              <div id="success"></div>
+              <div class="form-group">
+                  <button type="submit" class="btn btn-primary" id="sendMessageButton">Invia</button>
+              </div>
+          </form>
+          <div id="resultsContainer" style="display: none;">
+              <h3>Search results</h3>
+              <div id="results"></div>
+          </div>
         </div>
       </div>
     </div>
 
-
-    <hr>
+    <hr />
 
     <!-- Footer -->
     <footer>
@@ -152,6 +158,9 @@
 
     <!-- Custom scripts for this template -->
     <script src="./view/js/clean-blog.min.js"></script>
+
+    <!-- Custom user scripts -->
+    <script src="main.js"></script>
 
   </body>
 
