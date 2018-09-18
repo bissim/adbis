@@ -77,21 +77,23 @@
             <p>Cerca ebook in base al titolo di un libro o al nome di un autore</p>
             <div class="control-group">
               <div class="form-group floating-label-form-group controls">
-                <label>Titolo</label>
+                <label id="searchLabel">Titolo</label>
                 <input id="keyword" type="text" class="form-control" placeholder="Titolo" id="title">
                 <p class="help-block text-danger"></p>
               </div>
               <input type="radio" id="searchByTitle" name="search" value="title" checked>&nbsp;Titolo
               <input type="radio" id="searchByAuthor" name="search" value="author">&nbsp;Autore
-              <input type="checkbox" name="both" value="both" disabled>&nbsp;Cerca le recensioni associate
+              <input type="checkbox" name="join" value="join" disabled>&nbsp;Cerca le recensioni associate
             </div>
             <div class="control-group" style="margin-top:5px;">
-              <button type="submit" class="btn btn-primary" id="sendMessageButton">Cerca</button>
+              <button type="submit" class="btn btn-primary" id="sendMessageButton" disabled>Cerca</button>
+              <button type="reset" class="btn btn-primary" id="resetMessageButton" disabled>Cancella</button>
             </div>
-            <div id="success"></div><!-- TODO show success message -->
+            <div id="success"></div>
           </form>
         </div>
-        <div id="resultsContainer" class="row" style="display: none;">
+        <br />
+        <div id="resultsContainer" class="row" style="display:none;">
           <h3>Risultati di ricerca</h3>
           <div id="results"></div>
         </div>

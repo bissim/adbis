@@ -1,25 +1,47 @@
+// search page elements
+let sendButton = $("button[type = submit]#sendMessageButton");
+let searchField = $("input[type = text]#keyword");
+
 /**
- * Associate click events to page buttons
- * after page has been loaded
+ * Associate events
+ * to loaded page
  */
 $(document).ready(function () {
     // assign events to radio
     $("input[type = radio]#searchByTitle").click(swapSearch);
     $("input[type = radio]#searchByAuthor").click(swapSearch);
-    $("button[type = submit]#sendMessageButton").click(searchBooks);
+    // check search textfield
+    searchField.keyup(disableSearchButton);
+    searchField.focusout(disableSearchButton);
+    // async call to retrieve results
+    sendButton.click(searchBooks);
+    // block form submission from reloading page
     $("form#contactForm").submit(function (event) {
         event.preventDefault(); // prevent page reload
     });
-
-    // assign click event
-    // to Search button
-    // TODO activate
-    // try {
-    //     $('input[type = button]').click(search);
-    // } catch (e) {
-    //     console.error("An error occurred!\n" + e);
-    // }
 });
+
+/**
+ * Disable search button with
+ * keywords shorter than 2
+ */
+function disableSearchButton() {
+    let cancelButton = $("button[type = submit]#resetMessageButton");
+
+    if (searchField.val().length > 0) {
+        cancelButton.prop("disabled", false);
+    }
+    else {
+        cancelButton.prop("disabled", true);
+    }
+
+    if (searchField.val().length > 2) {
+        sendButton.prop("disabled", false);
+    }
+    else {
+        sendButton.prop("disabled", true);
+    }
+}
 
 /**
  * Determine whether search must be
@@ -30,11 +52,11 @@ function swapSearch() {
     let isTitleRadio = $('#searchByTitle').prop("checked");
 
     if (isAuthorRadio) {
-        // console.debug("Author selected");
-        $("#keyword").prop("placeholder", "Autore");
+        searchField.prop("placeholder", "Autore");
+        $("#searchLabel").text("Autore");
     } else if (isTitleRadio) {
-        // console.debug("Title selected");
-        $("#keyword").prop("placeholder", "Titolo");
+        searchField.prop("placeholder", "Titolo");
+        $("#searchLabel").text("Titolo");
     } else {
         console.error("wat");
     }
@@ -117,7 +139,7 @@ function search() {
  */
 function searchBooks() {
     let search = $("input[name = search]:checked, #sentMessage").val();
-    let keyword = $("input#keyword").val();
+    let keyword = searchField.val();
     // console.debug("Searching for " + search.toString() + " " + keyword.toString() + "...");
 
     // AJAX call
@@ -129,7 +151,7 @@ function searchBooks() {
             'search': search,
             'keyword': keyword
         },
-        // beforeSend: function (xhr) {},
+        beforeSend: prepareForResults,
         success: showBooks,
         error: ajaxError
     });
@@ -140,7 +162,7 @@ function searchBooks() {
  */
 function searchReviews() {
     let search = $("input[name = search]:checked, #sentMessage").val();
-    let keyword = $("input#keyword").val();
+    let keyword = searchField.val();
 
     // AJAX call
     let searchUrl = baseSearchUrl + "review";
@@ -155,20 +177,38 @@ function searchReviews() {
     });
 }
 
+function prepareForResults() {
+    console.debug("Preparing for results...");
+
+    let resultsContainerDiv = $("#resultsContainer");
+    let resultsDiv = $("#results");
+
+    // hide and delete former results
+    if (!resultsContainerDiv.hidden) {
+        resultsContainerDiv.hide();
+        resultsDiv.html("<p>Caricamento dei risultati in corso...</p>");
+        resultsContainerDiv.show();
+    }
+}
+
 /**
  * Show results for book query in page.
  * @param res
  */
 function showBooks(res) {
     // console.debug("Object received: " + res);
+
+    let resultsDiv = $("#results");
+
     if (res) {
         let message =  "La ricerca ha ottenuto dei risultati! Consultare l'elenco sottostante.";
         $("#success").html(message);
     }
 
-    let results = "";
-
     try {
+        // delete temporary message in results container
+        resultsDiv.empty();
+
         // create object from JSON
         let json = JSON.parse(res);
 
@@ -176,26 +216,34 @@ function showBooks(res) {
         let resultNode = "";
         $.each(json, function (i, value) {
             // create result node
-            // console.debug("Creating element " + i + "...");
-            resultNode = "<div class='row'>";
-            resultNode += "<img src='" + value.image + "' style='float:right;'/>";
-            resultNode += "<a href='" + value.link + "'>";
-            resultNode += "<strong>" + value.title + "</strong>";
-            resultNode += "</a><br />";
-            resultNode += "di&nbsp;" + value.author + "<br />";
-            resultNode += "EUR&nbsp;" + value.price + "<br />";
-            resultNode += "</div><hr />";
+            resultNode = $("<div></div>").attr("id", "res" + i).attr("class", "row");
+            resultNode.hide();
 
-            results += resultNode;
+            // create image container
+            let imgContainerNode = $("<div></div>")
+                .attr("style", "float:right;width:200px;height:200px;margin:2px 4px 2px 4px;");
+            let imgNode = $("<img />")
+                .attr("class", "img-responsive center-block")
+                .attr("src", value.image)
+                .attr("style", "max-width:190px;max-height:190px;");
+            imgContainerNode.append(imgNode);
+            resultNode.append(imgContainerNode);
+
+            // create details container
+            let detailsContainerNode = $("<div></div>");
+            detailsContainerNode
+                .append("<span><a href='" + value.link + "'><span><strong>" + value.title + "</strong></span></a></span><br />")
+                .append("<span>di&nbsp;<em>" + value.author + "</em></span><br />")
+                .append("<span>Prezzo:&nbsp;" + value.price + "&euro;</span><br />");
+            resultNode.append(detailsContainerNode);
+
+            resultsDiv.append(resultNode);
+            resultsDiv.append("<hr />");
+            resultNode.fadeIn();
         }); // TODO properly create a result node
     } catch (e) {
         throw e;
     }
-
-    // populate results div
-    console.debug("Populate results container...");
-    $("#results").html(results);
-    $("#resultsContainer").show();
 }
 
 /**
