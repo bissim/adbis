@@ -125,26 +125,6 @@
         Flight::render('oldIndex.php');
     });
 
-    Flight::route('/test', function () {
-        try {
-            $request = Flight::request();
-            $keyword = $request->query['k'];
-            echo "GET request: {$keyword}";
-        }
-        catch (\Exception $ex)
-        {
-            user_error("Some sort of exception occurred: {$ex->getMessage()}");
-        }
-        catch (\Error $er)
-        {
-            error_log("Some sort of error occurred: {$er->getMessage()}");
-        }
-        catch (\Throwable $t)
-        {
-            error_log("A weird and mysterious error happened: {$t->getMessage()}");
-        }
-    });
-
     // tests
     Flight::route('/test/review', function () {
         (new \test\ReviewWrapperTest)->test();
