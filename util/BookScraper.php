@@ -92,11 +92,11 @@
             for ($i=0; $i<$length; $i++)
             {
                 $book = new Book(
-                    $this->checkEmpty($entriesTitle[$i]->nodeValue),
-                    $this->checkEmpty($entriesAuthor[$i]->nodeValue),
-                    $this->checkFloat($entriesPrice[$i]->nodeValue),
-                    $this->checkEmpty($entriesImage[$i]->nodeValue),
-                    $this->checkEmpty($entriesLink[$i]->nodeValue)
+                    $this->checkEmpty($entriesTitle, $i),
+                    $this->checkEmpty($entriesAuthor, $i),
+                    $this->checkFloat($entriesPrice, $i),
+                    $this->checkEmpty($entriesImage, $i),
+                    $this->checkEmpty($entriesLink, $i)
                 );
                 array_push($booksFound,$book);
             }
@@ -104,16 +104,39 @@
             return $booksFound;
         }
 
-        private function checkEmpty($value)
+        private function checkEmpty($entriesValue, $i) : string
         {
-            return empty($value) ? '' : $value;
+            if ($entriesValue->length > $i)
+            {   
+                $value = $entriesValue[$i]->nodeValue;
+                return empty($value) ? '' : $value;
+            }
+            return '';
         }
 
-        private function checkFloat($value)
+        private function checkFloat($entriesValue, $i) : float
         {
-            if (empty($value)) return 0.0;
-            $value = preg_replace('/[^0-9,.]/', '', $value);
-            $value = str_replace(',', '.', $value);
-            return (float) \floatval($value);
+            if ($entriesValue->length > $i)
+            {
+                $value = $entriesValue[$i]->nodeValue;
+                if (empty($value)) return 0.0;
+                    $value = preg_replace('/[^0-9,.]/', '', $value);
+                    $value = str_replace(',', '.', $value);
+                    return (float) \floatval($value);                
+            }
+            return 0.0;
         }
+
+        // private function checkEmpty($value)
+        // {
+        //     return empty($value) ? '' : $value;
+        // }
+
+        // private function checkFloat($value)
+        // {
+        //     if (empty($value)) return 0.0;
+        //     $value = preg_replace('/[^0-9,.]/', '', $value);
+        //     $value = str_replace(',', '.', $value);
+        //     return (float) \floatval($value);
+        // }
     }
