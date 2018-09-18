@@ -6,8 +6,10 @@ $(document).ready(function () {
     // assign events to radio
     $("input[type = radio]#searchByTitle").click(swapSearch);
     $("input[type = radio]#searchByAuthor").click(swapSearch);
-    // $("input[type = button]#sendMessageButton").click(searchBooks);
-    $("form#contactForm").submit(searchBooks);
+    $("button[type = submit]#sendMessageButton").click(searchBooks);
+    $("form#contactForm").submit(function (event) {
+        event.preventDefault(); // prevent page reload
+    });
 
     // assign click event
     // to Search button
@@ -20,17 +22,18 @@ $(document).ready(function () {
 });
 
 /**
- *
+ * Determine whether search must be
+ * based on title or author
  */
 function swapSearch() {
     let isAuthorRadio = $('#searchByAuthor').prop("checked");
     let isTitleRadio = $('#searchByTitle').prop("checked");
 
     if (isAuthorRadio) {
-        console.debug("Author selected");
+        // console.debug("Author selected");
         $("#keyword").prop("placeholder", "Autore");
     } else if (isTitleRadio) {
-        console.debug("Title selected");
+        // console.debug("Title selected");
         $("#keyword").prop("placeholder", "Titolo");
     } else {
         console.error("wat");
@@ -113,19 +116,20 @@ function search() {
  * Specific function to search for books.
  */
 function searchBooks() {
-    let search = $("input[name = search]:selected, #sentMessage");
+    let search = $("input[name = search]:checked, #sentMessage").val();
     let keyword = $("input#keyword").val();
-    console.debug("Searching for " + search.toString() + " " + keyword.toString() + "...");
+    // console.debug("Searching for " + search.toString() + " " + keyword.toString() + "...");
 
     // AJAX call
     let searchUrl = baseSearchUrl + "book";
-    console.debug("GET " + searchUrl + "...");
+    // console.debug("GET " + searchUrl + "...");
     $.ajax({
         url: searchUrl,
         data: {
             'search': search,
             'keyword': keyword
         },
+        // beforeSend: function (xhr) {},
         success: showBooks,
         error: ajaxError
     });
@@ -135,7 +139,7 @@ function searchBooks() {
  * Specific function to search for reviews.
  */
 function searchReviews() {
-    let search = $("input[name = search]:selected");
+    let search = $("input[name = search]:checked, #sentMessage").val();
     let keyword = $("input#keyword").val();
 
     // AJAX call
@@ -156,27 +160,42 @@ function searchReviews() {
  * @param res
  */
 function showBooks(res) {
-    let txt = "";
-
     // console.debug("Object received: " + res);
+    if (res) {
+        let message =  "La ricerca ha ottenuto dei risultati! Consultare l'elenco sottostante.";
+        $("#success").html(message);
+    }
+
+    let results = "";
 
     try {
         // create object from JSON
         let json = JSON.parse(res);
 
-        // iterate over array
+        // iterate over results array
+        let resultNode = "";
         $.each(json, function (i, value) {
-            txt += "Titolo: " + value.title + "<br />";
-            txt += "Autore: " + value.author + "<br />";
-            txt += "Prezzo: " + value.price + "<br />";
-            txt += "Immagine: " + value.image + "<br />";
-            txt += "Link: " + value.link + "<hr />";
-        });
+            // create result node
+            // console.debug("Creating element " + i + "...");
+            resultNode = "<div class='row'>";
+            resultNode += "<img src='" + value.image + "' style='float:right;'/>";
+            resultNode += "<a href='" + value.link + "'>";
+            resultNode += "<strong>" + value.title + "</strong>";
+            resultNode += "</a><br />";
+            resultNode += "di&nbsp;" + value.author + "<br />";
+            resultNode += "EUR&nbsp;" + value.price + "<br />";
+            resultNode += "</div><hr />";
+
+            results += resultNode;
+        }); // TODO properly create a result node
     } catch (e) {
         throw e;
     }
 
-    $("#results").html(txt);
+    // populate results div
+    console.debug("Populate results container...");
+    $("#results").html(results);
+    $("#resultsContainer").show();
 }
 
 /**
