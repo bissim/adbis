@@ -111,8 +111,9 @@
 
         private function checkFloat($value)
         {
+            if (empty($value)) return 0.0;
             $value = preg_replace('/[^0-9,.]/', '', $value);
             $value = str_replace(',', '.', $value);
-            return empty($value) ? 0.0 : (float) \floatval($value);
+            return (float) \floatval($value);
         }
     }
