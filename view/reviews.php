@@ -3,7 +3,8 @@
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+
+<html lang="it">
 
   <head>
 
@@ -12,7 +13,7 @@
     <meta name="description" content="Academic project for data integration course held by Prof. G. Costagliola">
     <meta name="author" content="Antonio Addeo and Simone Bisogno">
 
-    <title>AdBis</title>
+    <title>AdBis - Reviews</title>
 
     <!-- Bootstrap core CSS -->
     <link href="./view/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -73,41 +74,32 @@
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <form name="sentMessage" id="contactForm" novalidate>
-          <p>Trova recensioni in base al nome di un autore</p>
+          <p>Cerca recensioni in base al titolo di un libro o al nome di un autore</p>
             <div class="control-group">
               <div class="form-group floating-label-form-group controls">
                 <label>Autore</label>
-                <input type="text" class="form-control" placeholder="Autore" id="autore">
+                <input id="keyword" type="text" class="form-control" placeholder="Titolo" id="title">
                 <p class="help-block text-danger"></p>
               </div>
+              <input type="radio" id="searchByTitle" name="search" value="title" checked>&nbsp;Titolo
+              <input type="radio" id="searchByAuthor" name="search" value="author">&nbsp;Autore
             </div>
-            <br>
-            <div id="success"></div>
             <div class="form-group">
-              <button type="submit" class="btn btn-primary" id="sendMessageButton">Invia</button>
+              <button type="submit" class="btn btn-primary" id="sendMessageButton" disabled>Invia</button>
+              <button type="reset" class="btn btn-primary" id="resetMessageButton" disabled>Cancella</button>
             </div>
+              <div id="success"></div>
           </form>
-          <form name="sentMessage" id="contactForm" novalidate>
-          <p>Trova recensioni in base al titolo di un libro</p>
-            <div class="control-group">
-              <div class="form-group floating-label-form-group controls">
-                <label>Titolo</label>
-                <input type="text" class="form-control" placeholder="Titolo" id="titolo">
-                <p class="help-block text-danger"></p>
-              </div>
-            </div>
-            <br>
-            <div id="success"></div>
-            <div class="form-group">
-              <button type="submit" class="btn btn-primary" id="sendMessageButton">Invia</button>
-            </div>
-          </form>
+        </div>
+        <br />
+        <div id="resultsContainer" class="row" style="display:none;">
+          <h3>Risultati di ricerca</h3>
+          <div id="results"></div>
         </div>
       </div>
     </div>
 
-
-    <hr>
+    <hr />
 
     <!-- Footer -->
     <footer>
@@ -152,6 +144,9 @@
 
     <!-- Custom scripts for this template -->
     <script src="./view/js/clean-blog.min.js"></script>
+
+    <!-- Custom user scripts -->
+    <script src="./view/js/main.js"></script>
 
   </body>
 

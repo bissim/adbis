@@ -2,11 +2,15 @@
 let sendButton = $("button[type = submit]#sendMessageButton");
 let searchField = $("input[type = text]#keyword");
 
+let pageName;
+
 /**
  * Associate events
  * to loaded page
  */
 $(document).ready(function () {
+    determinePageName();
+
     // assign events to radio
     $("input[type = radio]#searchByTitle").click(swapSearch);
     $("input[type = radio]#searchByAuthor").click(swapSearch);
@@ -14,12 +18,31 @@ $(document).ready(function () {
     searchField.keyup(disableSearchButton);
     searchField.focusout(disableSearchButton);
     // async call to retrieve results
-    sendButton.click(searchBooks);
+    switch (pageName) {
+        case 'ebooks':
+            sendButton.click(searchBooks);
+            break;
+        case 'reviews':
+            sendButton.click(searchReviews);
+            break;
+        default:
+            console.error("wait wat page is dis");
+            break;
+    }
     // block form submission from reloading page
     $("form#contactForm").submit(function (event) {
         event.preventDefault(); // prevent page reload
     });
 });
+
+/**
+ * Determines which page
+ * is currently browsed
+ */
+function determinePageName() {
+    pageName = document.location.href.match(/[^\/]+$/)[0];
+    // console.debug("Hi u'r in " + pageName);
+}
 
 /**
  * Disable search button with
@@ -163,22 +186,28 @@ function searchBooks() {
 function searchReviews() {
     let search = $("input[name = search]:checked, #sentMessage").val();
     let keyword = searchField.val();
+    // console.debug("Searching for " + search.toString() + " " + keyword.toString() + "...");
 
     // AJAX call
     let searchUrl = baseSearchUrl + "review";
+    // console.debug("GET " + searchUrl + "...");
     $.ajax({
         url: searchUrl,
         data: {
             'search': search,
             'keyword': keyword
         },
+        beforeSend: prepareForResults,
         success: showReviews,
         error: ajaxError
     });
 }
 
+/**
+ * Prepare results container
+ */
 function prepareForResults() {
-    console.debug("Preparing for results...");
+    // console.debug("Preparing for results...");
 
     let resultsContainerDiv = $("#resultsContainer");
     let resultsDiv = $("#results");
@@ -198,12 +227,12 @@ function prepareForResults() {
 function showBooks(res) {
     // console.debug("Object received: " + res);
 
-    let resultsDiv = $("#results");
-
     if (res) {
         let message =  "La ricerca ha ottenuto dei risultati! Consultare l'elenco sottostante.";
         $("#success").html(message);
     }
+
+    let resultsDiv = $("#results");
 
     try {
         // delete temporary message in results container
@@ -216,7 +245,9 @@ function showBooks(res) {
         let resultNode = "";
         $.each(json, function (i, value) {
             // create result node
-            resultNode = $("<div></div>").attr("id", "res" + i).attr("class", "row");
+            resultNode = $("<div></div>")
+                .attr("id", "res" + i)
+                .attr("class", "row");
             resultNode.hide();
 
             // create image container
@@ -240,7 +271,7 @@ function showBooks(res) {
             resultsDiv.append(resultNode);
             resultsDiv.append("<hr />");
             resultNode.fadeIn();
-        }); // TODO properly create a result node
+        });
     } catch (e) {
         throw e;
     }
@@ -251,30 +282,58 @@ function showBooks(res) {
  * @param res
  */
 function showReviews(res) {
-    let txt = "";
-
     // console.debug("Object received: " + res);
 
+    if (res) {
+        let message =  "La ricerca ha ottenuto dei risultati! Consultare l'elenco sottostante.";
+        $("#success").html(message);
+    }
+
+    let resultsDiv = $("#results");
+
     try {
+        // delete temporary message in results container
+        resultsDiv.empty();
+
         // create object from JSON
         let json = JSON.parse(res);
 
-        // iterate over array
+        // iterate over results array
+        let resultNode = "";
         $.each(json, function (i, value) {
-            txt += "Titolo: " + value.title + "<br />";
-            txt += "Autore: " + value.author + "<br />";
-            txt += "Trama: " + value.plot + "<br />";
-            txt += "Testo: " + value.txt + "<br />";
-            txt += "Media: " + value.average + "<br />";
-            txt += "Stile: " + value.style + "<br />";
-            txt += "Contenuto: " + value.content + "<br />";
-            txt += "Piacevolezza: " + value.pleasantness + "<hr />";
+            // create results node
+            resultNode = $("<div></div>")
+                .attr("id", "res" + i)
+                .attr("class", "row");
+            resultNode.hide();
+
+            // create stats container
+            let statsContainer = $("<div></div>")
+                .attr("style", "float:right;width:200px;height:200px;margin:2px 4px 2px 4px;");
+            statsContainer
+                .append("<span>Voto: <strong>" + value.average + "</strong></span><br />")
+                .append("<span>Stile: " + value.style + "</span><br />")
+                .append("<span>Contenuto: " + value.content + "</span><br />")
+                .append("<span>Piacevolezza: " + value.pleasantness + "</span>");
+            resultNode.append(statsContainer);
+
+            // create plot and review container
+            let textContainer = $("<div></div>")
+                .css("float", "left");
+            textContainer
+                .append("<span><strong>" + value.title + "</strong></span><br />")
+                .append("<span>di <em>" + value.author + "</em></span><br />")
+                .append("<div><h4>Trama</h4><p>" + value.plot + "</p></div>")
+                .append("<div><h4>Recensione di un utente</h4><p>" + value.txt + "</p></div>");
+            resultNode.append(textContainer);
+
+            resultsDiv.append(resultNode);
+            resultsDiv.append("<hr />");
+            resultNode.fadeIn();
         });
     } catch (e) {
         throw e;
     }
-
-    $("#demo").html(txt);
 }
 
 /**
