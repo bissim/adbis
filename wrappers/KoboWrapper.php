@@ -10,7 +10,7 @@
         // variables
         private $bookScraper;
         private $queries;
-        private $queryUrl = 'https://www.kobo.com/it/it/search?Query=';
+        private $queryUrl = 'https://www.kobo.com/it/it/search?fclanguages=it&Query=';
 
         public function __construct()
         {
@@ -22,7 +22,7 @@
                 'price' => '//section//div/ul/li/div/div[2]/p[@class="product-field price"]/span/span/text()',
                 // 'editor' => '//div[@class="BookItemDetailSecondaryMetadataWidget"]/div/div/div/ul/li/a[@class="description-anchor"]/span/text()',
                 'image' => '//section//div/ul/li/div/div[1]/div/a/div/img/attribute::src',
-            );
+            ); // TODO cycle over <li> element
             $this->bookScraper = new BookScraper;
             $this->bookScraper->setQueries($this->queries);
         }
