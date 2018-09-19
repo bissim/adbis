@@ -19,6 +19,7 @@
                 'title' => '//div[@id="system"]/article/div/div/h1/span[@class="fn"]/text()',
                 'author' => '//div[@class="jr_customFields"]/div/div[@class="fieldRow jr_autorestr"]/div/a/text()',
                 'plot' => '//div[@class="contentFulltext"]/text()',
+//                'plotAlt' => '//div[@class="contentFulltext"]/p/text()', // TODO determine wheter it can be used
                 'text' => '//div[@id="jr_user_reviews"]/div[2]/div/div[3]/div[1]/p',
                 'avg' => '//div[@class="ratingInfo"]/table/tr[1]/td[@class="rating_value"]/text()',
                 'style' => '//div[@class="ratingInfo"]/table/tr[2]/td[@class="rating_value"]/text()',
