@@ -2,5 +2,6 @@
 .vscode/
 .settings/
 /vendor/
+node_modules/
 
 /db/dbconfig.ini
