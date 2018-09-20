@@ -10,22 +10,44 @@
         // variables
         private $bookScraper;
         private $queries;
-        // private $domain = 'https://www.amazon.it';
         private $domain = '';
-        // private $queryUrl = '/gp/aw/s/?rh=n%3A411663031%2Cp_n_binding_browse-bin%3A1462592031&keywords=';
         private $queryUrl = 'https://www.amazon.it/s/ref=nb_sb_noss?__mk_it_IT=%C3%85M%C3%85%C5%BD%C3%95%C3%91&url=node%3D827182031&field-keywords=';
 
         public function __construct()
         {
-            $this->queries = array(
-                // 'links' => '//ul[@id="resultItems"]/li/a/attribute::href',
-                'link' => '//div[@class="a-fixed-left-grid-col a-col-right"]/div/div/a/attribute::href',
-                'title' => '//div[@class="a-fixed-left-grid-col a-col-right"]/div/div/a/h2/text()',
-                'author' => '//div[@class="a-row a-spacing-small"]/div[2]/span[2]/a/text()',
-                'price' => '//div[@class="s-item-container"]/div/div/div/div/div/div/a/span[2]/text()',
-                // 'editor' => '//div[@id="detailBullets_feature_div"]/div/ul/li[2]/span/span[2]/text()',
-                'image' => '//div[@class="s-item-container"]/div/div/div/div/div/a/img/attribute::src',
-            );
+            $titleQueries = array();
+            $linkQueries = array();
+            $authorQueries = array();
+            $imgQueries = array();
+            $priceQueries = array();
+
+            for ($i=1; $i<=15; $i++)
+            {
+                $itemId = '"result_' . $i . '"';
+
+                array_push($titleQueries,
+                '//ul/li[@id=' . $itemId . ']/div/div/div/div[2]/div/div/a/h2');
+
+                array_push($linkQueries, 
+                '//ul/li[@id=' . $itemId . ']/div/div/div/div[2]/div/div/a/attribute::href');
+
+                array_push($authorQueries,
+                '//ul/li[@id=' . $itemId . ']/div/div/div/div[2]/div/div[2]/span[2]/a/text()');
+
+                array_push($imgQueries,
+                '//ul/li[@id=' . $itemId . ']/div/div/div/div/div/div/a/img/attribute::src');
+
+                array_push($priceQueries,
+                '//ul/li[@id=' . $itemId . ']/div/div/div/div[2]/div[2]/div/div/*[contains(.,"EUR")]');
+            }
+
+            $this->queries = array();
+            $this->queries['titleQueries'] = $titleQueries;
+            $this->queries['linkQueries'] = $linkQueries;
+            $this->queries['authorQueries'] = $authorQueries;
+            $this->queries['imgQueries'] = $imgQueries;
+            $this->queries['priceQueries'] = $priceQueries;
+
             $this->bookScraper = new BookScraper;
             $this->bookScraper->setQueries($this->queries);
         }

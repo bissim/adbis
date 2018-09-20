@@ -14,15 +14,37 @@
 
         public function __construct()
         {
-            $this->queries = array(
-                // 'links' => '//div[@class="item-info"]/p[@class="title product-field"]/a/attribute::href',
-                'link' => '//section//div/ul/li/div/div[2]/p/a/attribute::href',
-                'title' => '//section//div/ul/li/div/div[2]/p/a/text()',
-                'author' => '//section//div/ul/li/div/div[2]/p/span[2]/a/text()',
-                'price' => '//section//div/ul/li/div/div[2]/p[@class="product-field price"]/span/span/text()',
-                // 'editor' => '//div[@class="BookItemDetailSecondaryMetadataWidget"]/div/div/div/ul/li/a[@class="description-anchor"]/span/text()',
-                'image' => '//section//div/ul/li/div/div[1]/div/a/div/img/attribute::src',
-            ); // TODO cycle over <li> element
+            $titleQueries = array();
+            $linkQueries = array();
+            $authorQueries = array();
+            $imgQueries = array();
+            $priceQueries = array();
+
+            for ($i=1; $i<=12; $i++)
+            {
+                array_push($titleQueries,
+                '//section//div/ul/li[' . $i . ']/div/div[2]/p/a/text()');
+
+                array_push($linkQueries, 
+                '//section//div/ul/li[' . $i . ']/div/div[2]/p/a/attribute::href');
+
+                array_push($authorQueries,
+                '//section//div/ul/li[' . $i . ']/div/div[2]/p/span[2]/a/text()');
+
+                array_push($imgQueries,
+                '//section//div/ul/li[' . $i . ']/div/div[1]/div/a/div/img/attribute::src');
+
+                array_push($priceQueries,
+                '//section//div/ul/li[' . $i . ']/div/div[2]/p[@class="product-field price"]/span/span/text()');
+            }
+
+            $this->queries = array();
+            $this->queries['titleQueries'] = $titleQueries;
+            $this->queries['linkQueries'] = $linkQueries;
+            $this->queries['authorQueries'] = $authorQueries;
+            $this->queries['imgQueries'] = $imgQueries;
+            $this->queries['priceQueries'] = $priceQueries;
+
             $this->bookScraper = new BookScraper;
             $this->bookScraper->setQueries($this->queries);
         }
