@@ -73,13 +73,17 @@ function disableSearchButton() {
 function swapSearch() {
     let isAuthorRadio = $('#searchByAuthor').prop("checked");
     let isTitleRadio = $('#searchByTitle').prop("checked");
+    let join = $("#searchBoth");
 
     if (isAuthorRadio) {
         searchField.prop("placeholder", "Autore");
         $("#searchLabel").text("Autore");
+        join.prop("disabled", true);
+        join.prop("checked", false);
     } else if (isTitleRadio) {
         searchField.prop("placeholder", "Titolo");
         $("#searchLabel").text("Titolo");
+        join.prop("disabled", false);
     } else {
         console.error("wat");
     }
@@ -163,7 +167,9 @@ function search() {
 function searchBooks() {
     let search = $("input[name = search]:checked, #sentMessage").val();
     let keyword = searchField.val();
+    let join = $("#searchBoth").prop("checked");
     // console.debug("Searching for " + search.toString() + " " + keyword.toString() + "...");
+    // console.debug("Both? " + join);
 
     // AJAX call
     let searchUrl = baseSearchUrl + "book";
@@ -172,10 +178,11 @@ function searchBooks() {
         url: searchUrl,
         data: {
             'search': search,
-            'keyword': keyword
+            'keyword': keyword,
+            'join': join
         },
         beforeSend: prepareForResults,
-        success: showBooks,
+        success: join? showBoth: showBooks,
         error: ajaxError
     });
 }
@@ -226,6 +233,7 @@ function prepareForResults() {
  */
 function showBooks(res) {
     // console.debug("Object received: " + res);
+    return; // TODO REMOVE!
 
     if (res) {
         let message =  "La ricerca ha ottenuto dei risultati! Consultare l'elenco sottostante.";
@@ -334,6 +342,10 @@ function showReviews(res) {
     } catch (e) {
         throw e;
     }
+}
+
+function showBoth(res) {
+    console.warn("implement me pls");
 }
 
 /**

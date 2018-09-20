@@ -83,7 +83,7 @@
               </div>
               <input type="radio" id="searchByTitle" name="search" value="title" checked>&nbsp;Titolo
               <input type="radio" id="searchByAuthor" name="search" value="author">&nbsp;Autore
-              <input type="checkbox" name="join" value="join" disabled>&nbsp;Cerca le recensioni associate
+              <input type="checkbox" id="searchBoth" name="join" value="join">&nbsp;Cerca le recensioni associate
             </div>
             <div class="control-group" style="margin-top:5px;">
               <button type="submit" class="btn btn-primary" id="sendMessageButton" disabled>Cerca</button>

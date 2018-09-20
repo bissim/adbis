@@ -27,13 +27,51 @@
             $this->search('review', $search, $keyword, $ajax);
         }
 
+        public function searchBoth(string $search, string $keyword, bool $ajax)
+        {
+            $result = '';
+            $join = '';
+            $mediator = new Mediator;
+
+            try
+            {
+                $result = $mediator->retrieve('join', $search, $keyword);
+
+            }
+            catch (Throwable $th)
+            {
+                user_error(
+                    "An error occurred: {$th->getMessage()}" .
+                    " in {$th->getFile()}" .
+                    " line {$th->getLine()}" .
+                    " (code {$th->getCode()})."
+                );
+            }
+
+            // show result in view
+            if ($ajax)
+            {
+                echo $result;
+            }
+            else
+            {
+                Flight::render(
+                    'index',
+                    array(
+                        'result' => $result,
+                        'join' => $join
+                    )
+                );
+            }
+        }
+
         public function search(string $table, string $search, string $keyword, bool $ajax)
         {
             $result = '';
 
             try
             {
-                $result = (new Mediator())->retrieve($table, $search, $keyword);
+                $result = (new Mediator)->retrieve($table, $search, $keyword);
             }
             catch (Throwable $th)
             {

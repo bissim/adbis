@@ -88,12 +88,25 @@
         // extract data from request
         $search = $request->query['search'];
         $keyword = $request->query['keyword'];
+        $join = $request->query['join'];
+        $ajax = $request->ajax;
 
         // manage data if they exist
         if ($search && $keyword)
         {
             $controller = new SearchController;
-            $controller->searchBook($search, $keyword, $request->ajax);
+            switch ($join) // TODO check
+            {
+                case 'true':
+                    $controller->searchBoth($search, $keyword, $ajax);
+                    break;
+                case 'false':
+                    $controller->searchBook($search, $keyword, $ajax);
+                    break;
+                default:
+                    throw new \Exception("wtf");
+                    break;
+            }
         }
         else
         {

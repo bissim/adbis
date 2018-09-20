@@ -63,6 +63,13 @@
             return $result;
         }
 
+        /**
+         * @param string $search
+         * @param string $keyword
+         *
+         * @return string
+         * @throws \Exception
+         */
         private function jsonEncodeBooks(string $search, string $keyword): string
         {
             $daoMng = new DAOManager();
@@ -77,6 +84,13 @@
             return json_encode($books);
         }
 
+        /**
+         * @param string $search
+         * @param string $keyword
+         *
+         * @return string
+         * @throws \Exception
+         */
         private function jsonEncodeReviews(string $search, string $keyword): string
         {
             $daoMng = new DAOManager();
@@ -91,20 +105,27 @@
             return json_encode($reviews);
         }
 
+        /**
+         * @param string $search
+         * @param string $keyword
+         *
+         * @return string
+         * @throws \Exception
+         */
         private function jsonEncodeBoth(string $search, string $keyword): string
         {
             $daoMng = new DAOManager();
             $books = $daoMng->getBooks($search, $keyword);
             $reviews = $daoMng->getReviews($search, $keyword);
-            
+
             if (empty($books))
             {
                 $wrapperMng = new WrapperManager();
                 $daoMng->addBooks($wrapperMng->getBooks($keyword));
                 $books = $daoMng->getBooks($search, $keyword);
             }
+
             if (empty($reviews))
-            
             {
                 $wrapperMng = new WrapperManager();
                 $daoMng->addReviews($wrapperMng->getReviews($keyword));
@@ -114,18 +135,18 @@
             $booksFound = array();
             $booksFound['reviews'] = array();
 
-            foreach ($books as $book)
+            foreach ($books as $book) // TODO Y U ARRAY
             {
                 array_push($booksFound, $book);
                 foreach ($reviews as $review)
-                if ($book->getTitle === $review->getTitle)
                 {
-                    array_push($booksFound['reviews'], $review);
+                    if ($book['title'] === $review['title'])
+                    {
+                        array_push($booksFound['reviews'], $review);
+                    }
                 }
             }
-            
+
             return json_encode($booksFound);
         }
-
-
-}
+    }
