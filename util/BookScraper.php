@@ -91,11 +91,11 @@
                 $link = $xpath->query($this->queries['linkQueries'][$i]);
 
                 $book = new Book(
-                    $this->checkEmpty($title[0]->nodeValue),
-                    $this->checkEmpty($author[0]->nodeValue),
-                    $this->checkFloat($price[0]->nodeValue),
-                    $this->checkEmpty($image[0]->nodeValue),
-                    $this->checkEmpty($link[0]->nodeValue)
+                    $this->checkEmpty($title),
+                    $this->checkEmpty($author),
+                    $this->checkFloat($price),
+                    $this->checkEmpty($image),
+                    $this->checkEmpty($link)
                 );
 
                 array_push($booksFound, $book);
@@ -104,15 +104,26 @@
             return $booksFound;
         }
 
-        private function checkEmpty($value)
+        private function checkEmpty($result)
         {
-            return empty($value) ? '' : $value;
+            if ($result->length > 0)
+            {
+                $value = $result[0]->nodeValue;
+                return empty($value) ? '' : $value;
+            }
+            return '';
+
         }
-        private function checkFloat($value)
+        private function checkFloat($result)
         {
-            if (empty($value)) return 0.0;
-            $value = preg_replace('/[^0-9,.]/', '', $value);
-            $value = str_replace(',', '.', $value);
-            return (float) \floatval($value);
+            if ($result->length > 0)
+            {
+                $value = $result[0]->nodeValue;
+                if (empty($value)) return 0.0;
+                $value = preg_replace('/[^0-9,.]/', '', $value);
+                $value = str_replace(',', '.', $value);
+                return (float) \floatval($value);
+            }
+            return 0.0;
         }
 }
