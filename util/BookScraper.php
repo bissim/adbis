@@ -62,7 +62,6 @@
         private function createDOMXPath(string $url): DOMXPath
         {
             $page = $this->getWebPage($url);
-            // $page = file_get_contents($url);
             // create DOM
             $dom = new DOMDocument;
             libxml_use_internal_errors(true);
@@ -81,62 +80,39 @@
 
             $booksFound = array();
 
-            $entriesTitle = $xpath->query($this->queries['title']);
-            $entriesAuthor = $xpath->query($this->queries['author']);
-            $entriesPrice = $xpath->query($this->queries['price']);
-            $entriesImage = $xpath->query($this->queries['image']);
-            $entriesLink = $xpath->query($this->queries['link']);
-            
-            $length = $entriesAuthor->length;
+            $length = count($this->queries['titleQueries']);
 
-            for ($i=0; $i<$length; $i++)
+            for ($i=0; $i < $length; $i++)
             {
-                $book = new Book(
-                    $this->checkEmpty($entriesTitle, $i),
-                    $this->checkEmpty($entriesAuthor, $i),
-                    $this->checkFloat($entriesPrice, $i),
-                    $this->checkEmpty($entriesImage, $i),
-                    $this->checkEmpty($entriesLink, $i)
-                );
-                array_push($booksFound,$book);
-            }
+                $title = $xpath->query($this->queries['titleQueries'][$i]);
+                $author = $xpath->query($this->queries['authorQueries'][$i]);
+                $price = $xpath->query($this->queries['priceQueries'][$i]);
+                $image = $xpath->query($this->queries['imgQueries'][$i]);
+                $link = $xpath->query($this->queries['linkQueries'][$i]);
 
+                $book = new Book(
+                    $this->checkEmpty($title[0]->nodeValue),
+                    $this->checkEmpty($author[0]->nodeValue),
+                    $this->checkFloat($price[0]->nodeValue),
+                    $this->checkEmpty($image[0]->nodeValue),
+                    $this->checkEmpty($link[0]->nodeValue)
+                );
+
+                array_push($booksFound, $book);
+            }
+            
             return $booksFound;
         }
 
-        private function checkEmpty($entriesValue, $i) : string
+        private function checkEmpty($value)
         {
-            if ($entriesValue->length > $i)
-            {   
-                $value = $entriesValue[$i]->nodeValue;
-                return empty($value) ? '' : $value;
-            }
-            return '';
+            return empty($value) ? '' : $value;
         }
-
-        private function checkFloat($entriesValue, $i) : float
+        private function checkFloat($value)
         {
-            if ($entriesValue->length > $i)
-            {
-                $value = $entriesValue[$i]->nodeValue;
-                if (empty($value)) return 0.0;
-                    $value = preg_replace('/[^0-9,.]/', '', $value);
-                    $value = str_replace(',', '.', $value);
-                    return (float) \floatval($value);                
-            }
-            return 0.0;
+            if (empty($value)) return 0.0;
+            $value = preg_replace('/[^0-9,.]/', '', $value);
+            $value = str_replace(',', '.', $value);
+            return (float) \floatval($value);
         }
-
-        // private function checkEmpty($value)
-        // {
-        //     return empty($value) ? '' : $value;
-        // }
-
-        // private function checkFloat($value)
-        // {
-        //     if (empty($value)) return 0.0;
-        //     $value = preg_replace('/[^0-9,.]/', '', $value);
-        //     $value = str_replace(',', '.', $value);
-        //     return (float) \floatval($value);
-        // }
-    }
+}
