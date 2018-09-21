@@ -1,17 +1,23 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mauro
- * Date: 12/09/2018
- * Time: 10:10
- */
+    /**
+     * Created by PhpStorm.
+     * User: mauro
+     * Date: 12/09/2018
+     * Time: 10:10
+     */
 
-namespace test;
+    namespace test;
 
-$configs = parse_ini_file('../db/dbconfig.ini', true);
+    class ParseIniTest
+    {
+        public function test()
+        {
+            $configs = parse_ini_file('../db/dbconfig.ini', true);
 
-$serverProperty = $configs['connection']['server'];
+            $serverProperty = $configs['connection']['server'];
 
-user_error("DB Server: {$serverProperty}");
+            user_error("DB Server: {$serverProperty}");
 
-echo 'Parse successful!';
+            echo 'Parse successful!';
+        }
+    }

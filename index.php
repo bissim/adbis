@@ -19,6 +19,7 @@
     require './test/AmazonWrapperTest.php';
     require './test/GoogleWrapperTest.php';
     require './test/KoboWrapperTest.php';
+    require './test/MediatorTest.php';
 
     use \controller\SearchController;
 
@@ -153,6 +154,10 @@
 
     Flight::route('/test/kobobook', function () {
         (new \test\KoboWrapperTest)->test();
+    });
+
+    Flight::route('/test/mediator', function () {
+        (new \test\MediatorTest)->test();
     });
 
     // run Fight router
