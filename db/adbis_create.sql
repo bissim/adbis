@@ -24,7 +24,7 @@ drop table if exists book;
 
 create table if not exists book (
   id integer(4) auto_increment unique,
-  title VARCHAR(200) not null,
+  title VARCHAR(400) not null,
   author VARCHAR(150) not null,
   price FLOAT not null,
   image VARCHAR(250),
