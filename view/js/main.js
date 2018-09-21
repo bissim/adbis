@@ -2,8 +2,6 @@
 let sendButton = $("button[type = submit]#sendMessageButton");
 let searchField = $("input[type = text]#keyword");
 
-let pageName;
-
 /**
  * Associate events
  * to loaded page
@@ -34,6 +32,8 @@ $(document).ready(function () {
         event.preventDefault(); // prevent page reload
     });
 });
+
+let pageName;
 
 /**
  * Determines which page
@@ -232,8 +232,8 @@ function prepareForResults() {
  * @param res
  */
 function showBooks(res) {
+    console.debug("hi I'll show books nao");
     // console.debug("Object received: " + res);
-    return; // TODO REMOVE!
 
     if (res) {
         let message =  "La ricerca ha ottenuto dei risultati! Consultare l'elenco sottostante.";
@@ -345,7 +345,40 @@ function showReviews(res) {
 }
 
 function showBoth(res) {
-    console.warn("implement me pls");
+    console.warn("implement me pls ___;-;");
+    let json = JSON.parse(res);
+
+    // test
+    // for (let propName in json) {
+    //     let propValue = json[propName];
+    //     console.debug("Property " + propName + ": " + propValue + ".");
+    // }
+
+    let books = json.books;
+    let reviews = json.reviews;
+
+    $.each(books, function (i, value) {
+        console.debug(
+            "Value " + i +
+            ": " + value.toString() +
+            "\nTitle " + value.title
+        );
+
+        // $.each(value.books, function (i, book) {
+        //     console.debug("Libro: " + book.title);
+        // });
+        // $.each(value.reviews, function (i, review) {
+        //     console.debug("Recensione: " + review.title);
+        // });
+    });
+
+    $.each(reviews, function (i, value) {
+        console.debug(
+            "Value " + i +
+            ": " + value.toString() +
+            "\nTitle " + value.title
+        );
+    })
 }
 
 /**
