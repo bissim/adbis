@@ -4,14 +4,18 @@
     require './controller/BookDAO.php';
     require './controller/ReviewDAO.php';
 
-    class DAOManager {
+    use \controller\BookDAO;
+    use \controller\ReviewDAO;
+
+    class DAOManager
+    {
         private $bookDAO;
         private $reviewDAO;
 
         public function __construct()
         {
-            $this->bookDAO = new BookDAO();
-            $this->reviewDAO = new ReviewDAO();
+            $this->bookDAO = new BookDAO;
+            $this->reviewDAO = new ReviewDAO;
         }
 
         // Ricerca i libri nel database in base all'autore o al titolo
