@@ -39,4 +39,12 @@
             return $reviews;
         }
 
+        
+        public function getNewBooks(): array
+        {
+            $books = array_merge($this->amazonWrapper->getNewBooks(),
+                                $this->koboWrapper->getNewBooks());
+            return $books;
+        }
+
     }

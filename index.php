@@ -82,6 +82,11 @@
         }
     });
 
+    Flight::route('/search/news', function () {        
+        $controller = new SearchController;
+        $controller->searchNews();
+    });
+
     Flight::route('/search/book', function () {
         // retrieve request
         $request = Flight::request();

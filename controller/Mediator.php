@@ -62,6 +62,14 @@
             return $result;
         }
 
+        // Restituisce in formato JSON i nuovi ebook
+        public function getNewBooks()
+        {
+            $wrapperMng = new WrapperManager;
+            $books = $wrapperMng->getNewBooks();
+            return json_encode($books);
+        }
+
         /**
          * @param string $search
          * @param string $keyword

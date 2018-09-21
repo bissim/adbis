@@ -27,6 +27,14 @@
             $this->search('review', $search, $keyword, $ajax);
         }
 
+        // Cerca i nuovi ebook
+        public function searchNews()
+        {
+            $mediator = new Mediator;
+            $result = $mediator->getNewBooks();
+            echo $result;
+        }
+
         public function searchBoth(string $search, string $keyword, bool $ajax)
         {
             $result = '';

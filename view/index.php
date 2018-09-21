@@ -102,6 +102,8 @@
     <!-- Custom scripts for this template -->
     <script src="./view/js/clean-blog.min.js"></script>
 
+    <script src="./view/js/prova.js"></script>
+
   </body>
 
 </html>
