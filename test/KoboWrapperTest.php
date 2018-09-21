@@ -21,7 +21,8 @@
             $inizio = $this->microtime_float();
 
             $koboWrapper = new KoboWrapper;
-            $books = $koboWrapper->getBooks('harry potter');
+            // $books = $koboWrapper->getBooks('harry potter');
+            $books = $koboWrapper->getNewBooks();
 
             foreach ($books as $book)
                 print $book;

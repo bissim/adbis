@@ -29,13 +29,10 @@
 
             $reviewWrapper = new ReviewWrapper;
 
-            // $reviews = $reviewWrapper->getReviews('il signore degli anelli');
-
             try
             {
-                // $reviews = $reviewWrapper->getReviews('harry potter');
-
-                $reviews = $reviewWrapper->getReviews('il signore degli anelli');
+                // $reviews = $reviewWrapper->getReviews('il signore degli anelli');
+                $reviews = $reviewWrapper->getNewReviews();
             }
             catch (\Throwable $th)
             {

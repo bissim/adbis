@@ -21,8 +21,8 @@
             $inizio = $this->microtime_float();
 
             $amazonWrapper = new AmazonWrapper;
-            // var_dump($amazonWrapper->getQueries());
-            $books = $amazonWrapper->getBooks('harry potter');
+            // $books = $amazonWrapper->getBooks('harry potter');
+            $books = $amazonWrapper->getNewBooks();
 
             // check parameters for every book
             foreach ($books as $book)
