@@ -44,6 +44,8 @@
             foreach ($entries as $entryLink)
             {
                 $l = $entryLink->firstChild->nodeValue;
+                if (!(substr( $l, 0, 7 ) === "http://"))
+                    $l = 'https://qlibri.it' . $l;
                 array_push($links, $l);
             }
 
