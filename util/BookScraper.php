@@ -74,7 +74,7 @@
             return $xpath;
         }
 
-        private function searchBooks(string $queryUrl)
+        private function searchBooks(string $queryUrl) : array
         {
             $xpath = $this->createDOMXPath($queryUrl);
 
