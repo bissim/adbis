@@ -10,10 +10,20 @@
         // variables
         private $bookScraper;
         private $queries;
+        private $queriesNews;
         private $domain = '';
         private $queryUrl = 'https://www.amazon.it/s/ref=nb_sb_noss?__mk_it_IT=%C3%85M%C3%85%C5%BD%C3%95%C3%91&url=node%3D827182031&field-keywords=';
+        private $queryNewsUrl = 'https://www.amazon.it/gp/new-releases/digital-text/827182031';
 
         public function __construct()
+        {
+            $this->queries = $this->createQueries();
+            $this->queriesNews = $this->createQueriesNews();
+
+            $this->bookScraper = new BookScraper;
+        }
+
+        private function createQueries(): array
         {
             $titleQueries = array();
             $linkQueries = array();
@@ -41,20 +51,60 @@
                 '//ul/li[@id=' . $itemId . ']/div/div/div/div[2]/div[2]/div/div/*[contains(.,"EUR")]');
             }
 
-            $this->queries = array();
-            $this->queries['titleQueries'] = $titleQueries;
-            $this->queries['linkQueries'] = $linkQueries;
-            $this->queries['authorQueries'] = $authorQueries;
-            $this->queries['imgQueries'] = $imgQueries;
-            $this->queries['priceQueries'] = $priceQueries;
-
-            $this->bookScraper = new BookScraper;
-            $this->bookScraper->setQueries($this->queries);
+            $queries = array();
+            $queries['titleQueries'] = $titleQueries;
+            $queries['linkQueries'] = $linkQueries;
+            $queries['authorQueries'] = $authorQueries;
+            $queries['imgQueries'] = $imgQueries;
+            $queries['priceQueries'] = $priceQueries;
+            return $queries;
         }
+
+        private function createQueriesNews(): array
+        {
+            $titleQueries = array();
+            $linkQueries = array();
+            $authorQueries = array();
+            $imgQueries = array();
+            $priceQueries = array();
+
+            for ($i=1; $i<=15; $i++)
+            {
+                array_push($titleQueries,
+                '//div[@id="zg-center-div"]/ol/li[' . $i . ']/span/div/span/a/div/text()');
+
+                array_push($linkQueries, 
+                '//div[@id="zg-center-div"]/ol/li[' . $i . ']/span/div/span/a/attribute::href');
+
+                array_push($authorQueries,
+                '//div[@id="zg-center-div"]/ol/li[' . $i . ']/span/div/span/div[1]');
+
+                array_push($imgQueries,
+                '//div[@id="zg-center-div"]/ol/li[' . $i . ']/span/div/span/a/span/div/img/attribute::src');
+
+                array_push($priceQueries,
+                '//div[@id="zg-center-div"]/ol/li[' . $i . ']/span/div/span/div/*[contains(.,"EUR")]');
+            }
+
+            $queries = array();
+            $queries['titleQueries'] = $titleQueries;
+            $queries['linkQueries'] = $linkQueries;
+            $queries['authorQueries'] = $authorQueries;
+            $queries['imgQueries'] = $imgQueries;
+            $queries['priceQueries'] = $priceQueries;
+            return $queries;
+        }        
 
         public function getBooks(String $keyword): array
         {
-             return $this->bookScraper->getBooks($this->domain, $this->queryUrl, $keyword, '');
+            $this->bookScraper->setQueries($this->queries);
+            return $this->bookScraper->getBooks($this->domain, $this->queryUrl, $keyword, '');
+        }
+
+        public function getNewBooks(): array
+        {
+            $this->bookScraper->setQueries($this->queriesNews);
+            return $this->bookScraper->getBooks($this->domain, $this->queryNewsUrl, '', '');
         }
 
         public function getQueries(): array
