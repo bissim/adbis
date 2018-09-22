@@ -39,9 +39,11 @@
 
             $review = $entity;
 
+            $is_recent = $review->isRecent() ? 1 : 0;
+
             $instruction = "
-                INSERT INTO review (title, author, plot, txt, average, style, content, pleasantness)
-                VALUES (:title, :author, :plot, :txt, :average, :style, :content, :pleasantness)
+                INSERT INTO review (title, author, plot, txt, average, style, content, pleasantness, is_recent)
+                VALUES (:title, :author, :plot, :txt, :average, :style, :content, :pleasantness, :is_recent)
             ";
             $params = array(
                 ':title' => $review->getTitle(),
@@ -51,7 +53,8 @@
                 ':average' => $review->getAvg(),
                 ':style' => $review->getStyle(),
                 ':content' => $review->getContent(),
-                ':pleasantness' => $review->getPleasantness()
+                ':pleasantness' => $review->getPleasantness(),
+                ':is_recent' => $is_recent
             );
             $this->dbMan->execute($instruction, $params);
             $this->dbMan->disconnect();
@@ -137,6 +140,24 @@
             ";
             $params = array(
                 ':author' => $author
+            );
+            $results = $this->dbMan->query($instruction, $params);
+            $this->dbMan->disconnect();
+
+            return $results;
+        }
+
+        public function retrieveNew(): array
+        {
+            $this->connect();
+
+            $is_recent = 1;
+
+            $instruction = "
+                SELECT * FROM review WHERE is_recent = :is_recent
+            ";
+            $params = array(
+                ':is_recent' => $is_recent
             );
             $results = $this->dbMan->query($instruction, $params);
             $this->dbMan->disconnect();

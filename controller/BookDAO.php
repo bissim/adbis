@@ -39,16 +39,19 @@
 
             $book = $entity;
 
+            $is_recent = $book->isRecent() ? 1 : 0;
+
             $instruction = "
-                INSERT INTO book (title, author, price, image, link)
-                VALUES (:title, :author, :price, :image, :link)
+                INSERT INTO book (title, author, price, image, link, is_recent)
+                VALUES (:title, :author, :price, :image, :link, :is_recent)
             ";
             $params = array(
                 ':title' => $book->getTitle(),
                 ':author' => $book->getAuthor(),
                 ':price' => $book->getPrice(),
                 ':image' => $book->getImg(),
-                ':link' => $book->getLink()
+                ':link' => $book->getLink(),
+                ':is_recent' => $is_recent
             );
             $this->dbMan->execute($instruction, $params);
             $this->dbMan->disconnect();
@@ -131,6 +134,24 @@
             ";
             $params = array(
                 ':author' => $author
+            );
+            $results = $this->dbMan->query($instruction, $params);
+            $this->dbMan->disconnect();
+
+            return $results;
+        }
+
+        public function retrieveNew(): array
+        {
+            $this->connect();
+
+            $is_recent = 1;
+
+            $instruction = "
+                SELECT * FROM book WHERE is_recent = :is_recent
+            ";
+            $params = array(
+                ':is_recent' => $is_recent
             );
             $results = $this->dbMan->query($instruction, $params);
             $this->dbMan->disconnect();
