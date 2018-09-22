@@ -98,13 +98,23 @@
         public function getBooks(String $keyword): array
         {
             $this->bookScraper->setQueries($this->queries);
-            return $this->bookScraper->getBooks($this->domain, $this->queryUrl, $keyword, '');
+            return $this->bookScraper->getBooks(
+                $this->domain,
+                $this->queryUrl,
+                $keyword,
+                '',
+                false);
         }
 
         public function getNewBooks(): array
         {
             $this->bookScraper->setQueries($this->queriesNews);
-            return $this->bookScraper->getBooks($this->domain, $this->queryNewsUrl, '', '');
+            return $this->bookScraper->getBooks(
+                $this->domain,
+                $this->queryNewsUrl,
+                '',
+                '',
+                true);
         }
 
         public function getQueries(): array

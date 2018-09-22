@@ -22,7 +22,9 @@
             $this->queries = $queries;
         }
 
-        public function getBooks(string $domain, string $queryUrl, string $keyword, string $urlSuffix): array
+        public function getBooks(string $domain, string $queryUrl,
+                                    string $keyword, string $urlSuffix,
+                                    bool $new): array
         {
             // create search URL
             $url = $domain . $queryUrl;
@@ -34,7 +36,7 @@
                 $urlSearch .= $urlSuffix;
             }
 
-            $books = $this->searchBooks($urlSearch);
+            $books = $this->searchBooks($urlSearch, $new);
 
             return $books;
         }
@@ -74,7 +76,7 @@
             return $xpath;
         }
 
-        private function searchBooks(string $queryUrl) : array
+        private function searchBooks(string $queryUrl, bool $new) : array
         {
             $xpath = $this->createDOMXPath($queryUrl);
 
@@ -95,7 +97,8 @@
                     $this->checkEmpty($author),
                     $this->checkFloat($price),
                     $this->checkEmpty($image),
-                    $this->checkEmpty($link)
+                    $this->checkEmpty($link),
+                    $new
                 );
 
                 array_push($booksFound, $book);

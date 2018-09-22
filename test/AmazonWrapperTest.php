@@ -22,7 +22,10 @@
 
             $amazonWrapper = new AmazonWrapper;
             // $books = $amazonWrapper->getBooks('harry potter');
-            $books = $amazonWrapper->getNewBooks();
+            // $books = $amazonWrapper->getNewBooks();
+
+            $books = array_merge($amazonWrapper->getBooks('harry potter'),
+                                $amazonWrapper->getNewBooks());
 
             // check parameters for every book
             foreach ($books as $book)

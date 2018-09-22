@@ -105,7 +105,8 @@
                 '',
                 $this->queryUrl,
                 $keyword,
-                '&fclanguages=it'
+                '&fclanguages=it',
+                false
             );
         }
 
@@ -116,7 +117,8 @@
                 '',
                 $this->queryUrl,
                 '',
-                '&fclanguages=it'
+                '&fclanguages=it',
+                true
             );
         }
 

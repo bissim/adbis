@@ -32,7 +32,11 @@
             try
             {
                 // $reviews = $reviewWrapper->getReviews('il signore degli anelli');
-                $reviews = $reviewWrapper->getNewReviews();
+                // $reviews = $reviewWrapper->getNewReviews();
+                $reviews = array_merge($reviewWrapper->getReviews('il signore degli anelli'),
+                                        $reviewWrapper->getNewReviews());
+                foreach ($reviews as $review)
+                    print $review;            
             }
             catch (\Throwable $th)
             {
@@ -40,8 +44,7 @@
             }
 
             // check parameters for every review
-            foreach ($reviews as $review)
-                print $review;
+
 
             $fine = $this->microtime_float();
             $tempo_impiegato = $fine - $inizio;

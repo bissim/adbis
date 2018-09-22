@@ -37,7 +37,8 @@
             return $this->reviewScraper->getReviews(
                 $this->baseUrl,
                 $keyword,
-                ''
+                '',
+                false
             );
         }
 
@@ -48,7 +49,8 @@
             return $this->reviewScraper->getReviews(
                 $this->newUrl,
                 '',
-                ''
+                '',
+                true
             );
         }
 

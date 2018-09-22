@@ -22,7 +22,10 @@
 
             $koboWrapper = new KoboWrapper;
             // $books = $koboWrapper->getBooks('harry potter');
-            $books = $koboWrapper->getNewBooks();
+            // $books = $koboWrapper->getNewBooks();
+
+            $books = array_merge($koboWrapper->getBooks('harry potter'),
+                                $koboWrapper->getNewBooks());
 
             foreach ($books as $book)
                 print $book;

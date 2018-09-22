@@ -22,7 +22,7 @@
             $this->queries = $queries;
         }
 
-        public function getReviews(string $url, string $keyword, string $urlSuffix): array
+        public function getReviews(string $url, string $keyword, string $urlSuffix, bool $new): array
         {
             // create search URL
             $keyword = str_replace(' ', '+', strtolower(trim($keyword)));
@@ -44,14 +44,16 @@
             foreach ($entries as $entryLink)
             {
                 $l = $entryLink->firstChild->nodeValue;
-                if (!(substr( $l, 0, 7 ) === "http://"))
+                if (!(substr( $l, 0, 7 ) === "http://") &&
+                    !(substr( $l, 0, 8 ) === "https://"))
                     $l = 'https://qlibri.it' . $l;
                 array_push($links, $l);
+
             }
 
             // retrieve reviews from links
             // as array of Review objects
-            $reviews = $this->searchReviews($links);
+            $reviews = $this->searchReviews($links, $new);
 
             return $reviews;
         }
@@ -93,7 +95,7 @@
             return $xpath;
         }
 
-        private function searchReviews(array $links): array
+        private function searchReviews(array $links, bool $new): array
         {
             $reviewsFound = array();
 
@@ -111,7 +113,8 @@
                     $attributes['avg'],
                     $attributes['style'],
                     $attributes['content'],
-                    $attributes['pleasantness']
+                    $attributes['pleasantness'],
+                    $new
                 );
                 array_push($reviewsFound, $review);
             }
@@ -141,6 +144,7 @@
 
         private function extractAttributes(string $link): array
         {
+
             $xpath = $this->createDOMXPath($link);
 
             $entriesTitle = $xpath->query($this->queries['title']);
