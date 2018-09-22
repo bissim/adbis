@@ -15,13 +15,14 @@
 
     require './vendor/autoload.php';
     require './controller/SearchController.php';
-    require './model/Book.php';
-    require './model/Review.php';
+    require_once './model/Book.php';
+    require_once './model/Review.php';
     require './test/ReviewWrapperTest.php';
     require './test/AmazonWrapperTest.php';
     require './test/GoogleWrapperTest.php';
     require './test/KoboWrapperTest.php';
     require './test/MediatorTest.php';
+    require './test/BookTest.php';
 
     use \controller\SearchController;
 

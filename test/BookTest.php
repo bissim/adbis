@@ -3,7 +3,11 @@
 
     require_once './model/Book.php';
 
+    use \util\ErrorHandler;
     use \model\Book;
+
+    set_error_handler(array(new ErrorHandler(), 'errorHandler'));
+
 
     class BookTest
     {
