@@ -29,13 +29,14 @@ create table if not exists book (
   price FLOAT not null,
   image VARCHAR(250),
   link VARCHAR(250) not null,
-  expiration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  expiration_date TIMESTAMP default CURRENT_TIMESTAMP,
+  is_recent tinyint(1) default 0
 );
 
 # review table
 drop table if exists review;
 
-create table if not exists review(
+create table if not exists review (
   id integer(4) auto_increment unique,
   title VARCHAR(200) not null,
   author VARCHAR(150) not null,
@@ -45,7 +46,8 @@ create table if not exists review(
   style FLOAT,
   content FLOAT,
   pleasantness FLOAT,
-  expiration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  expiration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  is_recent tinyint(1) default 0
 );
 
 #

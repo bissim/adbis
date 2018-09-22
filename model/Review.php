@@ -15,6 +15,7 @@
         private $style;
         private $content;
         private $pleasantness;
+        private $isRecent;
 
         // Constructor
         public function __construct(
@@ -25,7 +26,8 @@
             float $avg,
             float $style,
             float $content,
-            float $pleasantness
+            float $pleasantness,
+            bool $recent = false
         )
         {
             $this->id = 0;
@@ -37,6 +39,7 @@
             $this->style = $style;
             $this->content = $content;
             $this->pleasantness = $pleasantness;
+            $this->recent = $recent;
         }
 
         // getters
@@ -85,6 +88,11 @@
             return $this->pleasantness;
         }
 
+        public function isRecent(): bool
+        {
+            return $this->recent;
+        }
+
         // setters
         public function setId(int $id)
         {
@@ -130,6 +138,11 @@
             $this->pleasantness = $pleasantness;
         }
 
+        public function setRecent(bool $recent)
+        {
+            $this->recent = $recent;
+        }
+
         public function __toString(): string
         {
             $desc = "<br />Title: $this->title";
@@ -140,6 +153,9 @@
             $desc .= "<br />Style: $this->style";
             $desc .= "<br />Content: $this->content";
             $desc .= "<br />Pleasentness: $this->pleasantness";
+            $this->recent?
+                $desc .= "<br /><strong>New!</strong>":
+                null;
             $desc .= "<hr />";
 
             return $desc;
