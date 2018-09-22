@@ -9,7 +9,7 @@
      */
 
     require_once './vendor/autoload.php';
-    require './controller/Mediator.php';
+    require_once './controller/Mediator.php';
 
     use \Throwable;
     use Flight;
