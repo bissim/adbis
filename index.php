@@ -15,6 +15,8 @@
 
     require './vendor/autoload.php';
     require './controller/SearchController.php';
+    require './model/Book.php';
+    require './model/Review.php';
     require './test/ReviewWrapperTest.php';
     require './test/AmazonWrapperTest.php';
     require './test/GoogleWrapperTest.php';
@@ -140,12 +142,16 @@
         }
     });
 
-    Flight::route('/old', function () {
-        Flight::render('oldIndex.php');
+    // tests
+    Flight::route('/test/book', function () {
+        (new \test\BookTest)->test();
     });
 
-    // tests
-    Flight::route('/test/review', function () {
+    flight::route('/test/review', function () {
+        (new \test\ReviewTest)->test();
+    });
+
+    Flight::route('/test/qreview', function () {
         (new \test\ReviewWrapperTest)->test();
     });
 
