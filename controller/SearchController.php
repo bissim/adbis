@@ -31,12 +31,7 @@
         public function searchNews()
         {
             $mediator = new Mediator;
-            $books = $mediator->getNewBooks();
-            $reviews = $mediator->getNewReviews();
-            $result = array();
-            $result['books'] = $books;
-            $result['reviews'] = $reviews;
-            echo json_encode($result);
+            echo $mediator->getNewItems();
         }
 
         public function searchBoth(string $search, string $keyword, bool $ajax)

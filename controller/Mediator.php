@@ -62,8 +62,16 @@
             return $result;
         }
 
+        public function getNewItems(): string
+        {
+            $res = array();
+            $res['books'] = $this->getNewBooks();
+            $res['reviews'] = $this->getNewReviews();
+            return json_encode($res);
+        }
+
         // Restituisce in formato JSON i nuovi ebook
-        public function getNewBooks()
+        private function getNewBooks(): array
         {
             $daoMng = new DAOManager;
             $books = $daoMng->getNewBooks();
@@ -77,7 +85,7 @@
             return $books;
         }
 
-        public function getNewReviews()
+        private function getNewReviews(): array
         {
             $daoMng = new DAOManager;
             $reviews = $daoMng->getNewReviews();
