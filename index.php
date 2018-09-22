@@ -15,14 +15,15 @@
 
     require './vendor/autoload.php';
     require './controller/SearchController.php';
-    require_once './model/Book.php';
-    require_once './model/Review.php';
     require './test/ReviewWrapperTest.php';
     require './test/AmazonWrapperTest.php';
     require './test/GoogleWrapperTest.php';
     require './test/KoboWrapperTest.php';
     require './test/MediatorTest.php';
     require './test/BookTest.php';
+    require './test/ReviewTest.php';
+    require './test/BookDAOTest.php';
+    require './test/ReviewDAOTest.php';
 
     use \controller\SearchController;
 
@@ -76,8 +77,12 @@
         // manage data if they exist
         if ($table && $search && $keyword)
         {
-            $controller = new SearchController;
-            $controller->search($table, $search, $keyword, $request->ajax);
+            (new SearchController)->search(
+                $table,
+                $search,
+                $keyword,
+                $request->ajax
+            );
         }
         else
         {
@@ -86,8 +91,7 @@
     });
 
     Flight::route('/search/news', function () {        
-        $controller = new SearchController;
-        $controller->searchNews();
+        (new SearchController)->searchNews();
     });
 
     Flight::route('/search/book', function () {
@@ -134,8 +138,11 @@
         // manage data if they exist
         if ($search && $keyword)
         {
-            $controller = new SearchController;
-            $controller->searchReview($search, $keyword, $request->ajax);
+            (new SearchController)->searchReview(
+                $search,
+                $keyword,
+                $request->ajax
+            );
         }
         else
         {
@@ -150,6 +157,14 @@
 
     flight::route('/test/review', function () {
         (new \test\ReviewTest)->test();
+    });
+
+    Flight::route('/test/bookdao', function () {
+        (new \test\BookDAOTest())->test();
+    });
+
+    Flight::route('/test/reviewdao', function () {
+        (new \test\ReviewDAOTest())->test();
     });
 
     Flight::route('/test/qreview', function () {

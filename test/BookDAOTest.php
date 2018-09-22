@@ -20,37 +20,66 @@
         {
             $bookDao = new BookDAO;
 
-            $book = new Book('title', 'author', 1.0, 'image', 'link');
-            $book->setRecent(true);
+            $book = new Book(
+                'title',
+                'author',
+                1.0,
+                'image',
+                'link'
+            );
+
+            $recentBook = new Book(
+                'New title',
+                'New Author',
+                10.,
+                'https://i.mg/img.png',
+                'http://li.nk',
+                true
+            );
+
+            $returnedBook = null;
             try
             {
-                $returnedBooks = $bookDao->retrieveNew();
-                $books = array();
-                
-                foreach ($returnedBooks as $returnedBook)
-                {
-                    $book = new Book (
-                        $returnedBook["title"],
-                        $returnedBook["author"],
-                        $returnedBook["price"],
-                        $returnedBook["image"],
-                        $returnedBook["link"],
-                        $returnedBook["is_recent"]
-                   );
-                   array_push($books, $book);
-                }
+                // test persisting book
+                $returnedBook = $bookDao->create($book);
+                echo "Added book: $returnedBook";
+                if (!$returnedBook)
+                    $returnedBook = new Book(
+                        'just a title',
+                        'just an author',
+                        0.0,
+                        'wtf do u rly want an img?',
+                        'wat'
+                    );
+                $returnedBook->setId(6);
+                echo "searching for book with ID {$returnedBook->getId()}...<br />";
+                $returnedBook = $bookDao->retrieveById($returnedBook);
+                echo "Book retrieved: $returnedBook";
 
-                foreach ($books as $book)
-                    print $book;
-
-
+                // test persisting new book
+                $returnedBook = $bookDao->create($recentBook);
+                echo "<hr />Added new book: $returnedBook";
+                if (!$returnedBook)
+                    $returnedBook = new Book(
+                        'just a title',
+                        'just an author',
+                        0.0,
+                        'wtf do u rly want an img?',
+                        'wat'
+                    );
+                $returnedBook->setId(7);
+                echo "searching for new book with ID {$returnedBook->getId()}...<br />";
+                $returnedBook = $bookDao->retrieveById($returnedBook);
+                echo "Book retrieved: $returnedBook";
             }
-        
             catch (\Exception $e)
             {
                 $date = (new \DateTime())->format('Y-m-d H:i:s');
-                error_log("[$date] An error occurred: {$e->getMessage()}");
+                echo "Code {$e->getCode()} error occurred, check server logs.";
+                error_log(
+                    "[$date] An error occurred: {$e->getMessage()} " .
+                    "on file {$e->getFile()}, line {$e->getLine()}."
+                );
             }
         }
-
     }
