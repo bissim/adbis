@@ -30,8 +30,8 @@
                 'http://de.rp',
                 true
             );
-            print_r($book);
-            echo $book;
+            print_r($newBook);
+            echo $newBook;
             echo '<br />New book printed!<hr />';
         }
     }
