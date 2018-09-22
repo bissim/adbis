@@ -13,7 +13,7 @@
         private $price;
         private $img;
         private $link;
-        private $isRecent;
+        private $recent;
 
         // Constructor
         public function __construct(
@@ -22,7 +22,7 @@
             float $price,
             string $image,
             string $link,
-            bool $isRecent = false
+            bool $recent = false
         )
         {
             $this->id = 0;
@@ -31,7 +31,7 @@
             $this->price = $price;
             $this->img = $image;
             $this->link = $link;
-            $this->isRecent = $isRecent;
+            $this->recent = $recent;
         }
 
         // getters
@@ -67,7 +67,7 @@
 
         public function isRecent(): bool
         {
-            return $this->isRecent;
+            return $this->recent;
         }
 
         // setters
@@ -101,9 +101,9 @@
             $this->link = $link;
         }
 
-        public function setRecent(bool $isRecent)
+        public function setRecent(bool $recent)
         {
-            $this->isRecent = $isRecent;
+            $this->recent = $recent;
         }
 
         public function __toString(): string
@@ -114,7 +114,7 @@
             $desc .= "<br />Price: $this->price";
             $desc .= "<br />Imagine: $this->img";
             $desc .= "<br />Link: $this->link";
-            $this->isRecent?
+            $this->recent?
                 $desc .= "<br /><strong>New!</strong>":
                 null;
             $desc .= "<hr />";
