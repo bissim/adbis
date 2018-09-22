@@ -92,7 +92,7 @@
             $this->dbMan->disconnect();
 
             // return persisted object
-            if (!$results[0]) // TODO check
+            if (!$results) // TODO check
             {
                 throw new \Exception("Review with id {$review->getId()} not found!");
             }
@@ -105,8 +105,10 @@
                 $results[0]["average"],
                 $results[0]["content"],
                 $results[0]["style"],
-                $results[0]["pleasantness"]
+                $results[0]["pleasantness"],
+                $results[0]['is_recent']
             );
+            $review->setId($results[0]['id']);
 
             return $review;
         }

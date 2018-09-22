@@ -89,7 +89,7 @@
             $this->dbMan->disconnect();
 
             // return persisted object
-            if (!$results[0]) // TODO check
+            if (!$results) // TODO check
             {
                 throw new \Exception("Book with id {$book->getId()} not found!");
             }
@@ -99,8 +99,10 @@
                 $results[0]["author"],
                 $results[0]["price"],
                 $results[0]["image"],
-                $results[0]["link"]
+                $results[0]["link"],
+                $results[0]['is_recent']
             );
+            $book->setId($results[0]['id']);
 
             return $book;
         }
