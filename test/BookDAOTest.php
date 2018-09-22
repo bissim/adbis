@@ -9,7 +9,7 @@
     namespace test;
 
     require_once './model/Book.php';
-    require './controller/BookDAO.php';
+    require_once './controller/BookDAO.php';
 
     use \model\Book;
     use \controller\BookDAO;
@@ -20,31 +20,32 @@
         {
             $bookDao = new BookDAO;
 
-            $book = new Book(
-                'title',
-                'author',
-                1.0,
-                'image',
-                'link'
-            );
-            $returnedBook = null;
+            $book = new Book('title', 'author', 1.0, 'image', 'link');
+            $book->setRecent(true);
             try
             {
-                $returnedBook = $bookDao->create($book);
-                echo "Added book: $returnedBook";
-                if (!$returnedBook)
-                    $returnedBook = new Book(
-                        'just a title',
-                        'just an author',
-                        0.0,
-                        'wtf do u rly want an img?',
-                        'wat'
-                    );
-                $returnedBook->setId(6);
-                echo "PENEsearching for book with ID {$returnedBook->getId()}...<br />";
-                $returnedBook = $bookDao->retrieve($book);
-                echo "Book retrieved: $returnedBook";
+                $returnedBooks = $bookDao->retrieveNew();
+                $books = array();
+                
+                foreach ($returnedBooks as $returnedBook)
+                {
+                    $book = new Book (
+                        $returnedBook["title"],
+                        $returnedBook["author"],
+                        $returnedBook["price"],
+                        $returnedBook["image"],
+                        $returnedBook["link"],
+                        $returnedBook["is_recent"]
+                   );
+                   array_push($books, $book);
+                }
+
+                foreach ($books as $book)
+                    print $book;
+
+
             }
+        
             catch (\Exception $e)
             {
                 $date = (new \DateTime())->format('Y-m-d H:i:s');

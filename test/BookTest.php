@@ -21,6 +21,10 @@
                 '',
                 ''
             );
+            if ($book->isRecent())
+                echo 'il libro è recente<br>';
+            else echo 'il libro è vecchio<br>';
+
             var_dump($book);
             echo $book;
             echo '<br />Book printed!<hr />';
