@@ -47,4 +47,10 @@
             return $books;
         }
 
+        public function getNewReviews(): array
+        {
+            $reviews = $this->reviewWrapper->getNewReviews();
+            return $reviews;
+        }
+
     }

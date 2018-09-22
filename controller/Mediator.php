@@ -65,10 +65,31 @@
         // Restituisce in formato JSON i nuovi ebook
         public function getNewBooks()
         {
-            $wrapperMng = new WrapperManager;
-            $books = $wrapperMng->getNewBooks();
-            return json_encode($books);
+            $daoMng = new DAOManager;
+            $books = $daoMng->getNewBooks();
+            if (empty($books))
+            {
+                $wrapperMng = new WrapperManager;
+                $daoMng->addBooks($wrapperMng->getNewBooks());
+                $books = $daoMng->getNewBooks();
+            }
+            // return json_encode($books);
+            return $books;
         }
+
+        public function getNewReviews()
+        {
+            $daoMng = new DAOManager;
+            $reviews = $daoMng->getNewReviews();
+            if (empty($reviews))
+            {
+                $wrapperMng = new WrapperManager;
+                $daoMng->addReviews($wrapperMng->getNewReviews());
+                $reviews = $daoMng->getNewReviews();
+            }            
+            // return json_encode($reviews);
+            return $reviews;
+        }        
 
         /**
          * @param string $search

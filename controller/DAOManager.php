@@ -93,4 +93,14 @@
                 $this->reviewDAO->create($review);
             }
         }
-    }
+
+        public function getNewBooks(): array
+        {
+            return $this->bookDAO->retrieveNew();
+        }
+
+        public function getNewReviews(): array
+        {
+            return $this->reviewDAO->retrieveNew();
+        }
+}
