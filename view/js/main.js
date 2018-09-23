@@ -249,37 +249,8 @@ function showBooks(res) {
         // create object from JSON
         let json = JSON.parse(res);
 
-        // iterate over results array
-        let resultNode = "";
-        $.each(json, function (i, value) {
-            // create result node
-            resultNode = $("<div></div>")
-                .attr("id", "res" + i)
-                .attr("class", "row");
-            resultNode.hide();
-
-            // create image container
-            let imgContainerNode = $("<div></div>")
-                .attr("style", "float:right;width:200px;height:200px;margin:2px 4px 2px 4px;");
-            let imgNode = $("<img />")
-                .attr("class", "img-responsive center-block")
-                .attr("src", value.image)
-                .attr("style", "max-width:190px;max-height:190px;");
-            imgContainerNode.append(imgNode);
-            resultNode.append(imgContainerNode);
-
-            // create details container
-            let detailsContainerNode = $("<div></div>");
-            detailsContainerNode
-                .append("<span><a href='" + value.link + "'><span><strong>" + value.title + "</strong></span></a></span><br />")
-                .append("<span>di&nbsp;<em>" + value.author + "</em></span><br />")
-                .append("<span>Prezzo:&nbsp;" + value.price + "&euro;</span><br />");
-            resultNode.append(detailsContainerNode);
-
-            resultsDiv.append(resultNode);
-            resultsDiv.append("<hr />");
-            resultNode.fadeIn();
-        });
+        // show results
+        createBookNodes(json, resultsDiv);
     } catch (e) {
         throw e;
     }
@@ -306,79 +277,123 @@ function showReviews(res) {
         // create object from JSON
         let json = JSON.parse(res);
 
-        // iterate over results array
-        let resultNode = "";
-        $.each(json, function (i, value) {
-            // create results node
-            resultNode = $("<div></div>")
-                .attr("id", "res" + i)
-                .attr("class", "row");
-            resultNode.hide();
-
-            // create stats container
-            let statsContainer = $("<div></div>")
-                .attr("style", "float:right;width:200px;height:200px;margin:2px 4px 2px 4px;");
-            statsContainer
-                .append("<span>Voto: <strong>" + value.average + "</strong></span><br />")
-                .append("<span>Stile: " + value.style + "</span><br />")
-                .append("<span>Contenuto: " + value.content + "</span><br />")
-                .append("<span>Piacevolezza: " + value.pleasantness + "</span>");
-            resultNode.append(statsContainer);
-
-            // create plot and review container
-            let textContainer = $("<div></div>")
-                .css("float", "left");
-            textContainer
-                .append("<span><strong>" + value.title + "</strong></span><br />")
-                .append("<span>di <em>" + value.author + "</em></span><br />")
-                .append("<div><h4>Trama</h4><p>" + value.plot + "</p></div>")
-                .append("<div><h4>Recensione di un utente</h4><p>" + value.txt + "</p></div>");
-            resultNode.append(textContainer);
-
-            resultsDiv.append(resultNode);
-            resultsDiv.append("<hr />");
-            resultNode.fadeIn();
-        });
+        // show result
+        createReviewNodes(json, resultsDiv);
     } catch (e) {
         throw e;
     }
 }
 
+/**
+ *
+ * @param res
+ */
 function showBoth(res) {
     console.warn("implement me pls ___;-;");
     let json = JSON.parse(res);
 
-    // test
-    // for (let propName in json) {
-    //     let propValue = json[propName];
-    //     console.debug("Property " + propName + ": " + propValue + ".");
-    // }
+    if (res) {
+        let message =  "La ricerca ha ottenuto dei risultati! Consultare l'elenco sottostante.";
+        $("#success").html(message);
+    }
+
+    let resultsDiv = $("#results");
 
     let books = json.books;
     let reviews = json.reviews;
 
-    $.each(books, function (i, value) {
-        console.debug(
-            "Value " + i +
-            ": " + value.toString() +
-            "\nTitle " + value.title
-        );
+    // populate books results
+    createBookNodes(books, resultsDiv);
 
-        // $.each(value.books, function (i, book) {
-        //     console.debug("Libro: " + book.title);
-        // });
-        // $.each(value.reviews, function (i, review) {
-        //     console.debug("Recensione: " + review.title);
-        // });
+    // populate reviews result
+    let reviewsDivHeader = $("<h4></h4>")
+        .text("Recensioni correlate a \"" + searchField.val() + "\"");
+    let reviewsDiv = $("<div></div>")
+        .prop("id", "#relatedReviews")
+        .append(reviewsDivHeader);
+
+    createReviewNodes(reviews, reviewsDiv);
+    resultsDiv.after(reviewsDiv);
+}
+
+/**
+ *
+ * @param json
+ * @param resultsDiv
+ */
+function createBookNodes(json, resultsDiv) {
+    // iterate over results array
+    let resultNode = "";
+    $.each(json, function (i, value) {
+        // create result node
+        resultNode = $("<div></div>")
+            .attr("id", "res" + i)
+            .attr("class", "row");
+        resultNode.hide();
+
+        // create image container
+        let imgContainerNode = $("<div></div>")
+            .attr("style", "float:right;width:200px;height:200px;margin:2px 4px 2px 4px;");
+        let imgNode = $("<img />")
+            .attr("class", "img-responsive center-block")
+            .attr("src", value.image)
+            .attr("style", "max-width:190px;max-height:190px;");
+        imgContainerNode.append(imgNode);
+        resultNode.append(imgContainerNode);
+
+        // create details container
+        let detailsContainerNode = $("<div></div>");
+        detailsContainerNode
+            .append("<span><a href='" + value.link + "'><span><strong>" + value.title + "</strong></span></a></span><br />")
+            .append("<span>di&nbsp;<em>" + value.author + "</em></span><br />")
+            .append("<span>Prezzo:&nbsp;" + value.price + "&euro;</span><br />");
+        resultNode.append(detailsContainerNode);
+
+        resultsDiv.append(resultNode);
+        resultsDiv.append("<hr />");
+        resultNode.fadeIn();
     });
+}
 
-    $.each(reviews, function (i, value) {
-        console.debug(
-            "Value " + i +
-            ": " + value.toString() +
-            "\nTitle " + value.title
-        );
-    })
+/**
+ *
+ * @param json
+ * @param resultsDiv
+ */
+function createReviewNodes(json, resultsDiv) {
+    // iterate over results array
+    let resultNode = "";
+    $.each(json, function (i, value) {
+        // create results node
+        resultNode = $("<div></div>")
+            .attr("id", "res" + i)
+            .attr("class", "row");
+        resultNode.hide();
+
+        // create stats container
+        let statsContainer = $("<div></div>")
+            .attr("style", "float:right;width:200px;height:200px;margin:2px 4px 2px 4px;");
+        statsContainer
+            .append("<span>Voto: <strong>" + value.average + "</strong></span><br />")
+            .append("<span>Stile: " + value.style + "</span><br />")
+            .append("<span>Contenuto: " + value.content + "</span><br />")
+            .append("<span>Piacevolezza: " + value.pleasantness + "</span>");
+        resultNode.append(statsContainer);
+
+        // create plot and review container
+        let textContainer = $("<div></div>")
+            .css("float", "left");
+        textContainer
+            .append("<span><strong>" + value.title + "</strong></span><br />")
+            .append("<span>di <em>" + value.author + "</em></span><br />")
+            .append("<div><h4>Trama</h4><p>" + value.plot + "</p></div>")
+            .append("<div><h4>Recensione di un utente</h4><p>" + value.txt + "</p></div>");
+        resultNode.append(textContainer);
+
+        resultsDiv.append(resultNode);
+        resultsDiv.append("<hr />");
+        resultNode.fadeIn();
+    });
 }
 
 /**
