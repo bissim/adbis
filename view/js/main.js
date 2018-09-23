@@ -413,12 +413,13 @@ function createReviewNodes(json, resultsDiv, numResults) {
                 "margin": "6px 8px"
             })
             .append("<h3>" + value.title + "</h3><br />")
-            .append("<span>di <em>" + value.author + "</em></span><br />");
+            .append("<span style=\"margin-left:8px;\">di <em>" + value.author + "</em></span><br />");
         resultNode.append(titleContainer);
 
         // create inner container
         let innerContainer = $("<div></div>")
-            .attr("id", "inner" + i);
+            .attr("id", "inner" + i)
+            .css("padding", "6px 8px");
 
         // create stats container
         let statsContainer = $("<div></div>")

@@ -72,8 +72,9 @@
     <!-- Main Content -->
     <div class="container">
         <div class="row">
-            <h2>Nuovi eBook</h2>
-            <div id="results"></div>
+            <div id="results">
+                <h2>Nuovi eBook</h2>
+            </div>
         </div>
     </div>
 
