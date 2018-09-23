@@ -73,10 +73,7 @@
     <div class="container">
         <div class="row">
             <h2>Nuovi eBook</h2>
-            <div id="ebookResults"></div>
-
-            <h2>Nuove recensioni</h2>
-            <div id="reviewResults"></div>
+            <div id="results"></div>
         </div>
     </div>
 
@@ -110,7 +107,7 @@
     <!-- Custom scripts for this template -->
     <script src="./view/js/clean-blog.min.js"></script>
 
-    <script src="./view/js/prova.js"></script>
+    <script src="./view/js/main.js"></script>
 
   </body>
 

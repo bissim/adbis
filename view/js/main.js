@@ -3,11 +3,27 @@ let sendButton = $("button[type = submit]#sendMessageButton");
 let searchField = $("input[type = text]#keyword");
 
 /**
+ * Global variable holding
+ * current page name.
+ */
+// let pageName;
+
+/**
+ * Base endpoint for entity search.
+ * @type {string}
+ */
+let baseSearchUrl = '/adbis/search/';
+
+let numResult = 5;
+
+/**
  * Associate events
  * to loaded page
  */
 $(document).ready(function () {
-    determinePageName();
+    // set current page name
+    let pageName = determinePageName();
+    // console.debug("Hi u'r in " + pageName);
 
     // assign events to radio
     $("input[type = radio]#searchByTitle").click(swapSearch);
@@ -17,6 +33,13 @@ $(document).ready(function () {
     searchField.focusout(disableSearchButton);
     // async call to retrieve results
     switch (pageName) {
+        case '':
+            // console.debug("hai dis is main page");
+            $.ajax({
+                url: baseSearchUrl + 'news',
+                success: showBoth
+            });
+            break;
         case 'ebooks':
             sendButton.click(searchBooks);
             break;
@@ -33,15 +56,17 @@ $(document).ready(function () {
     });
 });
 
-let pageName;
-
 /**
  * Determines which page
  * is currently browsed
  */
 function determinePageName() {
-    pageName = document.location.href.match(/[^\/]+$/)[0];
-    // console.debug("Hi u'r in " + pageName);
+    try {
+        return document.location.href.match(/[^\/]+$/)[0];
+    } catch (e) {
+        // console.warn("I guess we're in main page here");
+        return "";
+    }
 }
 
 /**
@@ -88,12 +113,6 @@ function swapSearch() {
         console.error("wat");
     }
 }
-
-/**
- * Base endpoint for entity search.
- * @type {string}
- */
-let baseSearchUrl = '/adbis/search/';
 
 /**
  * Generic function to search for books or reviews.
@@ -250,7 +269,7 @@ function showBooks(res) {
         let json = JSON.parse(res);
 
         // show results
-        createBookNodes(json, resultsDiv);
+        createBookNodes(json, resultsDiv, numResult);
     } catch (e) {
         throw e;
     }
@@ -278,7 +297,7 @@ function showReviews(res) {
         let json = JSON.parse(res);
 
         // show result
-        createReviewNodes(json, resultsDiv);
+        createReviewNodes(json, resultsDiv, numResult);
     } catch (e) {
         throw e;
     }
@@ -289,12 +308,15 @@ function showReviews(res) {
  * @param res
  */
 function showBoth(res) {
-    console.warn("implement me pls ___;-;");
+    // console.warn("implement me pls ___;-;");
     let json = JSON.parse(res);
 
     if (res) {
         let message =  "La ricerca ha ottenuto dei risultati! Consultare l'elenco sottostante.";
-        $("#success").html(message);
+        let successMessage = $("#success");
+        if (successMessage) {
+            successMessage.html(message);
+        }
     }
 
     let resultsDiv = $("#results");
@@ -303,16 +325,23 @@ function showBoth(res) {
     let reviews = json.reviews;
 
     // populate books results
-    createBookNodes(books, resultsDiv);
+    createBookNodes(books, resultsDiv, numResult);
 
     // populate reviews result
-    let reviewsDivHeader = $("<h4></h4>")
-        .text("Recensioni correlate a \"" + searchField.val() + "\"");
+    let reviewsDivHeader;
+    if (searchField.val()) { // we're in reviews page
+        reviewsDivHeader = $("<h4></h4>")
+            .text("Recensioni correlate a \"" + searchField.val() + "\"");
+    }
+    else { // we're in home page
+        reviewsDivHeader = $("<h2></h2>")
+            .text("Nuove recensioni");
+    }
     let reviewsDiv = $("<div></div>")
         .prop("id", "#relatedReviews")
         .append(reviewsDivHeader);
 
-    createReviewNodes(reviews, reviewsDiv);
+    createReviewNodes(reviews, reviewsDiv, numResult);
     resultsDiv.after(reviewsDiv);
 }
 
@@ -320,8 +349,9 @@ function showBoth(res) {
  *
  * @param json
  * @param resultsDiv
+ * @param numResults
  */
-function createBookNodes(json, resultsDiv) {
+function createBookNodes(json, resultsDiv, numResults) {
     // iterate over results array
     let resultNode = "";
     $.each(json, function (i, value) {
@@ -352,6 +382,10 @@ function createBookNodes(json, resultsDiv) {
         resultsDiv.append(resultNode);
         resultsDiv.append("<hr />");
         resultNode.fadeIn();
+
+        if (0 !== numResults && numResults - 1 === i) {
+            return false;
+        }
     });
 }
 
@@ -360,7 +394,7 @@ function createBookNodes(json, resultsDiv) {
  * @param json
  * @param resultsDiv
  */
-function createReviewNodes(json, resultsDiv) {
+function createReviewNodes(json, resultsDiv, numResults) {
     // iterate over results array
     let resultNode = "";
     $.each(json, function (i, value) {
@@ -393,6 +427,10 @@ function createReviewNodes(json, resultsDiv) {
         resultsDiv.append(resultNode);
         resultsDiv.append("<hr />");
         resultNode.fadeIn();
+
+        if (0 !== numResults && numResults - 1 === i) {
+            return false;
+        }
     });
 }
 
