@@ -38,7 +38,7 @@
 
     <!-- Page Header -->
     <?php
-        include 'nav.php';
+        include 'header.php';
     ?>
 
     <!-- Main Content -->
