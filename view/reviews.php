@@ -32,42 +32,14 @@
   <body>
 
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
-      <div class="container">
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-          Menu
-          <i class="fas fa-bars"></i>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-          <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="./">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="./ebooks">Ebooks</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="./reviews">Recensioni</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
+    <?php
+        include 'nav.php';
+    ?>
 
     <!-- Page Header -->
-    <header class="masthead" style="background-image: url('./view/img/reviews-bg.jpg')">
-      <div class="overlay"></div>
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-8 col-md-10 mx-auto">
-            <div class="post-heading">
-              <h1>Trova la recensione di un libro</h1>
-              <h2 class="subheading">Il giudizio di appassionati di lettura a tua disposizione</h2>
-            </div>
-          </div>
-        </div>
-      </div>
-    </header>
+    <?php
+        include 'nav.php';
+    ?>
 
     <!-- Main Content -->
     <div class="container">
@@ -102,25 +74,9 @@
     <hr />
 
     <!-- Footer -->
-    <footer>
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-8 col-md-10 mx-auto">
-            <ul class="list-inline text-center">
-              <li class="list-inline-item">
-                <a href="https://github.com/bissim/adbis.git">
-                  <span class="fa-stack fa-lg">
-                    <i class="fas fa-circle fa-stack-2x"></i>
-                    <i class="fab fa-github fa-stack-1x fa-inverse"></i>
-                  </span>
-                </a>
-              </li>
-            </ul>
-            <p class="copyright text-muted">Copyright &copy; AdBis 2018</p>
-          </div>
-        </div>
-      </div>
-    </footer>
+    <?php
+        include 'footer.php';
+    ?>
 
     <!-- Bootstrap core JavaScript -->
     <script src="./view/vendor/jquery/jquery.min.js"></script>

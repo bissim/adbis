@@ -65,6 +65,14 @@
         Flight::render('reviews.php');
     });
 
+    Flight::route('/contacts', function () {
+        Flight::render('contact.php');
+    });
+
+    Flight::route('/about', function () {
+        Flight::render('about.php');
+    });
+
     Flight::route('/search', function () {
         // retrieve request
         $request = Flight::request();
