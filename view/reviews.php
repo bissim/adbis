@@ -64,9 +64,8 @@
           </form>
         </div>
         <br />
-        <div id="resultsContainer" class="row" style="display:none;">
+        <div id="results" class="row" style="display:none;">
           <h3>Risultati di ricerca</h3>
-          <div id="results"></div>
         </div>
       </div>
     </div>

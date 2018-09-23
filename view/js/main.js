@@ -235,14 +235,14 @@ function searchReviews() {
 function prepareForResults() {
     // console.debug("Preparing for results...");
 
-    let resultsContainerDiv = $("#resultsContainer");
+    // let resultsContainerDiv = $("#resultsContainer");
     let resultsDiv = $("#results");
 
     // hide and delete former results
-    if (!resultsContainerDiv.hidden) {
-        resultsContainerDiv.hide();
+    if (!resultsDiv.hidden) {
+        resultsDiv.hide();
         resultsDiv.html("<p>Caricamento dei risultati in corso...</p>");
-        resultsContainerDiv.show();
+        resultsDiv.show();
     }
 }
 
