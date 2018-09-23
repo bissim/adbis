@@ -70,14 +70,15 @@
     </header>
 
     <!-- Main Content -->
-    <h2>I nuovi eBook</h2>
-      <br>
-      <div id="ebookResults"></div>
+    <div class="container">
+        <div class="row">
+            <h2>Nuovi eBook</h2>
+            <div id="ebookResults"></div>
 
-
-    <h2>Le nuove recensioni</h2>
-      <br>
-      <div id="reviewResults"></div>
+            <h2>Nuove recensioni</h2>
+            <div id="reviewResults"></div>
+        </div>
+    </div>
 
     <hr />
 
