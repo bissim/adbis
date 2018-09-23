@@ -393,6 +393,7 @@ function createBookNodes(json, resultsDiv, numResults) {
  *
  * @param json
  * @param resultsDiv
+ * @param numResults
  */
 function createReviewNodes(json, resultsDiv, numResults) {
     // iterate over results array
@@ -401,31 +402,55 @@ function createReviewNodes(json, resultsDiv, numResults) {
         // create results node
         resultNode = $("<div></div>")
             .attr("id", "res" + i)
-            .attr("class", "row");
-        resultNode.hide();
+            .attr("class", "row")
+            .hide();
+
+        // create title and author container
+        let titleContainer = $("<div></div>")
+            .attr("id", "title" + i)
+            .css({
+                "padding": "6px 8px",
+                "margin": "6px 8px"
+            })
+            .append("<h3>" + value.title + "</h3><br />")
+            .append("<span>di <em>" + value.author + "</em></span><br />");
+        resultNode.append(titleContainer);
+
+        // create inner container
+        let innerContainer = $("<div></div>")
+            .attr("id", "inner" + i);
 
         // create stats container
         let statsContainer = $("<div></div>")
-            .attr("style", "float:right;width:200px;height:200px;margin:2px 4px 2px 4px;");
-        statsContainer
+            .attr("id", "stats" + i)
+            .css({
+                "float": "left",
+                "width": "18%",
+                "margin": "6px 8px"
+            })
+            .append("<h4>Punteggi</h4>")
             .append("<span>Voto: <strong>" + value.average + "</strong></span><br />")
             .append("<span>Stile: " + value.style + "</span><br />")
             .append("<span>Contenuto: " + value.content + "</span><br />")
             .append("<span>Piacevolezza: " + value.pleasantness + "</span>");
-        resultNode.append(statsContainer);
+        innerContainer.append(statsContainer);
 
         // create plot and review container
         let textContainer = $("<div></div>")
-            .css("float", "left");
-        textContainer
-            .append("<span><strong>" + value.title + "</strong></span><br />")
-            .append("<span>di <em>" + value.author + "</em></span><br />")
+            .attr("id", "text" + i)
+            .css({
+                "float": "right",
+                "width": "78%",
+                "margin": "6px 8px"
+            })
             .append("<div><h4>Trama</h4><p>" + value.plot + "</p></div>")
             .append("<div><h4>Recensione di un utente</h4><p>" + value.txt + "</p></div>");
-        resultNode.append(textContainer);
+        innerContainer.append(textContainer);
 
-        resultsDiv.append(resultNode);
-        resultsDiv.append("<hr />");
+        resultNode.append(innerContainer);
+        resultsDiv
+            .append(resultNode)
+            .append("<hr />");
         resultNode.fadeIn();
 
         if (0 !== numResults && numResults - 1 === i) {
