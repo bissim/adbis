@@ -19,7 +19,7 @@
                 // 'links' => '//h3[@class="clk"]/a/attribute::href',
                 // 'links' => '//div[@class="listItem"]/div[2]/div/a/attribute::href',
                 'title' => '//div[@id="system"]/article/div/div/h1/span[@class="fn"]/text()',
-                'author' => '//div[@class="jr_customFields"]/div/div[@class="fieldRow jr_autorestr"]/div/a/text()',
+                'author' => '//div[@class="fieldRow jr_autorestr" or @class="fieldRow jr_autoreita"]/div/a/text()',
                 'plot' => '//div[@class="contentFulltext"]/text()',
                 'text' => '//div[@id="jr_user_reviews"]/div[2]/div/div[3]/div[1]/p',
                 'avg' => '//div[@class="ratingInfo"]/table/tr[1]/td[@class="rating_value"]/text()',
