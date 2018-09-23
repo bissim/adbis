@@ -109,12 +109,15 @@
         public function getNewBooks(): array
         {
             $this->bookScraper->setQueries($this->queriesNews);
-            return $this->bookScraper->getBooks(
+            $books = $this->bookScraper->getBooks(
                 $this->domain,
                 $this->queryNewsUrl,
                 '',
                 '',
                 true);
+            foreach ($books as $book)
+                $book->setLink('https://amazon.it' . $book->getLink());
+            return $books;
         }
 
         public function getQueries(): array
