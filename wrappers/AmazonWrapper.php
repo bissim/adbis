@@ -12,7 +12,7 @@
         private $queries;
         private $queriesNews;
         private $domain = '';
-        private $queryUrl = 'https://www.amazon.it/s/ref=nb_sb_noss?__mk_it_IT=%C3%85M%C3%85%C5%BD%C3%95%C3%91&url=node%3D827182031&field-keywords=';
+        private $queryUrl = 'https://www.amazon.it/s/?url=node%3D827182031&field-keywords=';
         private $queryNewsUrl = 'https://www.amazon.it/gp/new-releases/digital-text/827182031';
 
         public function __construct()
@@ -48,7 +48,7 @@
                 '//ul/li[@id=' . $itemId . ']/div/div/div/div/div/div/a/img/attribute::src');
 
                 array_push($priceQueries,
-                '//ul/li[@id=' . $itemId . ']/div/div/div/div[2]/div[2]/div/div/*[contains(.,"EUR")]');
+                '//ul/li[@id=' . $itemId . ']/div/div/div/div[2]/div[2]/div[1]/div/a/span[2]/text()');
             }
 
             $queries = array();
