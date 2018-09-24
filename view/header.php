@@ -15,7 +15,7 @@
             <div class="col-lg-8 col-md-10 mx-auto">
                 <div class="site-heading">
                     <h1>AdBis</h1>
-                    <span class="subheading">AdBis - Academic project for data integration course held by Prof. G. Costagliola</span>
+                    <span class="subheading">eBook and Review Aggregator</span>
                 </div>
             </div>
         </div>
