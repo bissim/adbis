@@ -148,7 +148,7 @@
          * @return string
          * @throws \Exception
          */
-        private function jsonEncodeBoth(string $search, string $keyword): string
+        public function jsonEncodeBoth(string $search, string $keyword): string
         {
             $daoMng = new DAOManager;
             // check in db first
@@ -171,22 +171,23 @@
                 $reviews = $daoMng->getReviews($search, $keyword);
             }
 
-            $booksFound['books'] = array();
-            $booksFound['reviews'] = array();
+            $items = array();
 
             foreach ($books as $book) // TODO Y U ARRAY
             {
-                array_push($booksFound['books'], $book);
+                $reviewOfBook;
 
                 foreach ($reviews as $review)
                 {
-                    if ($book['title'] === $review['title'])
+                    if (strtolower($book['title']) === strtolower($review['title']))
                     {
-                        array_push($booksFound['reviews'], $review);
+                        $reviewOfBook = $review;
                     }
                 }
+                $item = array($book, $reviewOfBook);
+                array_push($items, $item); 
             }
 
-            return json_encode($booksFound);
+            return json_encode($items);
         }
     }

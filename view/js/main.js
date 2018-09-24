@@ -321,28 +321,142 @@ function showBoth(res) {
 
     let resultsDiv = $("#results");
 
-    let books = json.books;
-    let reviews = json.reviews;
+    $.each(json, function (i, item)
+    {
+        book = item[0];
+        review = item[1];
+        let resultNode = "";
 
-    // populate books results
-    createBookNodes(books, resultsDiv, numResult);
+        // create result node
+        resultNode = $("<div></div>")
+            .attr("class", "row");
+        resultNode.hide();
 
-    // populate reviews result
-    let reviewsDivHeader;
-    if (searchField.val()) { // we're in reviews page
-        reviewsDivHeader = $("<h4></h4>")
-            .text("Recensioni correlate a \"" + searchField.val() + "\"");
-    }
-    else { // we're in home page
-        reviewsDivHeader = $("<h2></h2>")
-            .text("Nuove recensioni");
-    }
-    let reviewsDiv = $("<div></div>")
-        .prop("id", "#relatedReviews")
-        .append(reviewsDivHeader);
+        // create image container
+        let imgContainerNode = $("<div></div>")
+            .attr("style", "float:right;width:200px;height:200px;margin:2px 4px 2px 4px;");
+        let imgNode = $("<img />")
+            .attr("class", "img-responsive center-block")
+            .attr("src", book['image'])
+            .attr("style", "max-width:190px;max-height:190px;");
+        imgContainerNode.append(imgNode);
+        resultNode.append(imgContainerNode);
 
-    createReviewNodes(reviews, reviewsDiv, numResult);
-    resultsDiv.after(reviewsDiv);
+        // create details container
+        let detailsContainerBook = $("<div></div>");
+        detailsContainerBook
+            .append("<span><a href='" + book['link'] + "'><span><strong>" + book['title'] + "</strong></span></a></span><br />")
+            .append("<span>di&nbsp;<em>" + book['author'] + "</em></span><br />")
+            .append("<span>Prezzo:&nbsp;" + book['price'] + "&euro;</span><br />");
+            resultNode.append(detailsContainerBook);
+
+        let detailsContainerReview = $("<div></div>");
+
+        // create stats container
+        let statsContainer = $("<div></div>")
+            .attr("id", "stats" + i)
+            .css({
+                "float": "left",
+                "width": "18%",
+                "margin": "6px 8px"
+            })
+            .append("<h4>Punteggi</h4>")
+            .append("<span>Voto: <strong>" + review.average + "</strong></span><br />")
+            .append("<span>Stile: " + review.style + "</span><br />")
+            .append("<span>Contenuto: " + review.content + "</span><br />")
+            .append("<span>Piacevolezza: " + review.pleasantness + "</span>");
+        detailsContainerReview.append(statsContainer);
+
+        // create plot and review container
+        let textContainer = $("<div></div>")
+            .attr("id", "text" + i)
+            .css({
+                "float": "right",
+                "width": "78%",
+                "margin": "6px 8px"
+            })
+            .append("<div><h4>Trama</h4><p>" + review.plot + "</p></div>")
+            .append("<div><h4>Recensione di un utente</h4><p>" + review.txt + "</p></div>");
+        detailsContainerReview.append(textContainer);
+        
+        resultNode.append(detailsContainerReview);
+
+        resultsDiv.append(resultNode);
+        resultsDiv.append("<hr />");
+        resultNode.fadeIn();
+
+        // if (0 !== numResults && numResults - 1 === i) {
+        //     return false;
+        // }
+                
+    });
+}
+
+function createBookWithReviewNode(book, review, resultsDiv, numResults) {
+    // iterate over results array
+    let resultNode = "";
+
+        // create result node
+        resultNode = $("<div></div>")
+            .attr("class", "row");
+        resultNode.hide();
+
+        // create image container
+        let imgContainerNode = $("<div></div>")
+            .attr("style", "float:right;width:200px;height:200px;margin:2px 4px 2px 4px;");
+        let imgNode = $("<img />")
+            .attr("class", "img-responsive center-block")
+            .attr("src", book['image'])
+            .attr("style", "max-width:190px;max-height:190px;");
+        imgContainerNode.append(imgNode);
+        resultNode.append(imgContainerNode);
+
+        // create details container
+        let detailsContainerBook = $("<div></div>");
+        detailsContainerBook
+            .append("<span><a href='" + book['link'] + "'><span><strong>" + book['title'] + "</strong></span></a></span><br />")
+            .append("<span>di&nbsp;<em>" + book['author'] + "</em></span><br />")
+            .append("<span>Prezzo:&nbsp;" + book['price'] + "&euro;</span><br />");
+            resultNode.append(detailsContainerBook);
+
+        let detailsContainerReview = $("<div></div>");
+
+        // create stats container
+        let statsContainer = $("<div></div>")
+            .attr("id", "stats" + i)
+            .css({
+                "float": "left",
+                "width": "18%",
+                "margin": "6px 8px"
+            })
+            .append("<h4>Punteggi</h4>")
+            .append("<span>Voto: <strong>" + review.average + "</strong></span><br />")
+            .append("<span>Stile: " + review.style + "</span><br />")
+            .append("<span>Contenuto: " + review.content + "</span><br />")
+            .append("<span>Piacevolezza: " + review.pleasantness + "</span>");
+        detailsContainerReview.append(statsContainer);
+
+        // create plot and review container
+        let textContainer = $("<div></div>")
+            .attr("id", "text" + i)
+            .css({
+                "float": "right",
+                "width": "78%",
+                "margin": "6px 8px"
+            })
+            .append("<div><h4>Trama</h4><p>" + review.plot + "</p></div>")
+            .append("<div><h4>Recensione di un utente</h4><p>" + review.txt + "</p></div>");
+        detailsContainerReview.append(textContainer);
+        
+        resultNode.append(detailsContainerReview);
+
+        resultsDiv.append(resultNode);
+        resultsDiv.append("<hr />");
+        resultNode.fadeIn();
+
+        if (0 !== numResults && numResults - 1 === i) {
+            return false;
+        }
 }
 
 /**
