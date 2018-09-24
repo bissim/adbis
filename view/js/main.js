@@ -241,7 +241,9 @@ function prepareForResults() {
     // hide and delete former results
     if (!resultsDiv.hidden) {
         resultsDiv.hide();
-        resultsDiv.html("<p>Caricamento dei risultati in corso...</p>");
+        let loadingMessage = $("<p>Caricamento dei risultati in corso...</p>").attr("id", "loadingMessage");
+        resultsDiv.append(loadingMessage);
+        $("div#resultsTitle").show();
         resultsDiv.show();
     }
 }
@@ -256,6 +258,8 @@ function showBooks(res) {
 
     if (res) {
         let message =  "La ricerca ha ottenuto dei risultati! Consultare l'elenco sottostante.";
+        let loadingMessage = $("p#loadingMessage");
+        loadingMessage.remove();
         $("#success").html(message);
     }
 
@@ -284,6 +288,8 @@ function showReviews(res) {
 
     if (res) {
         let message =  "La ricerca ha ottenuto dei risultati! Consultare l'elenco sottostante.";
+        let loadingMessage = $("p#loadingMessage");
+        loadingMessage.remove();
         $("#success").html(message);
     }
 
@@ -317,6 +323,8 @@ function showBoth(res) {
         if (successMessage) {
             successMessage.html(message);
         }
+        let loadingMessage = $("p#loadingMessage");
+        loadingMessage.remove();
     }
 
     let resultsDiv = $("#results");
