@@ -21,14 +21,11 @@ let numResult = 5;
  * to loaded page
  */
 $(document).ready(function () {
+
     // set current page name
     let pageName = determinePageName();
     // console.debug("Hi u'r in " + pageName);
 
-    // assign events to radio
-    // $("input[type = radio]#searchByTitle").click(swapSearch);
-    // $("input[type = radio]#searchByAuthor").click(swapSearch);
-    // check search textfield
     searchField.keyup(disableSearchButton);
     searchField.focusout(disableSearchButton);
     // async call to retrieve results
@@ -90,30 +87,6 @@ function disableSearchButton() {
         sendButton.prop("disabled", true);
     }
 }
-
-/**
- * Determine whether search must be
- * based on title or author
- */
-
-// function swapSearch() {
-//     let isAuthorRadio = $('#searchByAuthor').prop("checked");
-//     let isTitleRadio = $('#searchByTitle').prop("checked");
-//     let join = $("#searchBoth");
-
-//     if (isAuthorRadio) {
-//         searchField.prop("placeholder", "Autore");
-//         $("#searchLabel").text("Autore");
-//         join.prop("disabled", true);
-//         join.prop("checked", false);
-//     } else if (isTitleRadio) {
-//         searchField.prop("placeholder", "Titolo");
-//         $("#searchLabel").text("Titolo");
-//         join.prop("disabled", false);
-//     } else {
-//         console.error("wat");
-//     }
-// }
 
 /**
  * Generic function to search for books or reviews.
@@ -329,7 +302,10 @@ function showBoth(res) {
     }
 
     let resultsDiv = $("#results");
+    createBookWithReviewNode(json, resultsDiv);
+}
 
+function createBookWithReviewNode(json, resultsDiv) {
     $.each(json, function (i, item)
     {
         book = item[0];
@@ -338,6 +314,7 @@ function showBoth(res) {
 
         // create result node
         resultNode = $("<div></div>")
+            .attr("id", "resultNode" + (i + 1))
             .attr("class", "row");
         resultNode.hide();
 
@@ -361,9 +338,16 @@ function showBoth(res) {
 
         if (review != null)
         {
-            let detailsContainerReview = $("<div></div>");
+            let collapseNode = $("<div></div")
+            .append("<br><br><span><a data-toggle='collapse' href='#collapse" + i +
+                                "'>Scopri di più</a><span></div>");
+            detailsContainerBook.append(collapseNode);
+            
+            let detailsContainerReview = $('<div></div>')
+                .attr("id", "collapse" + i)
+                .attr("class", "panel-collapse collapse");
             // create stats container
-        let statsContainer = $("<div></div>")
+            let statsContainer = $("<div></div>")
             .attr("id", "stats" + i)
             .css({
                 "float": "left",
@@ -401,118 +385,7 @@ function showBoth(res) {
         //     return false;
         // }
                 
-    });
-}
-
-function createBookWithReviewNode(book, review, resultsDiv, numResults) {
-    // iterate over results array
-    let resultNode = "";
-
-        // create result node
-        resultNode = $("<div></div>")
-            .attr("class", "row");
-        resultNode.hide();
-
-        // create image container
-        let imgContainerNode = $("<div></div>")
-            .attr("style", "float:right;width:200px;height:200px;margin:2px 4px 2px 4px;");
-        let imgNode = $("<img />")
-            .attr("class", "img-responsive center-block")
-            .attr("src", book['image'])
-            .attr("style", "max-width:190px;max-height:190px;");
-        imgContainerNode.append(imgNode);
-        resultNode.append(imgContainerNode);
-
-        // create details container
-        let detailsContainerBook = $("<div></div>");
-        detailsContainerBook
-            .append("<span><a href='" + book['link'] + "'><span><strong>" + book['title'] + "</strong></span></a></span><br />")
-            .append("<span>di&nbsp;<em>" + book['author'] + "</em></span><br />")
-            .append("<span>Prezzo:&nbsp;" + book['price'] + "&euro;</span><br />");
-            resultNode.append(detailsContainerBook);
-
-        let detailsContainerReview = $("<div></div>");
-
-        // create stats container
-        let statsContainer = $("<div></div>")
-            .attr("id", "stats" + i)
-            .css({
-                "float": "left",
-                "width": "18%",
-                "margin": "6px 8px"
-            })
-            .append("<h4>Punteggi</h4>")
-            .append("<span>Voto: <strong>" + review.average + "</strong></span><br />")
-            .append("<span>Stile: " + review.style + "</span><br />")
-            .append("<span>Contenuto: " + review.content + "</span><br />")
-            .append("<span>Piacevolezza: " + review.pleasantness + "</span>");
-        detailsContainerReview.append(statsContainer);
-
-        // create plot and review container
-        let textContainer = $("<div></div>")
-            .attr("id", "text" + i)
-            .css({
-                "float": "right",
-                "width": "78%",
-                "margin": "6px 8px"
-            })
-            .append("<div><h4>Trama</h4><p>" + review.plot + "</p></div>")
-            .append("<div><h4>Recensione di un utente</h4><p>" + review.txt + "</p></div>");
-        detailsContainerReview.append(textContainer);
-        
-        resultNode.append(detailsContainerReview);
-
-        resultsDiv.append(resultNode);
-        resultsDiv.append("<hr />");
-        resultNode.fadeIn();
-
-        if (0 !== numResults && numResults - 1 === i) {
-            return false;
-        }
-}
-
-/**
- *
- * @param json
- * @param resultsDiv
- * @param numResults
- */
-function createBookNodes(json, resultsDiv, numResults) {
-    // iterate over results array
-    let resultNode = "";
-    $.each(json, function (i, value) {
-        // create result node
-        resultNode = $("<div></div>")
-            .attr("id", "res" + i)
-            .attr("class", "row");
-        resultNode.hide();
-
-        // create image container
-        let imgContainerNode = $("<div></div>")
-            .attr("style", "float:right;width:200px;height:200px;margin:2px 4px 2px 4px;");
-        let imgNode = $("<img />")
-            .attr("class", "img-responsive center-block")
-            .attr("src", value.image)
-            .attr("style", "max-width:190px;max-height:190px;");
-        imgContainerNode.append(imgNode);
-        resultNode.append(imgContainerNode);
-
-        // create details container
-        let detailsContainerNode = $("<div></div>");
-        detailsContainerNode
-            .append("<span><a href='" + value.link + "'><span><strong>" + value.title + "</strong></span></a></span><br />")
-            .append("<span>di&nbsp;<em>" + value.author + "</em></span><br />")
-            .append("<span>Prezzo:&nbsp;" + value.price + "&euro;</span><br />");
-        resultNode.append(detailsContainerNode);
-
-        resultsDiv.append(resultNode);
-        resultsDiv.append("<hr />");
-        resultNode.fadeIn();
-
-        if (0 !== numResults && numResults - 1 === i) {
-            return false;
-        }
-    });
+    });    
 }
 
 /**
