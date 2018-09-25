@@ -14,8 +14,6 @@ let searchField = $("input[type = text]#keyword");
  */
 let baseSearchUrl = '/adbis/search/';
 
-let numResult = 5;
-
 /**
  * Associate events
  * to loaded page
@@ -247,7 +245,7 @@ function showBooks(res) {
         let json = JSON.parse(res);
 
         // show results
-        createBookNodes(json, resultsDiv, numResult);
+        createBookNodes(json, resultsDiv);
     } catch (e) {
         throw e;
     }
@@ -277,7 +275,7 @@ function showReviews(res) {
         let json = JSON.parse(res);
 
         // show result
-        createReviewNodes(json, resultsDiv, numResult);
+        createReviewNodes(json, resultsDiv);
     } catch (e) {
         throw e;
     }
@@ -380,21 +378,50 @@ function createBookWithReviewNode(json, resultsDiv) {
         resultsDiv.append(resultNode);
         resultsDiv.append("<hr />");
         resultNode.fadeIn();
-
-        // if (0 !== numResults && numResults - 1 === i) {
-        //     return false;
-        // }
-                
     });    
 }
+
+function createBookNodes(json, resultsDiv) {
+    // iterate over results array
+    let resultNode = "";
+    $.each(json, function (i, value) {
+        // create result node
+        resultNode = $("<div></div>")
+            .attr("id", "res" + i)
+            .attr("class", "row");
+        resultNode.hide();
+
+        // create image container
+        let imgContainerNode = $("<div></div>")
+            .attr("style", "float:right;width:200px;height:200px;margin:2px 4px 2px 4px;");
+        let imgNode = $("<img />")
+            .attr("class", "img-responsive center-block")
+            .attr("src", value.image)
+            .attr("style", "max-width:190px;max-height:190px;");
+        imgContainerNode.append(imgNode);
+        resultNode.append(imgContainerNode);
+
+        // create details container
+        let detailsContainerNode = $("<div></div>");
+        detailsContainerNode
+            .append("<span><a href='" + value.link + "'><span><strong>" + value.title + "</strong></span></a></span><br />")
+            .append("<span>di&nbsp;<em>" + value.author + "</em></span><br />")
+            .append("<span>Prezzo:&nbsp;" + value.price + "&euro;</span><br />");
+        resultNode.append(detailsContainerNode);
+
+        resultsDiv.append(resultNode);
+        resultsDiv.append("<hr />");
+        resultNode.fadeIn();
+    });
+}
+
 
 /**
  *
  * @param json
  * @param resultsDiv
- * @param numResults
  */
-function createReviewNodes(json, resultsDiv, numResults) {
+function createReviewNodes(json, resultsDiv) {
     // iterate over results array
     let resultNode = "";
     $.each(json, function (i, value) {
@@ -453,9 +480,6 @@ function createReviewNodes(json, resultsDiv, numResults) {
             .append("<hr />");
         resultNode.fadeIn();
 
-        if (0 !== numResults && numResults - 1 === i) {
-            return false;
-        }
     });
 }
 
