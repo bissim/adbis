@@ -26,8 +26,8 @@ $(document).ready(function () {
     // console.debug("Hi u'r in " + pageName);
 
     // assign events to radio
-    $("input[type = radio]#searchByTitle").click(swapSearch);
-    $("input[type = radio]#searchByAuthor").click(swapSearch);
+    // $("input[type = radio]#searchByTitle").click(swapSearch);
+    // $("input[type = radio]#searchByAuthor").click(swapSearch);
     // check search textfield
     searchField.keyup(disableSearchButton);
     searchField.focusout(disableSearchButton);
@@ -95,24 +95,25 @@ function disableSearchButton() {
  * Determine whether search must be
  * based on title or author
  */
-function swapSearch() {
-    let isAuthorRadio = $('#searchByAuthor').prop("checked");
-    let isTitleRadio = $('#searchByTitle').prop("checked");
-    let join = $("#searchBoth");
 
-    if (isAuthorRadio) {
-        searchField.prop("placeholder", "Autore");
-        $("#searchLabel").text("Autore");
-        join.prop("disabled", true);
-        join.prop("checked", false);
-    } else if (isTitleRadio) {
-        searchField.prop("placeholder", "Titolo");
-        $("#searchLabel").text("Titolo");
-        join.prop("disabled", false);
-    } else {
-        console.error("wat");
-    }
-}
+// function swapSearch() {
+//     let isAuthorRadio = $('#searchByAuthor').prop("checked");
+//     let isTitleRadio = $('#searchByTitle').prop("checked");
+//     let join = $("#searchBoth");
+
+//     if (isAuthorRadio) {
+//         searchField.prop("placeholder", "Autore");
+//         $("#searchLabel").text("Autore");
+//         join.prop("disabled", true);
+//         join.prop("checked", false);
+//     } else if (isTitleRadio) {
+//         searchField.prop("placeholder", "Titolo");
+//         $("#searchLabel").text("Titolo");
+//         join.prop("disabled", false);
+//     } else {
+//         console.error("wat");
+//     }
+// }
 
 /**
  * Generic function to search for books or reviews.
@@ -187,8 +188,8 @@ function searchBooks() {
     let search = $("input[name = search]:checked, #sentMessage").val();
     let keyword = searchField.val();
     let join = $("#searchBoth").prop("checked");
-    // console.debug("Searching for " + search.toString() + " " + keyword.toString() + "...");
-    // console.debug("Both? " + join);
+    console.debug("Searching for " + search.toString() + " " + keyword.toString() + "...");
+    console.debug("Both? " + join);
 
     // AJAX call
     let searchUrl = baseSearchUrl + "book";
@@ -350,9 +351,10 @@ function showBoth(res) {
             .append("<span>Prezzo:&nbsp;" + book['price'] + "&euro;</span><br />");
             resultNode.append(detailsContainerBook);
 
-        let detailsContainerReview = $("<div></div>");
-
-        // create stats container
+        if (review != null)
+        {
+            let detailsContainerReview = $("<div></div>");
+            // create stats container
         let statsContainer = $("<div></div>")
             .attr("id", "stats" + i)
             .css({
@@ -366,6 +368,7 @@ function showBoth(res) {
             .append("<span>Contenuto: " + review.content + "</span><br />")
             .append("<span>Piacevolezza: " + review.pleasantness + "</span>");
         detailsContainerReview.append(statsContainer);
+        
 
         // create plot and review container
         let textContainer = $("<div></div>")
@@ -378,8 +381,9 @@ function showBoth(res) {
             .append("<div><h4>Trama</h4><p>" + review.plot + "</p></div>")
             .append("<div><h4>Recensione di un utente</h4><p>" + review.txt + "</p></div>");
         detailsContainerReview.append(textContainer);
-        
         resultNode.append(detailsContainerReview);
+        }
+
 
         resultsDiv.append(resultNode);
         resultsDiv.append("<hr />");
