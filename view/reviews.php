@@ -64,10 +64,9 @@
           </form>
         </div>
         <br />
-        <div id="results" class="row" style="display:none;">
-          <h3>Risultati di ricerca</h3>
-        </div>
       </div>
+      <div id="resultsTitle" class="row" style="display:none;"><h3>Risultati di ricerca</h3></div>
+      <div id="results" class="row" style="display:none;"></div>
     </div>
 
     <hr />
