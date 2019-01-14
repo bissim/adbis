@@ -26,7 +26,7 @@
             $books = array_merge($this->amazonWrapper->getBooks($keyword),
                                 $this->googleWrapper->getBooks($keyword),
                                 $this->koboWrapper->getBooks($keyword));
-            return $books;
+            return shuffle($books);
         }
 
     }
