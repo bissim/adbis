@@ -24,6 +24,7 @@
     require './test/ReviewTest.php';
     require './test/BookDAOTest.php';
     require './test/ReviewDAOTest.php';
+    require './test/UTF8LevenshteinTest.php';
 
     use \controller\SearchController;
 
@@ -193,6 +194,10 @@
 
     Flight::route('/test/mediator', function () {
         (new \test\MediatorTest)->test();
+    });
+
+    Flight::route('/test/levenshtein', function () {
+        (new \test\UTF8LevenshteinTest)->test();
     });
 
     // run Fight router
