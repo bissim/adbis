@@ -32,7 +32,7 @@
 
         public function getReviews(string $keyword): array
         {
-            $this->queries['links'] = '//h3[@class="clk"]/a/attribute::href';
+            $this->queries['links'] = '//div[3]/ol/li[@class="search-result search-item"]/h3/a/attribute::href'; // old one was //h3[@class="clk"]/a/attribute::href
             $this->reviewScraper->setQueries($this->queries);
             return $this->reviewScraper->getReviews(
                 $this->baseUrl,
