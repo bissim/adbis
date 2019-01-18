@@ -105,11 +105,11 @@
         private function jsonEncodeBooks(string $search, string $keyword): string
         {
             $dbMng = new DBManager;
-            $books = $dbMng->getBooks();
+            $books = $dbMng->getAllBooks();
             if (empty($books))
             {
                 $wrapperMng = new WrapperManager;
-                $dbMng->addBooks($wrapperMng->getAllBooks());
+                $dbMng->addBooks($wrapperMng->getBooks($keyword));
                 $books = $dbMng->getAllBooks();
             }
             return json_encode($books);

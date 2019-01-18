@@ -1,10 +1,12 @@
 <?php
     namespace model;
 
+    use \JsonSerializable;
+
     /**
      *
      */
-    class Book
+    class Book implements JsonSerializable 
     {
         // La classe book ha come variabili d'istanza i parametri di un libro, ne possiamo aggiungere altri successivamente
         private $id;
@@ -125,5 +127,12 @@
         public function __clone()
         {
             $this->id = 0;
+        }
+
+        public function jsonSerialize()
+        {
+            $vars = get_object_vars($this);
+    
+            return $vars;
         }
     }

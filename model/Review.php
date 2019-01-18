@@ -1,10 +1,12 @@
 <?php
     namespace model;
 
+    use \JsonSerializable;
+
     /**
      *
      */
-    class Review
+    class Review implements JsonSerializable
     {
         private $id;
         private $title;
@@ -159,5 +161,12 @@
             $desc .= "<hr />";
 
             return $desc;
+        }
+
+        public function jsonSerialize()
+        {
+            $vars = get_object_vars($this);
+    
+            return $vars;
         }
     }

@@ -56,7 +56,7 @@
             if ($result->rowCount() > 0) {
                 while($row = $result->fetch(PDO::FETCH_ASSOC)) {
                     array_push($books,
-                                new Book($row["title"],$row["author"],$row["price"],$row["image"],$row["link"])
+                                new Book($row["title"],$row["author"],$row["price"],$row["img"],$row["link"])
                     );
                 }
             }

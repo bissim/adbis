@@ -25,12 +25,12 @@
             try
             {
                 $mediator = new Mediator;
-                echo $mediator->getNewItems();
-             
-                // $jsonBooks = $mediator->retrieve('book', 'title', 'harry potter');
-                // $books = json_decode($jsonBooks, true);
-//                echo $books;
-                // echo "<hr />";
+                $jsonBooks = $mediator->retrieve('book', 'title', 'harry potter');
+                $books = json_decode($jsonBooks, true);
+                foreach($books as $book) {
+                    var_dump($book);
+                    echo "<hr />";
+            }
 
 //                 $jsonReviews = $mediator->retrieve('review', 'title', 'harry potter');
 //                 $reviews = json_decode($jsonReviews, true);
