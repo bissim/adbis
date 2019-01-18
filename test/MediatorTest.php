@@ -1,17 +1,13 @@
 <?php
     namespace test;
-
-//    require_once './controller/BookDAO.php';
-//    require_once './controller/ReviewDAO.php';
-//    require_once './controller/DAOManager.php';
+    
     require_once './controller/Mediator.php';
+    require_once './controller/DBManager.php';
 
     use \util\ErrorHandler;
-//    use \controller\BookDAO;
-//    use \controller\ReviewDAO;
-//    use \controller\DAOManager;
     use \controller\Mediator;
-
+    use \controller\DBManager;
+    
     set_error_handler(array(new ErrorHandler, 'errorHandler'));
 
     class MediatorTest
@@ -26,41 +22,25 @@
         {
             $begin = $this->microtime_float();
 
-//            $bookDao = new BookDAO;
-//            $bookReturned = $bookDao->retrieveByAuthor('aut');
-//            $jsonBook = json_encode($bookReturned);
-//            echo $jsonBook;
-//
-//            $reviewDao = new ReviewDAO;
-//            $reviewReturned = $reviewDao->retrieveByAuthor('aut');
-//            $jsonReview = json_encode($reviewReturned);
-//            echo $jsonReview;
-
-//            $daoMan = new DAOManager;
-//
-//            $books = $daoMan->getBooks('title', 'harry potter');
-//            echo json_encode($books);
-//
-//            $reviews = $daoMan->getReviews('title', 'harry potter');
-//            echo json_encode($reviews);
-
             try
             {
                 $mediator = new Mediator;
-                $jsonBooks = $mediator->retrieve('book', 'title', 'harry potter');
-                $books = json_decode($jsonBooks, true);
+                echo $mediator->getNewItems();
+             
+                // $jsonBooks = $mediator->retrieve('book', 'title', 'harry potter');
+                // $books = json_decode($jsonBooks, true);
 //                echo $books;
-                echo "<hr />";
+                // echo "<hr />";
 
-                $jsonReviews = $mediator->retrieve('review', 'title', 'harry potter');
-                $reviews = json_decode($jsonReviews, true);
-//                echo $reviews;
-                echo "<hr />";
+//                 $jsonReviews = $mediator->retrieve('review', 'title', 'harry potter');
+//                 $reviews = json_decode($jsonReviews, true);
+// //                echo $reviews;
+//                 echo "<hr />";
 
-                $jsonReviewedBooks = $mediator->retrieve('join', 'title', 'harry potter');
-                $reviewedBook = json_decode($jsonReviewedBooks, true);
-                print_r($reviewedBook);
-                echo "<hr />";
+//                 $jsonReviewedBooks = $mediator->retrieve('join', 'title', 'harry potter');
+//                 $reviewedBook = json_decode($jsonReviewedBooks, true);
+//                 print_r($reviewedBook);
+//                 echo "<hr />";
 
                 $end = $this->microtime_float();
                 $elapsedTime = $end - $begin;

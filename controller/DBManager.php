@@ -83,14 +83,25 @@
 
         public function addBooks(array $books) {
             $this->connect();
-            $this->conn->beginTransaction();
-            foreach($books as $book)
+            $stmt = $this->conn->prepare("INSERT INTO book (title,author,price,img,link,is_recent)
+                                        VALUES (:title,:author,:price,:img,:link,:is_recent)");
+            $stmt->bindParam(':title', $title);
+            $stmt->bindParam(':author', $author);
+            $stmt->bindParam(':price', $price);
+            $stmt->bindParam(':img', $img);
+            $stmt->bindParam(':link', $link);
+            $stmt->bindParam(':is_recent', $isRecent);
+
+            foreach($books as $book) {
+                $title = $book->getTitle();
+                $author = $book->getAuthor();
+                $price = $book->getPrice();
+                $img = $book->getImg();
+                $link = $book->getLink();
                 $isRecent = $book->isRecent() ? 1 : 0;
-                $this->conn->exec("INSERT INTO book(title,author,price,img,link,is_recent)
-                                    VALUES ('{$book->getTitle()}' , '{$book->getAuthor()}' ,
-                                            '{$book->getPrice()}' , '{$book->getImg()}' ,
-                                            '{$book->getLink()}', '$isRecent')");
-            $this->conn->commit();
+                $stmt->execute();
+            }
+            $this->disconnect();
         }
 
         public function getAllReviews(): array {
@@ -131,15 +142,31 @@
 
         public function addReviews(array $reviews) {
             $this->connect();
-            $this->conn->beginTransaction();
-            foreach($reviews as $review)
+            $this->connect();
+            $stmt = $this->conn->prepare("INSERT INTO review (title,author,plot,txt,average,style,content,pleasantness,is_recent)
+                                        VALUES (:title,:author,:plot,:txt,:average,:style,:content,:pleasantness,:is_recent)");
+            $stmt->bindParam(':title', $title);
+            $stmt->bindParam(':author', $author);
+            $stmt->bindParam(':plot', $plot);
+            $stmt->bindParam(':txt', $txt);
+            $stmt->bindParam(':average', $average);
+            $stmt->bindParam(':style', $style);
+            $stmt->bindParam(':content', $content);
+            $stmt->bindParam(':pleasantness', $pleasantness);
+            $stmt->bindParam(':is_recent', $isRecent);
+
+            foreach($reviews as $review) {
+                $title = $review->getTitle();
+                $author = $review->getAuthor();
+                $plot = $review->getPlot();
+                $txt = $review->getText();
+                $average = $review->getAvg();
+                $style = $review->getStyle();
+                $content = $review->getContent();
+                $pleasantness = $review->getPleasantness();
                 $isRecent = $review->isRecent() ? 1 : 0;
-                $this->conn->exec("INSERT INTO review(title,author,plot,txt,average,style,content,pleasantness,is_recent)
-                                    VALUES ('{$review->getTitle()}' , '{$review->getAuthor()}' ,
-                                            '{$review->getPlot()}' , '{$review->getText()}' ,
-                                            '{$review->getAvg()}' ,  '{$review->getStyle()}' , 
-                                            '{$review->getContent()}' , '{$review->getPleasantness()}' ,
-                                            '$isRecent')");
-            $this->conn->commit();
+                $stmt->execute();
+            }
+            $this->disconnect();
         }
     }
