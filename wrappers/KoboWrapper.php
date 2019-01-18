@@ -115,7 +115,7 @@
             $this->bookScraper->setQueries($this->queriesNews);
             return $this->bookScraper->getBooks(
                 '',
-                $this->queryUrl,
+                $this->queryNewsUrl,
                 '',
                 '&fclanguages=it',
                 true
