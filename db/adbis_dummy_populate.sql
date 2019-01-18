@@ -1,4 +1,4 @@
-insert into book (title, author, price, image, link)
+insert into book (title, author, price, img, link)
   values ('Title 1', 'Author 1', 1.0, 'Image 1', 'Link 1'),
           ('Title 2', 'Author 2', 2.0, 'Image 2', 'Link 2'),
           ('Title 3', 'Author 3', 3.0, 'Image 3', 'Link 3');

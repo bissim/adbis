@@ -27,7 +27,7 @@ create table if not exists book (
   title VARCHAR(400) not null,
   author VARCHAR(150) not null,
   price FLOAT not null,
-  image VARCHAR(250),
+  img VARCHAR(250),
   link VARCHAR(250) not null,
   expiration_date TIMESTAMP default CURRENT_TIMESTAMP,
   is_recent tinyint(1) default 0
