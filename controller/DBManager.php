@@ -85,10 +85,11 @@
             $this->connect();
             $this->conn->beginTransaction();
             foreach($books as $book)
-                $this->conn->exec("INSERT INTO book(title,author,price,img,link)
+                $isRecent = $book->isRecent() ? 1 : 0;
+                $this->conn->exec("INSERT INTO book(title,author,price,img,link,is_recent)
                                     VALUES ('{$book->getTitle()}' , '{$book->getAuthor()}' ,
                                             '{$book->getPrice()}' , '{$book->getImg()}' ,
-                                            '{$book->getLink()}')");
+                                            '{$book->getLink()}', '$isRecent')");
             $this->conn->commit();
         }
 
@@ -132,11 +133,13 @@
             $this->connect();
             $this->conn->beginTransaction();
             foreach($reviews as $review)
-                $this->conn->exec("INSERT INTO review(title,author,plot,txt,average,style,content,pleasantness)
+                $isRecent = $review->isRecent() ? 1 : 0;
+                $this->conn->exec("INSERT INTO review(title,author,plot,txt,average,style,content,pleasantness,is_recent)
                                     VALUES ('{$review->getTitle()}' , '{$review->getAuthor()}' ,
                                             '{$review->getPlot()}' , '{$review->getText()}' ,
                                             '{$review->getAvg()}' ,  '{$review->getStyle()}' , 
-                                            '{$review->getContent()}' , '{$review->getPleasantness()}')");
+                                            '{$review->getContent()}' , '{$review->getPleasantness()}' ,
+                                            '$isRecent')");
             $this->conn->commit();
         }
     }
