@@ -63,6 +63,18 @@
             return $review;
         }
 
+        public function retrieveAll(): array
+        {
+            $this->connect();
+
+            $instruction = "
+                            SELECT * FROM review";
+            $results = $this->dbMan->query($instruction);
+            $this->dbMan->disconnect();
+
+            return $results;
+        }
+
         /**
          * @param object $entity
          *

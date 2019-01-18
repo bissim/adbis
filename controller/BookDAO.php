@@ -60,6 +60,18 @@
             return $book;
         }
 
+        public function retrieveAll(): array
+        {
+            $this->connect();
+
+            $instruction = "
+                            SELECT * FROM book";
+            $results = $this->dbMan->query($instruction);
+            $this->dbMan->disconnect();
+
+            return $results;
+        }
+        
         /**
          * @param object $entity
          *
@@ -105,7 +117,7 @@
             $book->setId($results[0]['id']);
 
             return $book;
-        }
+        }       
 
         public function retrieveByTitle(string $title): array
         {
