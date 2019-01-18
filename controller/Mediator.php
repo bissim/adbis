@@ -6,9 +6,11 @@
     require_once './util/ErrorHandler.php';
     require './controller/WrapperManager.php';
     require './controller/DBManager.php';
+    require './controller/StringComparator.php';
     
     use \controller\WrapperManager;
     use \controller\DBManager;
+    use \controller\StringComparator;
 
     class Mediator
     {
@@ -104,13 +106,19 @@
          */
         private function jsonEncodeBooks(string $search, string $keyword): string
         {
+            $books = array();
             $dbMng = new DBManager;
-            $books = $dbMng->getAllBooks();
+            $strComp = new StringComparator;
+            foreach ($dbMng->getAllBooks() as $book)
+                if(($search==='title' && $strComp->compare($keyword,$book->getTitle()))
+                    || ($search==='author' && $strComp->compare($keyword,$book->getAuthor())))
+                    array_push($books,$book);
+
             if (empty($books))
             {
                 $wrapperMng = new WrapperManager;
-                $dbMng->addBooks($wrapperMng->getBooks($keyword));
-                $books = $dbMng->getAllBooks();
+                $books = $wrapperMng->getBooks($keyword);
+                $dbMng->addBooks($books);
             }
             return json_encode($books);
         }
@@ -124,13 +132,20 @@
          */
         private function jsonEncodeReviews(string $search, string $keyword): string
         {
+            $reviews = array();
             $dbMng = new DBManager;
-            $reviews = $dbMng->getAllReviews();
+            $strComp = new StringComparator;
+            foreach ($dbMng->getAllReviews() as $review)
+                if(($search==='title' && $strComp->compare($keyword,$review->getTitle()))
+                    || ($search==='author' && $strComp->compare($keyword,$review->getAuthor())))
+                    array_push($reviews,$review);
+
+
             if (empty($reviews))
             {
                 $wrapperMng = new WrapperManager;
-                $dbMng->addReviews($wrapperMng->getReviews($keyword));
-                $reviews = $dbMng->getAllReviews();
+                $reviews = $wrapperMng->getReviews($keyword);
+                $dbMng->addReviews($reviews);
             }
             return json_encode($reviews);
         }
@@ -173,8 +188,6 @@
 
                 foreach ($reviews as $review)
                 {
-                    // if (strtolower($book[$search]) === strtolower($review[$search]) &&
-                    //     strtolower($book['title']) === strtolower($review['title']))
                     if ($this->isAssociate($book, $review, $search))
                     {
                         $reviewOfBook = $review;

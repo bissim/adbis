@@ -25,17 +25,19 @@
             try
             {
                 $mediator = new Mediator;
-                $jsonBooks = $mediator->retrieve('book', 'title', 'harry potter');
-                $books = json_decode($jsonBooks, true);
-                foreach($books as $book) {
-                    var_dump($book);
-                    echo "<hr />";
-            }
+            //     $jsonBooks = $mediator->retrieve('book', 'title', 'il barone rampante');
+            //     $books = json_decode($jsonBooks, true);
+            //     foreach($books as $book) {
+            //         var_dump($book);
+            //         echo "<hr />";
+            // }
 
-//                 $jsonReviews = $mediator->retrieve('review', 'title', 'harry potter');
-//                 $reviews = json_decode($jsonReviews, true);
-// //                echo $reviews;
-//                 echo "<hr />";
+                $jsonReviews = $mediator->retrieve('review', 'title', 'harry potter');
+                $reviews = json_decode($jsonReviews, true);
+                foreach($reviews as $review) {
+                    var_dump($review);
+                    echo "<hr />";
+                }
 
 //                 $jsonReviewedBooks = $mediator->retrieve('join', 'title', 'harry potter');
 //                 $reviewedBook = json_decode($jsonReviewedBooks, true);
