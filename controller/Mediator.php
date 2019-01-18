@@ -3,16 +3,15 @@
 
     require_once './model/Book.php';
     require_once './model/Review.php';
-
     require_once './util/ErrorHandler.php';
-
     require './controller/WrapperManager.php';
+    require './controller/DBManager.php';
     
     use \controller\WrapperManager;
+    use \controller\DBManager;
 
     class Mediator
     {
-
         public function __construct()
         {}
 
@@ -24,181 +23,178 @@
          * @return string
          * @throws \Throwable
          */
-        // public function retrieve(string $table, string $search, string $keyword): string
-        // {
-        //     try
-        //     {
-        //         switch ($table)
-        //         {
-        //             case 'book':
-        //             {
-        //                 $result = $this->jsonEncodeBooks($search, $keyword);
-        //                 break;
-        //             }
-        //             case 'review':
-        //             {
-        //                 $result = $this->jsonEncodeReviews($search, $keyword);
-        //                 break;
-        //             }
-        //             case 'join':
-        //             {
-        //                 $result = $this->jsonEncodeBoth($search, $keyword);
-        //                 break;
-        //             }
-        //             default:
-        //             {
-        //                 throw new \Exception("unknown table $table.");
-        //                 break;
-        //             }
-        //         }
-        //     }
-        //     catch (\Throwable $th)
-        //     {
-        //         throw $th;
-        //     }
 
-        //     return $result;
-        // }
+        public function retrieve(string $table, string $search, string $keyword): string
+        {
+            try
+            {
+                switch ($table)
+                {
+                    case 'book':
+                    {
+                        $result = $this->jsonEncodeBooks($search, $keyword);
+                        break;
+                    }
+                    case 'review':
+                    {
+                        $result = $this->jsonEncodeReviews($search, $keyword);
+                        break;
+                    }
+                    case 'join':
+                    {
+                        $result = $this->jsonEncodeBoth($search, $keyword);
+                        break;
+                    }
+                    default:
+                    {
+                        throw new \Exception("unknown table $table.");
+                        break;
+                    }
+                }
+            }
+            catch (\Throwable $th)
+            {
+                throw $th;
+            }
 
-        // public function getNewItems(): string
-        // {
-        //     $res = array();
-        //     $res['books'] = $this->getNewBooks();
-        //     $res['reviews'] = $this->getNewReviews();
-        //     return json_encode($res);
-        // }
+            return $result;
+        }
 
-        // // Restituisce in formato JSON i nuovi ebook
-        // private function getNewBooks(): array
-        // {
-        //     $daoMng = new DAOManager;
-        //     $books = $daoMng->getNewBooks();
-        //     if (empty($books))
-        //     {
-        //         $wrapperMng = new WrapperManager;
-        //         $daoMng->addBooks($wrapperMng->getNewBooks());
-        //         $books = $daoMng->getNewBooks();
-        //     }
-        //     // return json_encode($books);
-        //     return $books;
-        // }
+        public function getNewItems(): string
+        {
+            $res = array();
+            $res['books'] = $this->getNewBooks();
+            $res['reviews'] = $this->getNewReviews();
+            return json_encode($res);
+        }
 
-        // private function getNewReviews(): array
-        // {
-        //     $daoMng = new DAOManager;
-        //     $reviews = $daoMng->getNewReviews();
-        //     if (empty($reviews))
-        //     {
-        //         $wrapperMng = new WrapperManager;
-        //         $daoMng->addReviews($wrapperMng->getNewReviews());
-        //         $reviews = $daoMng->getNewReviews();
-        //     }            
-        //     // return json_encode($reviews);
-        //     return $reviews;
-        // }        
+        // Restituisce in formato JSON i nuovi ebook
+        private function getNewBooks(): array
+        {
+            $dbMng = new DBManager;
+            $books = $dbMng->getNewBooks();
+            if (empty($books))
+            {
+                $wrapperMng = new WrapperManager;
+                $dbMng->addBooks($wrapperMng->getNewBooks());
+                $books = $dbMng->getNewBooks();
+            }
+            return $books;
+        }
 
-        // /**
-        //  * @param string $search
-        //  * @param string $keyword
-        //  *
-        //  * @return string
-        //  * @throws \Exception
-        //  */
-        // private function jsonEncodeBooks(string $search, string $keyword): string
-        // {
-        //     $daoMng = new DAOManager;
-        //     $books = $daoMng->getBooks($search, $keyword);
-        //     if (empty($books))
-        //     {
-        //         $wrapperMng = new WrapperManager;
-        //         $daoMng->addBooks($wrapperMng->getBooks($keyword));
-        //         $books = $daoMng->getBooks($search, $keyword);
-        //     }
+        private function getNewReviews(): array
+        {
+            $dbMng = new DBManager;
+            $reviews = $dbMng->getNewReviews();
+            if (empty($reviews))
+            {
+                $wrapperMng = new WrapperManager;
+                $dbMng->addReviews($wrapperMng->getNewReviews());
+                $reviews = $dbMng->getNewReviews();
+            }
+            return $reviews;
+        }
+        
+        /**
+         * @param string $search
+         * @param string $keyword
+         *
+         * @return string
+         * @throws \Exception
+         */
+        private function jsonEncodeBooks(string $search, string $keyword): string
+        {
+            $dbMng = new DBManager;
+            $books = $dbMng->getBooks();
+            if (empty($books))
+            {
+                $wrapperMng = new WrapperManager;
+                $dbMng->addBooks($wrapperMng->getAllBooks());
+                $books = $dbMng->getAllBooks();
+            }
+            return json_encode($books);
+        }
 
-        //     return json_encode($books);
-        // }
+        /**
+         * @param string $search
+         * @param string $keyword
+         *
+         * @return string
+         * @throws \Exception
+         */
+        private function jsonEncodeReviews(string $search, string $keyword): string
+        {
+            $dbMng = new DBManager;
+            $reviews = $dbMng->getAllReviews();
+            if (empty($reviews))
+            {
+                $wrapperMng = new WrapperManager;
+                $dbMng->addReviews($wrapperMng->getReviews($keyword));
+                $reviews = $dbMng->getAllReviews();
+            }
+            return json_encode($reviews);
+        }
 
-        // /**
-        //  * @param string $search
-        //  * @param string $keyword
-        //  *
-        //  * @return string
-        //  * @throws \Exception
-        //  */
-        // private function jsonEncodeReviews(string $search, string $keyword): string
-        // {
-        //     $daoMng = new DAOManager;
-        //     $reviews = $daoMng->getReviews($search, $keyword);
-        //     if (empty($reviews))
-        //     {
-        //         $wrapperMng = new WrapperManager;
-        //         $daoMng->addReviews($wrapperMng->getReviews($keyword));
-        //         $reviews = $daoMng->getReviews($search, $keyword);
-        //     }
+        /**
+         * @param string $search
+         * @param string $keyword
+         *
+         * @return string
+         * @throws \Exception
+         */
+        private function jsonEncodeBoth(string $search, string $keyword): string
+        {
+            $dbMng = new DBManager;
+            // check in db first
+            $books = $dbMng->getAllBooks();
+            $reviews = $dbMng->getAllReviews();
 
-        //     return json_encode($reviews);
-        // }
+            if (empty($books))
+            {
+                // scrape books from sources
+                $wrapperMng = new WrapperManager;
+                $dbMng->addBooks($wrapperMng->getBooks($keyword));
+                $books = $dbMng->getAllBooks();
+            }
 
-        // /**
-        //  * @param string $search
-        //  * @param string $keyword
-        //  *
-        //  * @return string
-        //  * @throws \Exception
-        //  */
-        // private function jsonEncodeBoth(string $search, string $keyword): string
-        // {
-        //     $daoMng = new DAOManager;
-        //     // check in db first
-        //     $books = $daoMng->getBooks($search, $keyword);
-        //     $reviews = $daoMng->getReviews($search, $keyword);
+            if (empty($reviews))
+            {
+                // scrape reviews from source
+                $wrapperMng = new WrapperManager;
+                $dbMng->addReviews($wrapperMng->getReviews($keyword));
+                $reviews = $dbMng->getAllReviews();
+            }
 
-        //     if (empty($books))
-        //     {
-        //         // scrape books from sources
-        //         $wrapperMng = new WrapperManager;
-        //         $daoMng->addBooks($wrapperMng->getBooks($keyword));
-        //         $books = $daoMng->getBooks($search, $keyword);
-        //     }
+            $items = array();
 
-        //     if (empty($reviews))
-        //     {
-        //         // scrape reviews from source
-        //         $wrapperMng = new WrapperManager;
-        //         $daoMng->addReviews($wrapperMng->getReviews($keyword));
-        //         $reviews = $daoMng->getReviews($search, $keyword);
-        //     }
+            foreach ($books as $book) // TODO Y U ARRAY
+            {
+                $reviewOfBook = NULL;
 
-        //     $items = array();
+                foreach ($reviews as $review)
+                {
+                    // if (strtolower($book[$search]) === strtolower($review[$search]) &&
+                    //     strtolower($book['title']) === strtolower($review['title']))
+                    if ($this->isAssociate($book, $review, $search))
+                    {
+                        $reviewOfBook = $review;
+                    }
+                }
+                $item = array($book, $reviewOfBook);
+                array_push($items, $item); 
+            }
 
-        //     foreach ($books as $book) // TODO Y U ARRAY
-        //     {
-        //         $reviewOfBook = NULL;
+            return json_encode($items);
+        }
 
-        //         foreach ($reviews as $review)
-        //         {
-        //             // if (strtolower($book[$search]) === strtolower($review[$search]) &&
-        //             //     strtolower($book['title']) === strtolower($review['title']))
-        //             if ($this->isAssociate($book, $review, $search))
-        //             {
-        //                 $reviewOfBook = $review;
-        //             }
-        //         }
-        //         $item = array($book, $reviewOfBook);
-        //         array_push($items, $item); 
-        //     }
-
-        //     return json_encode($items);
-        // }
-
-        // private function isAssociate($book, $review, $search): bool
-        // {
-        //     switch ($search)
-        //     {
-        //         case 'title': return (strtolower($book['title']) === strtolower($review['title']));
-        //         case 'author': return (strtolower($book['author']) === strtolower($review['author'])
-        //                         && strtolower($book['title']) === strtolower($review['title']));
-        //     }
-        // }
+        private function isAssociate($book, $review, $search): bool
+        {
+            switch ($search)
+            {
+                case 'title': return (strtolower($book['title']) === strtolower($review['title']));
+                case 'author': return (strtolower($book['author']) === strtolower($review['author'])
+                                && strtolower($book['title']) === strtolower($review['title']));
+            }
+        }
 
     }
