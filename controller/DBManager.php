@@ -1,9 +1,13 @@
 <?php
     namespace controller;
 
+    require_once './model/Book.php';
+    require_once './model/Review.php';
+
     use \Exception;
     use \PDO;
-    use \PDOException;
+    use \model\Book;
+    use \model\Review;
 
     class DBManager
     {
@@ -11,8 +15,7 @@
         private $username;
         private $password;
         private $dbName;
-        private $port;
-        private $pdo;
+        private $conn;
 
         public function __construct()
         {
@@ -27,79 +30,113 @@
             $this->port = $configs['connection']['port'];
         }
 
-        // Connessione al database
-        public function isConnected(): bool
-        {
-            return $this->pdo ? true : false;
-        }
-
-        /**
-         * @throws PDOException
-         */
-        public function connect(): void
-        {
-
-            $pdoOptions = array(
-                PDO::ATTR_EMULATE_PREPARES   => false, // turn off emulation mode for "real" prepared statements
-                PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION, //turn on errors in the form of exceptions
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, //make the default fetch be an associative array
-                PDO::ATTR_PERSISTENT => true // make connections reusable
-            );
-
-            $dsn = "mysql:host={$this->serverName};dbname={$this->dbName}";
-            $user = $this->username;
-            $pwd = $this->password;
-            // user_error("User {$user} is trying to connect to {$this->serverName}...");
+        private function connect() {
             try {
-                $this->pdo = new PDO(
-                    $dsn,
-                    $user,
-                    $pwd,
-                    $pdoOptions
-                );
+                $this->conn = new PDO("mysql:host=$this->serverName;dbname=$this->dbName",
+                                $this->username, $this->password);
+                // set the PDO error mode to exception
+                $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                }
+            catch(PDOException $e)
+                {
+                echo $e->getMessage();
+                }
+        }
+
+        private function disconnect() {
+            $this->conn = null;
+        }
+        
+        public function getAllBooks(): array {
+            $this->connect();
+            $sql = "SELECT * FROM book";
+            $result = $this->conn->query($sql);
+
+            $books = array();
+            if ($result->rowCount() > 0) {
+                while($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                    array_push($books,
+                                new Book($row["title"],$row["author"],$row["price"],$row["image"],$row["link"])
+                    );
+                }
             }
-            catch (PDOException $pdoe)
-            {
-                error_log("A database error occurred: {$pdoe->getMessage()}.");
+            $this->disconnect();
+            return $books;
+        }
+
+        public function getNewBooks(): array {
+            $this->connect();
+            $sql = "SELECT * FROM book WHERE is_recent=1";
+            $result = $this->conn->query($sql);
+
+            $books = array();
+            if ($result->rowCount() > 0) {
+                while($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                    array_push($books,
+                                new Book($row["title"],$row["author"],$row["price"],$row["img"],$row["link"])
+                    );
+                }
             }
-            catch (Exception $e)
-            {
-                error_log("An error occurred: {$e->getMessage()}.");
+            $this->disconnect();
+            return $books;
+        }
+
+        public function addBooks(array $books) {
+            $this->connect();
+            $this->conn->beginTransaction();
+            foreach($books as $book)
+                $this->conn->exec("INSERT INTO book(title,author,price,img,link)
+                                    VALUES ('{$book->getTitle()}' , '{$book->getAuthor()}' ,
+                                            '{$book->getPrice()}' , '{$book->getImg()}' ,
+                                            '{$book->getLink()}')");
+            $this->conn->commit();
+        }
+
+        public function getAllReviews(): array {
+            $this->connect();
+            $sql = "SELECT * FROM review";
+            $result = $this->conn->query($sql);
+
+            $books = array();
+            if ($result->rowCount() > 0) {
+                while($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                    array_push($books,
+                                new Review($row["title"],$row["author"],$row["plot"],$row["txt"],
+                                            $row["average"],$row["style"],$row["content"],$row["pleasantness"])
+                    );
+                }
             }
+            $this->disconnect();
+            return $books;
         }
 
-        public function disconnect(): void
-        {
-            $this->pdo = null;
+        public function getNewReviews(): array {
+            $this->connect();
+            $sql = "SELECT * FROM review WHERE is_recent=1";
+            $result = $this->conn->query($sql);
+
+            $books = array();
+            if ($result->rowCount() > 0) {
+                while($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                    array_push($books,
+                                new Review($row["title"],$row["author"],$row["plot"],$row["txt"],
+                                            $row["average"],$row["style"],$row["content"],$row["pleasantness"])
+                    );
+                }
+            }
+            $this->disconnect();
+            return $books;
         }
 
-        public function execute(string $instruction, array $params): void
-        {
-            // execute instruction
-            $stmt = $this->pdo->prepare($instruction);
-            $stmt->execute($params);
-
-            // dismiss statement
-            $stmt = null;
-        }
-
-        public function query(string $instruction, array $params): array
-        {
-            // execute query
-            $stmt = $this->pdo->prepare($instruction);
-            $stmt->execute($params);
-
-            // retrieve results
-            $results = $stmt->fetchAll();
-
-            // dismiss statement
-            $stmt = null;
-
-            return $results;
-        }
-
-        public function __toString()
-        {
-            return $this->pdo ? "Connected to {$this->username}@{$this->serverName}." : "Not connected.";
+        public function addReviews(array $reviews) {
+            $this->connect();
+            $this->conn->beginTransaction();
+            foreach($reviews as $review)
+                $this->conn->exec("INSERT INTO review(title,author,plot,txt,average,style,content,pleasantness)
+                                    VALUES ('{$review->getTitle()}' , '{$review->getAuthor()}' ,
+                                            '{$review->getPlot()}' , '{$review->getText()}' ,
+                                            '{$review->getAvg()}' ,  '{$review->getStyle()}' , 
+                                            '{$review->getContent()}' , '{$review->getPleasantness()}')");
+            $this->conn->commit();
         }
     }

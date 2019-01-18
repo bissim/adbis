@@ -10,8 +10,8 @@
     // You should never display errors
     // in a production environment.
     // TODO comment following two lines
-//    error_reporting(E_ALL);
-//    ini_set('display_errors', '1');
+    //    error_reporting(E_ALL);
+    //    ini_set('display_errors', '1');
 
     require './vendor/autoload.php';
     require './controller/SearchController.php';
@@ -22,9 +22,8 @@
     require './test/MediatorTest.php';
     require './test/BookTest.php';
     require './test/ReviewTest.php';
-    require './test/BookDAOTest.php';
-    require './test/ReviewDAOTest.php';
     require './test/UTF8LevenshteinTest.php';
+    require './test/DBManagerTest.php';
 
     use \controller\SearchController;
 
@@ -168,14 +167,6 @@
         (new \test\ReviewTest)->test();
     });
 
-    Flight::route('/test/bookdao', function () {
-        (new \test\BookDAOTest())->test();
-    });
-
-    Flight::route('/test/reviewdao', function () {
-        (new \test\ReviewDAOTest())->test();
-    });
-
     Flight::route('/test/qreview', function () {
         (new \test\ReviewWrapperTest)->test();
     });
@@ -198,6 +189,10 @@
 
     Flight::route('/test/levenshtein', function () {
         (new \test\UTF8LevenshteinTest)->test();
+    });
+
+    Flight::route('/test/dbmanager', function () {
+        (new \test\DBManagerTest)->test();
     });
 
     // run Fight router
