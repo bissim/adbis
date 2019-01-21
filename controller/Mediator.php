@@ -34,17 +34,17 @@
                 {
                     case 'book':
                     {
-                        $result = $this->jsonEncodeBooks($search, $keyword);
+                        $result = $this->getBooks($search, $keyword);
                         break;
                     }
                     case 'review':
                     {
-                        $result = $this->jsonEncodeReviews($search, $keyword);
+                        $result = $this->getReviews($search, $keyword);
                         break;
                     }
                     case 'join':
                     {
-                        $result = $this->jsonEncodeBoth($search, $keyword);
+                        $result = $this->getBoth($search, $keyword);
                         break;
                     }
                     default:
@@ -59,7 +59,7 @@
                 throw $th;
             }
 
-            return $result;
+            return json_encode($result);
         }
 
         public function getNewItems(): string
@@ -104,7 +104,7 @@
          * @return string
          * @throws \Exception
          */
-        private function jsonEncodeBooks(string $search, string $keyword): string
+        private function getBooks(string $search, string $keyword): array
         {
             $books = array();
             $dbMng = new DBManager;
@@ -123,7 +123,7 @@
                     array_push($books,$book);
                 $dbMng->addBooks($books);
             }
-            return json_encode($books);
+            return $books;
         }
 
         /**
@@ -133,7 +133,7 @@
          * @return string
          * @throws \Exception
          */
-        private function jsonEncodeReviews(string $search, string $keyword): string
+        private function getReviews(string $search, string $keyword): array
         {
             $reviews = array();
             $dbMng = new DBManager;
@@ -152,7 +152,7 @@
                         array_push($reviews,$review);
                 $dbMng->addReviews($reviews);
             }
-            return json_encode($reviews);
+            return $reviews;
         }
 
         /**
@@ -162,30 +162,13 @@
          * @return string
          * @throws \Exception
          */
-        private function jsonEncodeBoth(string $search, string $keyword): string
+        private function getBoth(string $search, string $keyword): array
         {
-            $dbMng = new DBManager;
-            // check in db first
-            $books = $dbMng->getAllBooks();
-            $reviews = $dbMng->getAllReviews();
-
-            if (empty($books))
-            {
-                // scrape books from sources
-                $wrapperMng = new WrapperManager;
-                $dbMng->addBooks($wrapperMng->getBooks($keyword));
-                $books = $dbMng->getAllBooks();
-            }
-
-            if (empty($reviews))
-            {
-                // scrape reviews from source
-                $wrapperMng = new WrapperManager;
-                $dbMng->addReviews($wrapperMng->getReviews($keyword));
-                $reviews = $dbMng->getAllReviews();
-            }
+            $books = $this->getBooks($search, $keyword);
+            $reviews = $this->getReviews($search, $keyword);
 
             $items = array();
+            $comp = new StringComparator;
 
             foreach ($books as $book) // TODO Y U ARRAY
             {
@@ -193,26 +176,15 @@
 
                 foreach ($reviews as $review)
                 {
-                    if ($this->isAssociate($book, $review, $search))
-                    {
+                    if(($search==='title' && $comp->compare($book->getTitle(),$review->getTitle()))
+                    || ($search==='author' && $comp->compare($book->getAuthor(),$review->getAuthor())))
                         $reviewOfBook = $review;
-                    }
                 }
                 $item = array($book, $reviewOfBook);
                 array_push($items, $item); 
             }
 
-            return json_encode($items);
-        }
-
-        private function isAssociate($book, $review, $search): bool
-        {
-            switch ($search)
-            {
-                case 'title': return (strtolower($book['title']) === strtolower($review['title']));
-                case 'author': return (strtolower($book['author']) === strtolower($review['author'])
-                                && strtolower($book['title']) === strtolower($review['title']));
-            }
+            return $items;
         }
 
     }
