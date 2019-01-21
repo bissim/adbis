@@ -117,7 +117,10 @@
             if (empty($books))
             {
                 $wrapperMng = new WrapperManager;
-                $books = $wrapperMng->getBooks($keyword);
+                foreach($wrapperMng->getBooks($keyword) as $book)
+                if(($search==='title' && $strComp->compare($keyword,$book->getTitle()))
+                    || ($search==='author' && $strComp->compare($keyword,$book->getAuthor())))
+                    array_push($books,$book);
                 $dbMng->addBooks($books);
             }
             return json_encode($books);
@@ -140,11 +143,13 @@
                     || ($search==='author' && $strComp->compare($keyword,$review->getAuthor())))
                     array_push($reviews,$review);
 
-
             if (empty($reviews))
             {
                 $wrapperMng = new WrapperManager;
-                $reviews = $wrapperMng->getReviews($keyword);
+                foreach($wrapperMng->getReviews($keyword) as $review)
+                    if(($search==='title' && $strComp->compare($keyword,$review->getTitle()))
+                        || ($search==='author' && $strComp->compare($keyword,$review->getAuthor())))
+                        array_push($reviews,$review);
                 $dbMng->addReviews($reviews);
             }
             return json_encode($reviews);
