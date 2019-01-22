@@ -176,8 +176,8 @@
 
                 foreach ($reviews as $review)
                 {
-                    if(($search==='title' && $comp->compare($book->getTitle(),$review->getTitle()))
-                    || ($search==='author' && $comp->compare($book->getAuthor(),$review->getAuthor())))
+                    if($comp->compare($book->getTitle(),$review->getTitle())
+                     && $comp->compare($book->getAuthor(),$review->getAuthor()))
                         $reviewOfBook = $review;
                 }
                 $item = array($book, $reviewOfBook);
