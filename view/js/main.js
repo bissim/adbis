@@ -316,13 +316,14 @@ function createBookWithReviewNode(json, resultsDiv) {
     // create result node
     resultNode = $("<div></div>")
       .attr("id", "resultNode" + (i + 1))
-      .attr("class", "row");
+      .attr("class", "container")
+      .attr("style", "margin-bottom:50px");
     resultNode.hide();
 
     // create image container
     let imgContainerNode = $("<div></div>").attr(
       "style",
-      "float:right;width:200px;height:200px;margin:2px 4px 2px 4px;"
+      "float:left;width:200px;height:200px;margin:2px 4px 2px 4px;"
     );
     let imgNode = $("<img />")
       .attr("class", "img-responsive center-block")
@@ -402,13 +403,14 @@ function createBookNodes(json, resultsDiv) {
     // create result node
     resultNode = $("<div></div>")
       .attr("id", "res" + i)
-      .attr("class", "row");
+      .attr("class", "container")
+      .attr("style", "margin-bottom:50px");
     resultNode.hide();
 
     // create image container
     let imgContainerNode = $("<div></div>").attr(
       "style",
-      "float:right;width:200px;height:200px;margin:2px 4px 2px 4px;"
+      "float:left;width:200px;height:200px;margin:2px 4px 2px 4px;"
     );
     let imgNode = $("<img />")
       .attr("class", "img-responsive center-block")
