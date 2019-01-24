@@ -58,8 +58,7 @@
               <input type="checkbox" id="searchBoth" name="join" value="join">&nbsp;Cerca le recensioni associate
             </div>
             <div class="control-group" style="margin-top:5px;">
-              <button type="submit" class="btn btn-primary" id="sendMessageButton" disabled>Cerca</button>
-              <button type="reset" class="btn btn-primary" id="resetMessageButton" disabled>Cancella</button>
+              <button type="submit" class="btn btn-primary" id="sendMessageButton">Cerca</button>
             </div>
             <div id="success"></div>
           </form>

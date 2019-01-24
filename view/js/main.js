@@ -23,8 +23,8 @@ $(document).ready(function() {
   let pageName = determinePageName();
   // console.debug("Hi u'r in " + pageName);
 
-  searchField.keyup(disableSearchButton);
-  searchField.focusout(disableSearchButton);
+  // searchField.keyup(disableSearchButton);
+  // searchField.focusout(disableSearchButton);
   // async call to retrieve results
   switch (pageName) {
     case "":
@@ -67,21 +67,21 @@ function determinePageName() {
  * Disable search button with
  * keywords shorter than 2
  */
-function disableSearchButton() {
-  let cancelButton = $("button[type = submit]#resetMessageButton");
+// function disableSearchButton() {
+//   let cancelButton = $("button[type = submit]#resetMessageButton");
 
-  if (searchField.val().length > 0) {
-    cancelButton.prop("disabled", false);
-  } else {
-    cancelButton.prop("disabled", true);
-  }
+//   if (searchField.val().length > 0) {
+//     cancelButton.prop("disabled", false);
+//   } else {
+//     cancelButton.prop("disabled", true);
+//   }
 
-  if (searchField.val().length > 2) {
-    sendButton.prop("disabled", false);
-  } else {
-    sendButton.prop("disabled", true);
-  }
-}
+//   if (searchField.val().length > 2) {
+//     sendButton.prop("disabled", false);
+//   } else {
+//     sendButton.prop("disabled", true);
+//   }
+// }
 
 /**
  * Generic function to search for books or reviews.
@@ -227,30 +227,29 @@ function prepareForResults() {
  */
 function showBooks(res) {
   console.debug("hi I'll show books nao");
-  // console.debug("Object received: " + res);
+  let json = JSON.parse(res);
+  console.debug("Object received: length " + Object.keys(json).length);
 
-  if (res) {
+  let loadingMessage = $("p#loadingMessage");
+  loadingMessage.remove();
+
+  if (Object.keys(json).length>0) {
     let message =
       "La ricerca ha ottenuto dei risultati! Consultare l'elenco sottostante.";
-    let loadingMessage = $("p#loadingMessage");
-    loadingMessage.remove();
     $("#success").html(message);
+    
+    try {
+      // delete temporary message in results container
+      let resultsDiv = $("#results");
+      resultsDiv.empty();
+  
+      // show results
+      createBookNodes(json, resultsDiv);
+    } catch (e) {
+      throw e;
+    }
   }
 
-  let resultsDiv = $("#results");
-
-  try {
-    // delete temporary message in results container
-    resultsDiv.empty();
-
-    // create object from JSON
-    let json = JSON.parse(res);
-
-    // show results
-    createBookNodes(json, resultsDiv);
-  } catch (e) {
-    throw e;
-  }
 }
 
 /**
@@ -260,28 +259,31 @@ function showBooks(res) {
 function showReviews(res) {
   // console.debug("Object received: " + res);
 
-  if (res) {
+  // create object from JSON
+  let json = JSON.parse(res);
+
+  let loadingMessage = $("p#loadingMessage");
+  loadingMessage.remove();
+
+  if (Object.keys(json).length>0) {
     let message =
       "La ricerca ha ottenuto dei risultati! Consultare l'elenco sottostante.";
-    let loadingMessage = $("p#loadingMessage");
-    loadingMessage.remove();
     $("#success").html(message);
+
+    let resultsDiv = $("#results");
+
+    try {
+      let resultsDiv = $("#results");
+      // delete temporary message in results container
+      resultsDiv.empty();
+  
+      // show result
+      createReviewNodes(json, resultsDiv);
+    } catch (e) {
+      throw e;
+    }
   }
 
-  let resultsDiv = $("#results");
-
-  try {
-    // delete temporary message in results container
-    resultsDiv.empty();
-
-    // create object from JSON
-    let json = JSON.parse(res);
-
-    // show result
-    createReviewNodes(json, resultsDiv);
-  } catch (e) {
-    throw e;
-  }
 }
 
 /**
@@ -290,21 +292,23 @@ function showReviews(res) {
  */
 function showBoth(res) {
   // console.warn("implement me pls ___;-;");
+
+  let loadingMessage = $("p#loadingMessage");
+  loadingMessage.remove();
+
   let json = JSON.parse(res);
 
-  if (res) {
+  if (Object.keys(json).length>0) {
     let message =
       "La ricerca ha ottenuto dei risultati! Consultare l'elenco sottostante.";
     let successMessage = $("#success");
     if (successMessage) {
       successMessage.html(message);
     }
-    let loadingMessage = $("p#loadingMessage");
-    loadingMessage.remove();
+    let resultsDiv = $("#results");
+    createBookWithReviewNode(json, resultsDiv);  
   }
 
-  let resultsDiv = $("#results");
-  createBookWithReviewNode(json, resultsDiv);
 }
 
 function createBookWithReviewNode(json, resultsDiv) {
@@ -353,6 +357,7 @@ function createBookWithReviewNode(json, resultsDiv) {
           "'>Scopri di più</a><span></div>"
       );
       detailsContainerBook.append(collapseNode);
+      detailsContainerBook.append("<br/><br/><br/>");
 
       let detailsContainerReview = $("<div></div>")
         .attr("id", "collapse" + i)

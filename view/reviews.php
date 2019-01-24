@@ -57,8 +57,7 @@
               <input type="radio" id="searchByAuthor" name="search" value="author">&nbsp;Autore
             </div>
             <div class="form-group">
-              <button type="submit" class="btn btn-primary" id="sendMessageButton" disabled>Invia</button>
-              <button type="reset" class="btn btn-primary" id="resetMessageButton" disabled>Cancella</button>
+              <button type="submit" class="btn btn-primary" id="sendMessageButton">Cerca</button>
             </div>
               <div id="success"></div>
           </form>
