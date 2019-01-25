@@ -154,7 +154,7 @@ function search() {
 function searchBooks() {
   let search = $("input[name = search]:checked, #sentMessage").val();
   let keyword = searchField.val();
-  let join = $("#searchBoth").prop("checked");
+  let join = true;
   console.debug(
     "Searching for " + search.toString() + " " + keyword.toString() + "..."
   );
@@ -372,7 +372,7 @@ function createBookWithReviewNode(json, resultsDiv) {
         })
         .append("<h4>Punteggi</h4>")
         .append(
-          "<span>Voto: <strong>" + review.average + "</strong></span><br />"
+          "<span>Voto: <strong>" + review.avg + "</strong></span><br />"
         )
         .append("<span>Stile: " + review.style + "</span><br />")
         .append("<span>Contenuto: " + review.content + "</span><br />")
@@ -389,7 +389,7 @@ function createBookWithReviewNode(json, resultsDiv) {
         })
         .append("<div><h4>Trama</h4><p>" + review.plot + "</p></div>")
         .append(
-          "<div><h4>Recensione di un utente</h4><p>" + review.txt + "</p></div>"
+          "<div><h4>Recensione di un utente</h4><p>" + review.text + "</p></div>"
         );
       detailsContainerReview.append(textContainer);
       resultNode.append(detailsContainerReview);

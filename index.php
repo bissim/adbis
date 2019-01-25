@@ -19,6 +19,7 @@
     require './test/AmazonWrapperTest.php';
     require './test/GoogleWrapperTest.php';
     require './test/KoboWrapperTest.php';
+    require './test/AudibleWrapperTest.php';
     require './test/MediatorTest.php';
     require './test/BookTest.php';
     require './test/ReviewTest.php';
@@ -98,7 +99,7 @@
         }
     });
 
-    Flight::route('/search/news', function () {        
+    Flight::route('/search/news', function () {
         (new SearchController)->searchNews();
     });
 
@@ -181,6 +182,10 @@
 
     Flight::route('/test/kobobook', function () {
         (new \test\KoboWrapperTest)->test();
+    });
+
+    Flight::route('/test/audiobook', function () {
+        (new \test\AudibleWrapperTest)->test();
     });
 
     Flight::route('/test/mediator', function () {

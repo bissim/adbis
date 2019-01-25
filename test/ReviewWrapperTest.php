@@ -31,10 +31,10 @@
 
             try
             {
-                // $reviews = $reviewWrapper->getReviews('il signore degli anelli');
+                $reviews = $reviewWrapper->getReviews('harry potter');
                 // $reviews = $reviewWrapper->getNewReviews();
-                $reviews = array_merge($reviewWrapper->getReviews('il signore degli anelli'),
-                                        $reviewWrapper->getNewReviews());
+                // $reviews = array_merge($reviewWrapper->getReviews('il signore degli anelli'),
+                //                         $reviewWrapper->getNewReviews());
                 foreach ($reviews as $review)
                     print $review;            
             }

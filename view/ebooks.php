@@ -55,22 +55,25 @@
               </div>
               <input type="radio" id="searchByTitle" name="search" value="title" checked>&nbsp;Titolo
               <input type="radio" id="searchByAuthor" name="search" value="author">&nbsp;Autore
-              <input type="checkbox" id="searchBoth" name="join" value="join">&nbsp;Cerca le recensioni associate
+              <!-- <input type="checkbox" id="searchBoth" name="join" value="join">&nbsp;Cerca le recensioni associate -->
             </div>
+            <br />
             <div class="control-group" style="margin-top:5px;">
               <button type="submit" class="btn btn-primary" id="sendMessageButton">Cerca</button>
             </div>
+            <br/>
             <div id="success"></div>
           </form>
         </div>
         <br />
       </div>
+      <div id="resLoad" class="loader" style="display:none;"></div>
       <div id="resultsTitle" class="row" style="display:none;"><h3>Risultati di ricerca</h3></div>
       <div id="results" class="row" style="display:none;"></div>
     </div>
 
     <hr />
-
+ 
     <!-- Footer -->
     <?php
         include 'footer.php';
@@ -84,7 +87,8 @@
     <script src="./view/js/clean-blog.min.js"></script>
 
     <!-- Custom user scripts -->
-    <script src="./view/js/main.js"></script>
+    <!-- <script src="./view/js/main.js"></script> -->
+    <script src="./view/js/ebooks.js"></script>
 
   </body>
 

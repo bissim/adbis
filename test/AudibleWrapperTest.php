@@ -1,14 +1,14 @@
 <?php
     namespace test;
 
-    require_once './wrappers/KoboWrapper.php';
+    require_once './wrappers/AudibleWrapper.php';
 
     use \util\ErrorHandler;
-    use \wrappers\KoboWrapper;
+    use \wrappers\AudibleWrapper;
 
     set_error_handler(array(new ErrorHandler(), 'errorHandler'));
 
-    class KoboWrapperTest
+    class AudibleWrapperTest
     {
         private function microtime_float()
         {
@@ -20,9 +20,9 @@
         {
             $inizio = $this->microtime_float();
 
-            $koboWrapper = new KoboWrapper;
-            // $books = $koboWrapper->getBooks('harry potter');
-            $books = $koboWrapper->getNewBooks();
+            $audibleWrapper = new AudibleWrapper;
+            $books = $audibleWrapper->getBooks('harry potter');
+            // $books = $audibleWrapper->getNewBooks();
 
             // $books = array_merge($koboWrapper->getBooks('harry potter'),
             //                     $koboWrapper->getNewBooks());

@@ -10,7 +10,8 @@
         // variables
         private $reviewScraper;
         private $queries;
-        private $baseUrl = 'https://www.startpage.com/do/search?language=italiano&query=site%3Aqlibri.it+';
+        // private $baseUrl = 'https://www.startpage.com/do/search?language=italiano&query=site%3Aqlibri.it+';
+        private $baseUrl = 'https://www.startpage.com/do/search?language=italiano&query=site%qlibri%';
         private $newUrl = 'https://www.qlibri.it/';
 
         public function __construct()

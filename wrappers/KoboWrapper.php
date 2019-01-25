@@ -117,7 +117,7 @@
                 '',
                 $this->queryNewsUrl,
                 '',
-                '&fclanguages=it',
+                '',
                 true
             );
         }

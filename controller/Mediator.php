@@ -64,10 +64,11 @@
 
         public function getNewItems(): string
         {
-            $res = array();
-            $res['books'] = $this->getNewBooks();
-            $res['reviews'] = $this->getNewReviews();
-            return json_encode($res);
+            // $res = array();
+            // $res['books'] = $this->getNewBooks();
+            // $res['reviews'] = $this->getNewReviews();
+            // return json_encode($res);
+            return json_encode($this->getNewBooks());
         }
 
         // Restituisce in formato JSON i nuovi ebook

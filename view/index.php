@@ -42,12 +42,8 @@
     ?>
 
     <!-- Main Content -->
-    <div class="container">
-        <div class="row">
-            <div id="results">
-                <h2>Nuovi eBook</h2>
-            </div>
-        </div>
+    <div id="results" class="row">
+        <h2>Nuovi eBook</h2>
     </div>
 
     <hr />
@@ -65,7 +61,8 @@
     <script src="./view/js/clean-blog.min.js"></script>
 
     <!-- Custom user scripts -->
-    <script src="./view/js/main.js"></script>
+    <!-- <script src="./view/js/main.js"></script> -->
+    <script src="./view/js/index.js"></script>
 
   </body>
 
