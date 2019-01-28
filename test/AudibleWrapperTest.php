@@ -21,7 +21,7 @@
             $inizio = $this->microtime_float();
 
             $audibleWrapper = new AudibleWrapper;
-            $books = $audibleWrapper->getBooks('harry potter');
+            $books = $audibleWrapper->getBooks('il suggeritore');
             // $books = $audibleWrapper->getNewBooks();
 
             // $books = array_merge($koboWrapper->getBooks('harry potter'),

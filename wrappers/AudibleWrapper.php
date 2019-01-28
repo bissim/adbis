@@ -42,15 +42,13 @@
                 '//div[@id="center-3"]/div/span/ul/li[' . $i . ']/div/div/div/div/div/div/span/ul/li/h3/a/attribute::href');
 
                 array_push($authorQueries,
-                '//div[@id="center-3"]/div/span/ul/li[' . $i . ']/div/div/div/div/div/div/span/ul/li[@class="bc-list-item
-                authorLabel"]/span/a/text()');
+                '//div[@id="center-3"]/div/span/ul/li[' . $i . ']/div/div/div/div/div/div/span/ul/li[2]/span/a/text()');
 
                 array_push($imgQueries,
                 '//div[@id="center-3"]/div/span/ul/li[' . $i . ']/div/div/div/div/div/div/div/div/a/img/attribute::src');
 
                 array_push($voiceQueries,
-                '//div[@id="center-3"]/div/span/ul/li[' . $i . ']/div/div/div/div/div/div/span/ul/li[@class="bc-list-item
-                narratorLabel"]/span/a/text()');
+                '//div[@id="center-3"]/div/span/ul/li[' . $i . ']/div/div/div/div/div/div/span/ul/li[3]/span/a/text()');
             }
 
             $queries = array();
@@ -110,12 +108,15 @@
         public function getBooks(String $keyword): array
         {
             $this->bookScraper->setQueries($this->queries);
-            return $this->bookScraper->getBooks(
+            $books = $this->bookScraper->getBooks(
                 $this->domain,
                 $this->queryUrl,
                 $keyword,
                 '',
                 false);
+            foreach ($books as $book)
+                $book->setLink('https://audible.it' . $book->getLink());
+            return $books;
         }
 
         public function getNewBooks(): array

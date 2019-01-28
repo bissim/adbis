@@ -75,6 +75,7 @@ function showBooks(res) {
   console.debug("hi I'll show books nao");
   let json = JSON.parse(res);
   console.debug("Object received: length " + Object.keys(json).length);
+  console.debug(res);
 
   let loadingMessage = $("p#loadingMessage");
   loadingMessage.remove();
@@ -90,7 +91,8 @@ function showBooks(res) {
       resultsDiv.empty();
   
       // show results
-      createBookNodes(json, resultsDiv);
+      createBookNodes(json['ebooks'], resultsDiv);
+      createAuBookNodes(json['aubooks'], resultsDiv);
     } catch (e) {
       throw e;
     }
@@ -140,6 +142,50 @@ function createBookNodes(json, resultsDiv) {
     resultNode.fadeIn();
   });
 }
+
+function createAuBookNodes(json, resultsDiv) {
+  $.each(json, function(i, item) {
+    
+    let resultNode = "";
+
+    // create result node
+    resultNode = $("<div></div>")
+      .attr("id", "resultNode" + (i + 1))
+      .attr("class", "container")
+      .attr("style", "margin-bottom:50px");
+    resultNode.hide();
+
+    // create image container
+    let imgContainerNode = $("<div></div>").attr(
+      "style",
+      "float:left;width:200px;height:200px;margin:2px 4px 2px 4px;"
+    );
+    let imgNode = $("<img />")
+      .attr("class", "img-responsive center-block")
+      .attr("src", item["img"])
+      .attr("style", "max-width:190px;max-height:190px;");
+    imgContainerNode.append(imgNode);
+    resultNode.append(imgContainerNode);
+
+    // create details container
+    let detailsContaineritem = $("<div></div>");
+    detailsContaineritem
+      .append(
+        "<span><a href='" +
+          item["link"] +
+          "'><span><strong>" +
+          item["title"] +
+          "</strong></span></a></span><br />"
+      )
+      .append("<span>letto da&nbsp;<em>" + item["voice"] + "</em></span><br />");
+    resultNode.append(detailsContaineritem);
+
+    resultsDiv.append(resultNode);
+    resultsDiv.append("<hr />");
+    resultNode.fadeIn();
+  });
+}
+
 
 /**
  *

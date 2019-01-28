@@ -33,6 +33,20 @@ create table if not exists book (
   is_recent tinyint(1) default 0
 );
 
+# book table
+drop table if exists audioBook;
+
+create table if not exists audioBook (
+  id integer(4) auto_increment unique,
+  title VARCHAR(400) not null,
+  author VARCHAR(150) not null,
+  voice VARCHAR(150) not null,
+  img VARCHAR(250),
+  link VARCHAR(250) not null,
+  expiration_date TIMESTAMP default CURRENT_TIMESTAMP,
+  is_recent tinyint(1) default 0
+);
+
 # review table
 drop table if exists review;
 
@@ -57,6 +71,9 @@ delimiter //
 create procedure prune()
   begin
     delete from book
+    where TIMESTAMPDIFF(DAY, `expiration_date`, NOW()) > 30;
+
+    delete from audioBook
     where TIMESTAMPDIFF(DAY, `expiration_date`, NOW()) > 30;
 
     delete from review

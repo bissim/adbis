@@ -37,6 +37,11 @@
                         $result = $this->getBooks($search, $keyword);
                         break;
                     }
+                    case 'audioBook':
+                    {
+                        $result = $this->getAudioBooks($search, $keyword);
+                        break;
+                    }                    
                     case 'review':
                     {
                         $result = $this->getReviews($search, $keyword);
@@ -47,6 +52,11 @@
                         $result = $this->getBoth($search, $keyword);
                         break;
                     }
+                    case 'join1':
+                    {
+                        $result = $this->getEither($search, $keyword);
+                        break;
+                    }                    
                     default:
                     {
                         throw new \Exception("unknown table $table.");
@@ -64,11 +74,11 @@
 
         public function getNewItems(): string
         {
-            // $res = array();
-            // $res['books'] = $this->getNewBooks();
-            // $res['reviews'] = $this->getNewReviews();
-            // return json_encode($res);
-            return json_encode($this->getNewBooks());
+            $res = array();
+            $res['ebooks'] = $this->getNewBooks();
+            $res['aubooks'] = $this->getNewAuBooks();
+            return json_encode($res);
+            // return json_encode($this->getNewBooks());
         }
 
         // Restituisce in formato JSON i nuovi ebook
@@ -76,11 +86,10 @@
         {
             $dbMng = new DBManager;
             $books = $dbMng->getNewBooks();
-            if (empty($books))
-            {
+            if (empty($books)) {
                 $wrapperMng = new WrapperManager;
-                $dbMng->addBooks($wrapperMng->getNewBooks());
-                $books = $dbMng->getNewBooks();
+                $books = $wrapperMng->getNewBooks();
+                $dbMng->addBooks($books);
             }
             return $books;
         }
@@ -89,13 +98,23 @@
         {
             $dbMng = new DBManager;
             $reviews = $dbMng->getNewReviews();
-            if (empty($reviews))
-            {
+            if (empty($reviews)) {
                 $wrapperMng = new WrapperManager;
-                $dbMng->addReviews($wrapperMng->getNewReviews());
-                $reviews = $dbMng->getNewReviews();
+                $reviews = $wrapperMng->getNewReviews();
+                $dbMng->addReviews($reviews);
             }
             return $reviews;
+        }
+
+        private function getNewAuBooks(): array {
+            $dbMng = new DBManager;
+            $auBooks = $dbMng->getNewAudioBooks();
+            if (empty($auBooks)) {
+                $wrapperMng = new WrapperManager;
+                $auBooks = $wrapperMng->getNewAudioBooks();
+                $dbMng->addAudioBooks($auBooks);
+            }
+            return $auBooks;
         }
         
         /**
@@ -156,6 +175,28 @@
             return $reviews;
         }
 
+        private function getAudioBooks(string $search, string $keyword): array
+        {
+            $books = array();
+            $dbMng = new DBManager;
+            $strComp = new StringComparator;
+            foreach ($dbMng->getAllAudioBooks() as $book)
+                if(($search==='title' && $strComp->compare($keyword,$book->getTitle()))
+                    || ($search==='author' && $strComp->compare($keyword,$book->getAuthor())))
+                    array_push($books,$book);
+
+            if (empty($books))
+            {
+                $wrapperMng = new WrapperManager;
+                foreach($wrapperMng->getAudioBooks($keyword) as $book)
+                if(($search==='title' && $strComp->compare($keyword,$book->getTitle()))
+                    || ($search==='author' && $strComp->compare($keyword,$book->getAuthor())))
+                    array_push($books,$book);
+                $dbMng->addAudioBooks($books);
+            }
+            return $books;
+        }
+
         /**
          * @param string $search
          * @param string $keyword
@@ -187,5 +228,30 @@
 
             return $items;
         }
+
+        private function getEither(string $search, string $keyword): array
+        {
+            $books = $this->getAudioBooks($search, $keyword);
+            $reviews = $this->getReviews($search, $keyword);
+
+            $items = array();
+            $comp = new StringComparator;
+
+            foreach ($books as $book) // TODO Y U ARRAY
+            {
+                $reviewOfBook = NULL;
+
+                foreach ($reviews as $review)
+                {
+                    if($comp->compare($book->getTitle(),$review->getTitle())
+                     && $comp->compare($book->getAuthor(),$review->getAuthor()))
+                        $reviewOfBook = $review;
+                }
+                $item = array($book, $reviewOfBook);
+                array_push($items, $item); 
+            }
+
+            return $items;
+        }        
 
     }

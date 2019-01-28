@@ -32,17 +32,23 @@
             //         echo "<hr />";
             // }
 
-                $jsonReviews = $mediator->retrieve('review', 'title', 'harry potter');
-                $reviews = json_decode($jsonReviews, true);
-                foreach($reviews as $review) {
-                    var_dump($review);
-                    echo "<hr />";
-                }
+                // $jsonReviews = $mediator->retrieve('review', 'title', 'harry potter');
+                // $reviews = json_decode($jsonReviews, true);
+                // foreach($reviews as $review) {
+                //     var_dump($review);
+                //     echo "<hr />";
+                // }
 
 //                 $jsonReviewedBooks = $mediator->retrieve('join', 'title', 'harry potter');
 //                 $reviewedBook = json_decode($jsonReviewedBooks, true);
 //                 print_r($reviewedBook);
 //                 echo "<hr />";
+
+                $news = json_decode($mediator->getNewItems(),true);
+                $ebooks = $news['ebooks'];
+                $aubooks = $news['aubooks'];
+                foreach($ebooks as $ebook)
+                    var_dump($ebook);
 
                 $end = $this->microtime_float();
                 $elapsedTime = $end - $begin;

@@ -62,6 +62,10 @@
         Flight::render('ebooks.php');
     });
 
+    Flight::route('/audiobooks', function () {
+        Flight::render('audiobooks.php');
+    });
+
     Flight::route('/reviews', function () {
         Flight::render('reviews.php');
     });
@@ -124,6 +128,39 @@
                     break;
                 case 'false':
                     $controller->searchBook($search, $keyword, $ajax);
+                    break;
+                default:
+                    throw new \Exception("wtf");
+                    break;
+            }
+        }
+        else
+        {
+            Flight::redirect('/');
+        }
+    });
+
+    Flight::route('/search/audioBook', function () {
+        // retrieve request
+        $request = Flight::request();
+
+        // extract data from request
+        $search = $request->query['search'];
+        $keyword = $request->query['keyword'];
+        $join = $request->query['join'];
+        $ajax = $request->ajax;
+
+        // manage data if they exist
+        if ($search && $keyword)
+        {
+            $controller = new SearchController;
+            switch ($join)
+            {
+                case 'true':
+                    $controller->searchEither($search, $keyword, $ajax);
+                    break;
+                case 'false':
+                    $controller->searchAudioBook($search, $keyword, $ajax);
                     break;
                 default:
                     throw new \Exception("wtf");

@@ -2,11 +2,13 @@
     namespace controller;
 
     require_once './model/Book.php';
+    require_once './model/AudioBook.php';
     require_once './model/Review.php';
 
     use \Exception;
     use \PDO;
     use \model\Book;
+    use \model\AudioBook;
     use \model\Review;
 
     class DBManager
@@ -96,6 +98,63 @@
                 $title = $book->getTitle();
                 $author = $book->getAuthor();
                 $price = $book->getPrice();
+                $img = $book->getImg();
+                $link = $book->getLink();
+                $isRecent = $book->isRecent() ? 1 : 0;
+                $stmt->execute();
+            }
+            $this->disconnect();
+        }
+
+        public function getAllAudioBooks(): array {
+            $this->connect();
+            $sql = "SELECT * FROM audioBook";
+            $result = $this->conn->query($sql);
+
+            $books = array();
+            if ($result->rowCount() > 0) {
+                while($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                    array_push($books,
+                                new AudioBook($row["title"],$row["author"],$row["voice"],$row["img"],$row["link"])
+                    );
+                }
+            }
+            $this->disconnect();
+            return $books;
+        }
+
+        public function getNewAudioBooks(): array {
+            $this->connect();
+            $sql = "SELECT * FROM audioBook WHERE is_recent=1";
+            $result = $this->conn->query($sql);
+
+            $books = array();
+            if ($result->rowCount() > 0) {
+                while($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                    array_push($books,
+                                new AudioBook($row["title"],$row["author"],$row["voice"],$row["img"],$row["link"])
+                    );
+                }
+            }
+            $this->disconnect();
+            return $books;
+        }
+
+        public function addAudioBooks(array $books) {
+            $this->connect();
+            $stmt = $this->conn->prepare("INSERT INTO audioBook (title,author,voice,img,link,is_recent)
+                                        VALUES (:title,:author,:voice,:img,:link,:is_recent)");
+            $stmt->bindParam(':title', $title);
+            $stmt->bindParam(':author', $author);
+            $stmt->bindParam(':voice', $voice);
+            $stmt->bindParam(':img', $img);
+            $stmt->bindParam(':link', $link);
+            $stmt->bindParam(':is_recent', $isRecent);
+
+            foreach($books as $book) {
+                $title = $book->getTitle();
+                $author = $book->getAuthor();
+                $voice = $book->getVoice();
                 $img = $book->getImg();
                 $link = $book->getLink();
                 $isRecent = $book->isRecent() ? 1 : 0;

@@ -5,17 +5,20 @@
     require './wrappers/KoboWrapper.php';
     require './wrappers/GoogleWrapper.php';
     require './wrappers/ReviewWrapper.php';
+    require './wrappers/AudibleWrapper.php';
 
     use \wrappers\GoogleWrapper;
     use \wrappers\AmazonWrapper;
     use \wrappers\KoboWrapper;
     use \wrappers\ReviewWrapper;
+    use \wrappers\AudibleWrapper;
 
     class WrapperManager {
         private $amazonWrapper;
         private $googleWrapper;
         private $koboWrapper;
         private $reviewWrapper;
+        private $AudibleWrapper;
 
         public function __construct()
         {
@@ -23,6 +26,7 @@
             $this->googleWrapper = new GoogleWrapper();
             $this->koboWrapper = new KoboWrapper();
             $this->reviewWrapper = new ReviewWrapper();
+            $this->audibleWrapper = new AudibleWrapper();
         }
 
         public function getBooks($keyword): array
@@ -39,6 +43,10 @@
             return $reviews;
         }
 
+        public function getAudioBooks($keyword): array {
+            $books = $this->audibleWrapper->getBooks($keyword);
+            return $books;
+        }
         
         public function getNewBooks(): array
         {
@@ -51,6 +59,11 @@
         {
             $reviews = $this->reviewWrapper->getNewReviews();
             return $reviews;
+        }
+
+        public function getNewAudioBooks(): array {
+            $books = $this->audibleWrapper->getNewBooks();
+            return $books;
         }
 
     }
