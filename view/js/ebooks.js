@@ -1,6 +1,7 @@
 // search page elements
 let sendButton = $("button[type = submit]#sendMessageButton");
 let searchField = $("input[type = text]#keyword");
+$("input[type = radio]").click(changePH);
 
 /**
  * Global variable holding
@@ -31,6 +32,16 @@ $(document).ready(function() {
     event.preventDefault(); // prevent page reload
   });
 });
+
+
+function changePH() {
+  let id = $(this).attr('id');
+  switch(id) {
+    case 'searchByAuthor': searchField.attr("placeholder", "Autore"); break;
+    case 'searchByTitle': searchField.attr("placeholder", "Titolo"); break;
+    default : console.debug('unknown input radio');
+  }
+}
 
 /**
  * Determines which page
