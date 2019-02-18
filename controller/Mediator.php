@@ -4,13 +4,13 @@
     require_once './model/Book.php';
     require_once './model/Review.php';
     require_once './util/ErrorHandler.php';
+    require './util/StringsComparator.php';
     require './controller/WrapperManager.php';
     require './controller/DBManager.php';
-    require './controller/StringComparator.php';
     
     use \controller\WrapperManager;
     use \controller\DBManager;
-    use \controller\StringComparator;
+    use \util\StringsComparator;
 
     class Mediator
     {
@@ -25,7 +25,6 @@
          * @return string
          * @throws \Throwable
          */
-
         public function retrieve(string $table, string $search, string $keyword): string
         {
             try
@@ -121,14 +120,14 @@
          * @param string $search
          * @param string $keyword
          *
-         * @return string
+         * @return array
          * @throws \Exception
          */
         private function getBooks(string $search, string $keyword): array
         {
             $books = array();
             $dbMng = new DBManager;
-            $strComp = new StringComparator;
+            $strComp = new StringsComparator;
             foreach ($dbMng->getAllBooks() as $book)
                 if(($search==='title' && $strComp->compare($keyword,$book->getTitle()))
                     || ($search==='author' && $strComp->compare($keyword,$book->getAuthor())))
@@ -150,7 +149,7 @@
          * @param string $search
          * @param string $keyword
          *
-         * @return string
+         * @return array
          * @throws \Exception
          */
         private function getReviews(string $search, string $keyword): array
@@ -175,6 +174,13 @@
             return $reviews;
         }
 
+        /**
+         * @param string $search
+         * @param string $keyword
+         *
+         * @return array
+         * @throws \Exception
+         */
         private function getAudioBooks(string $search, string $keyword): array
         {
             $books = array();
@@ -201,7 +207,7 @@
          * @param string $search
          * @param string $keyword
          *
-         * @return string
+         * @return array
          * @throws \Exception
          */
         private function getBoth(string $search, string $keyword): array
@@ -229,6 +235,13 @@
             return $items;
         }
 
+        /**
+         * @param string $search
+         * @param string $keyword
+         *
+         * @return array
+         * @throws \Exception
+         */
         private function getEither(string $search, string $keyword): array
         {
             $books = $this->getAudioBooks($search, $keyword);
