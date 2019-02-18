@@ -25,6 +25,7 @@
     require './test/ReviewTest.php';
     require './test/UTF8LevenshteinTest.php';
     require './test/DBManagerTest.php';
+    require './test/TokenizerTest.php';
 
     use \controller\SearchController;
 
@@ -235,6 +236,10 @@
 
     Flight::route('/test/dbmanager', function () {
         (new \test\DBManagerTest)->test();
+    });
+
+    Flight::route('/test/tokenizer', function () {
+        (new \test\TokenizerTest)->test();
     });
 
     // run Fight router
