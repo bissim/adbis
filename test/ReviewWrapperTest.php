@@ -1,28 +1,18 @@
 <?php
-    /**
-         * Created by PhpStorm.
-         * User: bisim
-         * Date: 09/09/2018
-         * Time: 01:02
-         */
-
     namespace test;
 
+    require_once './test/BasicTest.php';
     require_once './wrappers/ReviewWrapper.php';
 
-    use util\ErrorHandler;
-    use wrappers\ReviewWrapper;
+    use \test\BasicTest;
+    use \util\ErrorHandler;
+    use \wrappers\ReviewWrapper;
 
     set_error_handler(array(new ErrorHandler(), 'errorHandler'));
 
     class ReviewWrapperTest
+        extends BasicTest
     {
-        private function microtime_float()
-        {
-            list($usec, $sec) = explode(" ", microtime());
-            return ((float)$usec + (float)$sec);
-        }
-
         public function test()
         {
             $inizio = $this->microtime_float();

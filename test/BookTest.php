@@ -1,8 +1,10 @@
 <?php
     namespace test;
 
+    require_once './test/BasicTest.php';
     require_once './model/Book.php';
 
+    use \test\BasicTest;
     use \util\ErrorHandler;
     use \model\Book;
 
@@ -10,6 +12,7 @@
 
 
     class BookTest
+        extends BasicTest
     {
         public function test()
         {

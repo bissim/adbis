@@ -1,21 +1,18 @@
 <?php
     namespace test;
 
+    require_once './test/BasicTest.php';
     require_once './wrappers/AudibleWrapper.php';
 
+    use \test\BasicTest;
     use \util\ErrorHandler;
     use \wrappers\AudibleWrapper;
 
     set_error_handler(array(new ErrorHandler(), 'errorHandler'));
 
     class AudibleWrapperTest
+        extends BasicTest
     {
-        private function microtime_float()
-        {
-            list($usec, $sec) = explode(" ", microtime());
-            return ((float) $usec + (float) $sec);
-        }
-
         public function test()
         {
             $inizio = $this->microtime_float();

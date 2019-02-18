@@ -1,15 +1,18 @@
 <?php
     namespace test;
 
-    require_once '../wrappers/AmazonWrapper.php';
-    require_once '../wrappers/GoogleWrapper.php';
-    require_once '../wrappers/KoboWrapper.php';
+    require_once './test/BasicTest.php';
+    require_once './wrappers/AmazonWrapper.php';
+    require_once './wrappers/GoogleWrapper.php';
+    require_once './wrappers/KoboWrapper.php';
 
+    use \test\BasicTest;
     use \wrappers\AmazonWrapper;
     use \wrappers\GoogleWrapper;
     use \wrappers\KoboWrapper;
 
     class WrappersTest
+        extends BasicTest
     {
         public function test()
         {

@@ -2,12 +2,14 @@
 
     namespace test;
 
+    require_once './test/BasicTest.php';
     require_once './controller/DBManager.php';
     require_once './model/Book.php';
     require_once './model/Review.php';
     require_once './wrappers/GoogleWrapper.php';
     require_once './wrappers/ReviewWrapper.php';
 
+    use \test\BasicTest;
     use \util\ErrorHandler;
     use controller\DBManager;
     use model\Book;
@@ -18,13 +20,8 @@
     set_error_handler(array(new ErrorHandler(), 'errorHandler'));
 
     class DBManagerTest
+        extends BasicTest
     {
-        private function microtime_float()
-        {
-            list($usec, $sec) = explode(" ", microtime());
-            return ((float) $usec + (float) $sec);
-        }
-
         public function test()
         {
             $inizio = $this->microtime_float();

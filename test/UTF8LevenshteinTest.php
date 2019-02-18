@@ -1,28 +1,18 @@
 <?php
-    /**
-     * Created by PhpStorm.
-     * User: bisim
-     * Date: 14/01/2019
-     * Time: 15:56
-     */
-
     namespace test;
 
+    require_once './test/BasicTest.php';
     require_once './controller/UTF8Levenshtein.php';
 
-    use util\ErrorHandler;
-    use controller\UTF8Levenshtein;
+    use \test\BasicTest;
+    use \util\ErrorHandler;
+    use \controller\UTF8Levenshtein;
 
     set_error_handler(array(new ErrorHandler, 'errorHandler'));
 
     class UTF8LevenshteinTest
+        extends BasicTest
     {
-        private function microtime_float()
-        {
-            list($usec, $sec) = explode(" ", microtime());
-            return ((float) $usec + (float) $sec);
-        }
-
         public function test()
         {
             $begin = $this->microtime_float();

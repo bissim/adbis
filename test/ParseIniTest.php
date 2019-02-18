@@ -1,14 +1,12 @@
 <?php
-    /**
-     * Created by PhpStorm.
-     * User: mauro
-     * Date: 12/09/2018
-     * Time: 10:10
-     */
-
     namespace test;
 
+    require_once './test/BasicTest.php';
+
+    use \test\BasicTest;
+
     class ParseIniTest
+        extends BasicTest
     {
         public function test()
         {

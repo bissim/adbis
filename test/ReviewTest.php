@@ -1,18 +1,14 @@
 <?php
-    /**
-     * Created by PhpStorm.
-     * User: mauro
-     * Date: 22/09/2018
-     * Time: 11:33
-     */
-
     namespace test;
 
+    require_once './test/BasicTest.php';
     require_once './model/Review.php';
 
+    use \test\BasicTest;
     use \model\Review;
 
     class ReviewTest
+        extends BasicTest
     {
         public function test()
         {

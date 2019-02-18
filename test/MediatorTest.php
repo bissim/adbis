@@ -1,9 +1,11 @@
 <?php
     namespace test;
-    
+
+    require_once './test/BasicTest.php';
     require_once './controller/Mediator.php';
     require_once './controller/DBManager.php';
 
+    use \test\BasicTest;
     use \util\ErrorHandler;
     use \controller\Mediator;
     use \controller\DBManager;
@@ -11,13 +13,8 @@
     set_error_handler(array(new ErrorHandler, 'errorHandler'));
 
     class MediatorTest
+        extends BasicTest
     {
-        private function microtime_float()
-        {
-            list($usec, $sec) = explode(" ", microtime());
-            return ((float) $usec + (float) $sec);
-        }
-
         public function test()
         {
             $begin = $this->microtime_float();
