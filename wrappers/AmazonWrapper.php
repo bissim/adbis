@@ -2,8 +2,10 @@
     namespace wrappers;
 
     require_once './util/BookScraper.php';
+    require_once './model/Book.php';
 
     use \util\BookScraper;
+    use \model\Book;
 
     class AmazonWrapper
     {
@@ -98,12 +100,16 @@
         public function getBooks(String $keyword): array
         {
             $this->bookScraper->setQueries($this->queries);
-            return $this->bookScraper->getBooks(
+            $books = $this->bookScraper->getBooks(
                 $this->domain,
                 $this->queryUrl,
                 $keyword,
                 '',
                 false);
+            foreach ($books as $book) {
+                $book->setSource('amazon');
+            }
+            return $books;
         }
 
         public function getNewBooks(): array

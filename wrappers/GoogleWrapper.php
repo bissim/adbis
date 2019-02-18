@@ -50,7 +50,8 @@
                         $author,
                         $price,
                         $image,
-                        $link
+                        $link,
+                        'google'
                     )
                 );
             }

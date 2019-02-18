@@ -16,6 +16,7 @@
         private $img;
         private $link;
         private $recent;
+        private $source;
 
         // Constructor
         public function __construct(
@@ -24,6 +25,7 @@
             float $price,
             string $image,
             string $link,
+            string $source,
             bool $recent = false
         )
         {
@@ -34,6 +36,7 @@
             $this->img = $image;
             $this->link = $link;
             $this->recent = $recent;
+            $this->source = $source;
         }
 
         // getters
@@ -72,6 +75,11 @@
             return $this->recent;
         }
 
+        public function getSource(): string
+        {
+            return $this->source;
+        }
+
         // setters
         public function setId(int $id)
         {
@@ -108,6 +116,12 @@
             $this->recent = $recent;
         }
 
+        public function setSource(string $source)
+        {
+            $this->source = $source;
+        }
+
+        // object methods
         public function __toString(): string
         {
             $desc = "ID: $this->id";

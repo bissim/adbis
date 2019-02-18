@@ -18,6 +18,7 @@
         private $password;
         private $dbName;
         private $conn;
+        private $port;
 
         public function __construct()
         {
@@ -39,7 +40,7 @@
                 // set the PDO error mode to exception
                 $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 }
-            catch(PDOException $e)
+            catch(\PDOException $e)
                 {
                 echo $e->getMessage();
                 }
@@ -58,7 +59,7 @@
             if ($result->rowCount() > 0) {
                 while($row = $result->fetch(PDO::FETCH_ASSOC)) {
                     array_push($books,
-                                new Book($row["title"],$row["author"],$row["price"],$row["img"],$row["link"])
+                                new Book($row["title"],$row["author"],$row["price"],$row["img"],$row["link"],$row["source"])
                     );
                 }
             }
@@ -75,7 +76,7 @@
             if ($result->rowCount() > 0) {
                 while($row = $result->fetch(PDO::FETCH_ASSOC)) {
                     array_push($books,
-                                new Book($row["title"],$row["author"],$row["price"],$row["img"],$row["link"])
+                                new Book($row["title"],$row["author"],$row["price"],$row["img"],$row["link"],$row["source"])
                     );
                 }
             }
@@ -85,14 +86,15 @@
 
         public function addBooks(array $books) {
             $this->connect();
-            $stmt = $this->conn->prepare("INSERT INTO book (title,author,price,img,link,is_recent)
-                                        VALUES (:title,:author,:price,:img,:link,:is_recent)");
+            $stmt = $this->conn->prepare("INSERT INTO book (title,author,price,img,link,is_recent,source)
+                                        VALUES (:title,:author,:price,:img,:link,:is_recent,:source)");
             $stmt->bindParam(':title', $title);
             $stmt->bindParam(':author', $author);
             $stmt->bindParam(':price', $price);
             $stmt->bindParam(':img', $img);
             $stmt->bindParam(':link', $link);
             $stmt->bindParam(':is_recent', $isRecent);
+            $stmt->bindParam(':source', $source);
 
             foreach($books as $book) {
                 $title = $book->getTitle();
@@ -101,6 +103,7 @@
                 $img = $book->getImg();
                 $link = $book->getLink();
                 $isRecent = $book->isRecent() ? 1 : 0;
+                $source = $book->getSource();
                 $stmt->execute();
             }
             $this->disconnect();
