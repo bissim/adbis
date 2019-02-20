@@ -1,7 +1,7 @@
 <?php
     namespace util;
 
-    class TokensManager
+    class StringsComparator
     {
         /**
          * Words to be removed.
