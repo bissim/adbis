@@ -4,13 +4,13 @@
     require_once './model/Book.php';
     require_once './model/Review.php';
     require_once './util/ErrorHandler.php';
-    require './util/StringsComparator.php';
+    require './util/TokensManager.php';
     require './controller/WrapperManager.php';
     require './controller/DBManager.php';
     
     use \controller\WrapperManager;
     use \controller\DBManager;
-    use \util\StringsComparator;
+    use \util\TokensManager;
 
     class Mediator
     {
@@ -90,6 +90,8 @@
                 $books = $wrapperMng->getNewBooks();
                 $dbMng->addBooks($books);
             }
+
+            shuffle($books);
             return $books;
         }
 
@@ -113,9 +115,11 @@
                 $auBooks = $wrapperMng->getNewAudioBooks();
                 $dbMng->addAudioBooks($auBooks);
             }
+
+            shuffle($auBooks);
             return $auBooks;
         }
-        
+
         /**
          * @param string $search
          * @param string $keyword
@@ -127,7 +131,7 @@
         {
             $books = array();
             $dbMng = new DBManager;
-            $strComp = new StringsComparator;
+            $strComp = new TokensManager;
             foreach ($dbMng->getAllBooks() as $book)
                 if(($search==='title' && $strComp->compare($keyword,$book->getTitle()))
                     || ($search==='author' && $strComp->compare($keyword,$book->getAuthor())))
@@ -142,6 +146,8 @@
                     array_push($books,$book);
                 $dbMng->addBooks($books);
             }
+
+            shuffle($books);
             return $books;
         }
 
@@ -156,7 +162,7 @@
         {
             $reviews = array();
             $dbMng = new DBManager;
-            $strComp = new StringComparator;
+            $strComp = new TokensManager;
             foreach ($dbMng->getAllReviews() as $review)
                 if(($search==='title' && $strComp->compare($keyword,$review->getTitle()))
                     || ($search==='author' && $strComp->compare($keyword,$review->getAuthor())))
@@ -171,6 +177,8 @@
                         array_push($reviews,$review);
                 $dbMng->addReviews($reviews);
             }
+
+            shuffle($reviews);
             return $reviews;
         }
 
@@ -185,7 +193,7 @@
         {
             $books = array();
             $dbMng = new DBManager;
-            $strComp = new StringComparator;
+            $strComp = new TokensManager;
             foreach ($dbMng->getAllAudioBooks() as $book)
                 if(($search==='title' && $strComp->compare($keyword,$book->getTitle()))
                     || ($search==='author' && $strComp->compare($keyword,$book->getAuthor())))
@@ -200,6 +208,8 @@
                     array_push($books,$book);
                 $dbMng->addAudioBooks($books);
             }
+
+            shuffle($$books);
             return $books;
         }
 
@@ -216,7 +226,7 @@
             $reviews = $this->getReviews($search, $keyword);
 
             $items = array();
-            $comp = new StringComparator;
+            $comp = new TokensManager;
 
             foreach ($books as $book) // TODO Y U ARRAY
             {
@@ -248,7 +258,7 @@
             $reviews = $this->getReviews($search, $keyword);
 
             $items = array();
-            $comp = new StringComparator;
+            $comp = new TokensManager;
 
             foreach ($books as $book) // TODO Y U ARRAY
             {
@@ -256,8 +266,8 @@
 
                 foreach ($reviews as $review)
                 {
-                    if($comp->compare($book->getTitle(),$review->getTitle())
-                     && $comp->compare($book->getAuthor(),$review->getAuthor()))
+                    if ($comp->compare($book->getTitle(),$review->getTitle())
+                     && $comp->compare($book->getAuthor(),$review->getAuthor())) // TODO qui vogliamo l'uguaglianza esatta?
                         $reviewOfBook = $review;
                 }
                 $item = array($book, $reviewOfBook);
