@@ -1,7 +1,7 @@
 <?php
     namespace util;
 
-    class StringsComparator
+    class TokensManager
     {
         /**
          * Words to be removed.
@@ -86,10 +86,27 @@
             return $words;
         }
 
+        /**
+         * @param array $firstSet
+         * @param array $secondSet
+         *
+         * @return float
+         */
         public function compareTokens(array $firstSet, array $secondSet): float
         {
             // TODO implement comparison metric
             return 0.0;
         }
 
+        /**
+         * @deprecated
+         * @param string $s1
+         * @param string $s2
+         *
+         * @return bool
+         */
+        public function compare(string $s1 = "", string $s2 = ""): bool
+        {
+            return strtolower($s1) === strtolower($s2); // TODO remove
+        }
     }
