@@ -267,7 +267,7 @@
                 foreach ($reviews as $review)
                 {
                     if ($comp->compare($book->getTitle(),$review->getTitle())
-                     && $comp->compare($book->getAuthor(),$review->getAuthor())) // TODO qui vogliamo l'uguaglianza esatta?
+                     && $comp->compare($book->getAuthor(),$review->getAuthor()))
                         $reviewOfBook = $review;
                 }
                 $item = array($book, $reviewOfBook);
