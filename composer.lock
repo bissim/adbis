@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f256d04e26737aad1342e05a533e3e31",
+    "content-hash": "9f715b94284950172032f9d41bd65cad",
     "packages": [
         {
             "name": "mikecao/flight",
-            "version": "v1.3.5",
+            "version": "v1.3.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikecao/flight.git",
-                "reference": "e146b8c0ddbc6384c5a66f23dea71743fc282289"
+                "reference": "7d5970f7617861c868a5c728764421d8950faaf0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikecao/flight/zipball/e146b8c0ddbc6384c5a66f23dea71743fc282289",
-                "reference": "e146b8c0ddbc6384c5a66f23dea71743fc282289",
+                "url": "https://api.github.com/repos/mikecao/flight/zipball/7d5970f7617861c868a5c728764421d8950faaf0",
+                "reference": "7d5970f7617861c868a5c728764421d8950faaf0",
                 "shasum": ""
             },
             "require": {
@@ -47,13 +47,60 @@
             ],
             "description": "Flight is a fast, simple, extensible framework for PHP. Flight enables you to quickly and easily build RESTful web applications.",
             "homepage": "http://flightphp.com",
-            "time": "2017-10-20T01:46:56+00:00"
+            "time": "2018-11-23T23:05:33+00:00"
+        },
+        {
+            "name": "nlp-tools/nlp-tools",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/angeloskath/php-nlp-tools.git",
+                "reference": "476e07c27fc032e4ca03ee599e7cd1ad0901af33"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/angeloskath/php-nlp-tools/zipball/476e07c27fc032e4ca03ee599e7cd1ad0901af33",
+                "reference": "476e07c27fc032e4ca03ee599e7cd1ad0901af33",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "NlpTools\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "WTFPL"
+            ],
+            "authors": [
+                {
+                    "name": "Angelos Katharopoulos",
+                    "email": "angelos@yourse.gr"
+                }
+            ],
+            "description": "NlpTools is a set of php 5.3+ classes for beginner to semi advanced natural language processing work.",
+            "keywords": [
+                "machine learning",
+                "nlp"
+            ],
+            "time": "2018-01-06T13:39:49+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "nlp-tools/nlp-tools": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
