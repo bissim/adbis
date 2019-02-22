@@ -1,13 +1,15 @@
 <?php
     namespace util;
 
+    use \NlpTools\Similarity\JaccardIndex;
+
     class TokensManager
     {
         /**
          * Words to be removed.
          * (words used as keys for better performance)
          *
-         * @var array
+         * @var array Words to be removed.
          */
         private $stopwords = array(
             'il' => 1,
@@ -35,6 +37,11 @@
             'fra' => 1,
             'the' => 1
         );
+
+        /**
+         * @var float Threshold value for similarity.
+         */
+        private $threshold = 0.6;
 
         /**
          * Splits a string into tokens; split occurs over spaces.
@@ -69,6 +76,7 @@
         public function removeStopWords(array $words): array
         {
             $sws = &$this->stopwords;
+            $this->lowercaseTokens($words);
 
             // if we have at least 2 words, remove stopwords
             if (count($words) > 1)
@@ -87,6 +95,18 @@
         }
 
         /**
+         * @param array $tokenSet The token set whose entries
+         * have to be turned lower case.
+         */
+        private function lowercaseTokens(array &$tokenSet)
+        {
+            for ($index = 0; $index < count($tokenSet); $index++)
+            {
+                $tokenSet[$index] = strtolower($tokenSet[$index]);
+            }
+        }
+
+        /**
          * @param array $firstSet
          * @param array $secondSet
          *
@@ -94,19 +114,44 @@
          */
         public function compareTokens(array $firstSet, array $secondSet): float
         {
-            // TODO implement comparison metric
-            return 0.0;
+            return (new JaccardIndex)->similarity(
+                $firstSet,
+                $secondSet
+            );
         }
 
         /**
-         * @deprecated
-         * @param string $s1
-         * @param string $s2
+         * @param string $keyword
+         * @param string $title
          *
          * @return bool
          */
-        public function compare(string $s1 = "", string $s2 = ""): bool
+        public function compare(string $keyword = "", string $title = ""): bool
         {
-            return strtolower($s1) === strtolower($s2); // TODO remove
+            $keywordSet = $this->removeStopWords($this->getTokens($keyword));
+            $titleSet = $this->removeStopWords($this->getTokens($title));
+
+            $value = $this->compareTokens(
+                $keywordSet,
+                $titleSet
+            );
+
+            //return $value >= $this->threshold? true: false;
+            if ($value >= $this->threshold)
+            {
+                return true;
+            }
+            else // check whether keyword tokens are all in title
+            {
+                foreach ($keywordSet as $token)
+                {
+                    if (!in_array($token, $titleSet))
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
         }
     }
