@@ -5,7 +5,6 @@
     require_once './model/AudioBook.php';
     require_once './model/Review.php';
 
-    use \Exception;
     use \PDO;
     use \model\Book;
     use \model\AudioBook;
@@ -36,31 +35,54 @@
             $this->port = $configs['connection']['port'];
         }
 
-        private function connect()
+        /**
+         * @return bool
+         * @throws \Exception
+         */
+        private function connect(): bool
         {
-            try
+            if (!$this->conn) // there is no existing connection
             {
-                $this->conn = new \PDO(
-                    "mysql:host=$this->serverName;dbname=$this->dbName",
-                    $this->username,
-                    $this->password
-                );
+                try // to create connection
+                {
+                    $this->conn = new \PDO(
+                        "mysql:host=$this->serverName;dbname=$this->dbName",
+                        $this->username,
+                        $this->password
+                    );
 
-                // set the PDO error mode to exception
-                $this->conn->setAttribute(
-                    \PDO::ATTR_ERRMODE,
-                    \PDO::ERRMODE_EXCEPTION
-                );
+                    // set the PDO error mode to exception
+                    $this->conn->setAttribute(
+                        \PDO::ATTR_ERRMODE,
+                        \PDO::ERRMODE_EXCEPTION
+                    );
+
+                    return true; // connection has been created
+                }
+                catch (\PDOException $e)
+                {
+                    echo $e->getMessage();
+                    return false; // error creating connection
+                }
             }
-            catch (\PDOException $e)
+            else
             {
-                echo $e->getMessage();
+                throw new \Exception(
+                    'A connection has been established already.'
+                );
+                return true; // a connection already exists
             }
         }
 
-        private function disconnect()
+        private function disconnect(): bool
         {
-            $this->conn = null;
+            if ($this->conn)
+            {
+                $this->conn = null;
+                return true;
+            }
+
+            return false;
         }
         
         public function getAllBooks(): array
@@ -128,6 +150,15 @@
                 "INSERT INTO book (title,author,price,img,link,is_recent,source)
                 VALUES (:title,:author,:price,:img,:link,:is_recent,:source)"
             );
+
+            $title = '';
+            $author = '';
+            $price = '';
+            $img = '';
+            $link = '';
+            $isRecent = '';
+            $source = '';
+
             $stmt->bindParam(':title', $title);
             $stmt->bindParam(':author', $author);
             $stmt->bindParam(':price', $price);
@@ -215,6 +246,14 @@
                 "INSERT INTO audioBook (title,author,voice,img,link,is_recent)
                 VALUES (:title,:author,:voice,:img,:link,:is_recent)"
             );
+
+            $title = '';
+            $author = '';
+            $voice = '';
+            $img = '';
+            $link = '';
+            $isRecent = '';
+
             $stmt->bindParam(':title', $title);
             $stmt->bindParam(':author', $author);
             $stmt->bindParam(':voice', $voice);
@@ -302,11 +341,21 @@
         public function addReviews(array $reviews)
         {
             $this->connect();
-            $this->connect();
             $stmt = $this->conn->prepare(
                 "INSERT INTO review (title,author,plot,txt,average,style,content,pleasantness,is_recent)
                 VALUES (:title,:author,:plot,:txt,:average,:style,:content,:pleasantness,:is_recent)"
             );
+
+            $title = '';
+            $author = '';
+            $plot = '';
+            $txt = '';
+            $average = '';
+            $style = '';
+            $content = '';
+            $pleasantness = '';
+            $isRecent = '';
+
             $stmt->bindParam(':title', $title);
             $stmt->bindParam(':author', $author);
             $stmt->bindParam(':plot', $plot);
