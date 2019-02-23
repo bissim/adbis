@@ -209,7 +209,7 @@
                 $dbMng->addAudioBooks($books);
             }
 
-            shuffle($$books);
+            shuffle($books);
             return $books;
         }
 
