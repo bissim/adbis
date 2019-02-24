@@ -174,10 +174,29 @@ function createBookWithReviewNode(json, resultsDiv) {
       )
       .append("<span>di&nbsp;<em>" + book["author"] + "</em></span><br />")
       .append("<span>Prezzo:&nbsp;" + book["price"] + "&euro;</span><br />");
+    let logoNode = $("<img />")
+        .attr("class", "img-responsive center-block")
+        .attr("style", "max-height:20px;");
+    let source = book["source"];
+    switch (source) {
+      case 'amazon':
+        logoNode.attr("src", "./view/img/amazon_logo.png");
+        break;
+      case 'kobo':
+        logoNode.attr("src", "./view/img/kobo_logo.png");
+        break;
+      case 'google':
+        logoNode.attr("src", "./view/img/google_logo.png");
+        break;
+      default:
+        console.warn("Unknown source '" + source + "'!");
+        break;
+    }
+    detailsContainerBook.append(logoNode);
     resultNode.append(detailsContainerBook);
 
     if (review != null) {
-      let collapseNode = $("<div></div").append(
+      let collapseNode = $("<div></div>").append(
         "<br><br><span><a data-toggle='collapse' href='#collapse" +
           i +
           "'>Scopri di più</a><span></div>"

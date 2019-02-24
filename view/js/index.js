@@ -72,15 +72,15 @@ function prepareForResults() {
  * @param res
  */
 function showBooks(res) {
-  console.debug("hi I'll show books nao");
+  // console.debug("hi I'll show books nao");
   let json = JSON.parse(res);
-  console.debug("Object received: length " + Object.keys(json).length);
-  console.debug(res);
+  // console.debug("Object received: length " + Object.keys(json).length);
+  // console.debug(res);
 
   let loadingMessage = $("p#loadingMessage");
   loadingMessage.remove();
 
-  if (Object.keys(json).length>0) {
+  if (Object.keys(json).length > 0) {
     let message =
       "La ricerca ha ottenuto dei risultati! Consultare l'elenco sottostante.";
     $("#success").html(message);
@@ -135,6 +135,25 @@ function createBookNodes(json, resultsDiv) {
       )
       .append("<span>di&nbsp;<em>" + value["author"] + "</em></span><br />")
       .append("<span>Prezzo:&nbsp;" + value["price"] + "&euro;</span><br />");
+    let logoNode = $("<img />")
+      .attr("class", "img-responsive center-block")
+      .attr("style", "max-height:20px;");
+    let source = value["source"];
+    switch (source) {
+      case 'amazon':
+        logoNode.attr("src", "./view/img/amazon_logo.png");
+        break;
+      case 'kobo':
+        logoNode.attr("src", "./view/img/kobo_logo.png");
+        break;
+      case 'google':
+        logoNode.attr("src", "./view/img/google_logo.png");
+        break;
+      default:
+        console.warn("Unknown source '" + source + "'!");
+        break;
+    }
+    detailsContainerNode.append(logoNode);
     resultNode.append(detailsContainerNode);
 
     resultsDiv.append(resultNode);
