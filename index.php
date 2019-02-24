@@ -12,6 +12,7 @@
     // TODO comment following two lines
     //    error_reporting(E_ALL);
     //    ini_set('display_errors', '1');
+    //    setlocale(LC_ALL, '');
 
     require './vendor/autoload.php';
     require './controller/SearchController.php';
