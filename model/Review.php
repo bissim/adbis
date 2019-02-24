@@ -17,7 +17,7 @@
         private $style;
         private $content;
         private $pleasantness;
-        private $isRecent;
+        private $recent;
 
         // Constructor
         public function __construct(

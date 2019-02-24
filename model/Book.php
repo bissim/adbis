@@ -130,6 +130,7 @@
             $desc .= "<br />Price: $this->price";
             $desc .= "<br />Imagine: $this->img";
             $desc .= "<br />Link: $this->link";
+            $desc .= "<br />From: $this->source";
             $this->recent?
                 $desc .= "<br /><strong>New!</strong>":
                 null;
