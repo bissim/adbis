@@ -1,11 +1,5 @@
 <?php
     namespace view;
-    /**
-     * Created by PhpStorm.
-     * User: bisim
-     * Date: 23/09/2018
-     * Time: 17:51
-     */
 ?>
 <footer>
     <div class="container">
@@ -21,7 +15,7 @@
                         </a>
                     </li>
                 </ul>
-                <p class="copyright text-muted">Copyright &copy; AdBis 2018</p>
+                <p class="copyright text-muted">Copyright &copy; AdBis 2018 &ndash; <?php echo strftime("%G"); ?></p>
             </div>
         </div>
     </div>
