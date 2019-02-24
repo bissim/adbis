@@ -15,21 +15,19 @@
     {
         public function test()
         {
-            $inizio = $this->microtime_float();
+            $this->start_time();
 
             $audibleWrapper = new AudibleWrapper;
             $books = $audibleWrapper->getBooks('il suggeritore');
             // $books = $audibleWrapper->getNewBooks();
 
-            // $books = array_merge($koboWrapper->getBooks('harry potter'),
-            //                     $koboWrapper->getNewBooks());
+            $count = count($books);
+            echo "$count libri trovati!<br /><br />";
 
             foreach ($books as $book)
                 print $book;
 
-            $fine = $this->microtime_float();
-            $tempo_impiegato = $fine - $inizio;
-            $tempo = number_format($tempo_impiegato, 5, ',', '.');
+            $tempo = $this->get_elapsed();
             echo "Tempo impiegato dallo script: $tempo secondi";
         }
     }
