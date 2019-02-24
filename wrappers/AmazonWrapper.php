@@ -59,6 +59,7 @@
             $queries['authorQueries'] = $authorQueries;
             $queries['imgQueries'] = $imgQueries;
             $queries['priceQueries'] = $priceQueries;
+
             return $queries;
         }
 
@@ -94,6 +95,7 @@
             $queries['authorQueries'] = $authorQueries;
             $queries['imgQueries'] = $imgQueries;
             $queries['priceQueries'] = $priceQueries;
+
             return $queries;
         }        
 
@@ -106,9 +108,11 @@
                 $keyword,
                 '',
                 false);
-            foreach ($books as $book) {
+            foreach ($books as $book)
+            {
                 $book->setSource('amazon');
             }
+
             return $books;
         }
 
@@ -122,7 +126,11 @@
                 '',
                 true);
             foreach ($books as $book)
+            {
                 $book->setLink('https://amazon.it' . $book->getLink());
+                $book->setSource('amazon');
+            }
+
             return $books;
         }
 

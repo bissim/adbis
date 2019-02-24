@@ -8,7 +8,7 @@
     class AudibleWrapper
     {
         // variables
-        private $bookScraper;
+        private $audioBookScraper;
         private $queries;
         private $queriesNews;
         private $domain = '';
@@ -20,7 +20,7 @@
         {
             $this->queries = $this->createQueries();
             $this->queriesNews = $this->createQueriesNews();
-            $this->bookScraper = new AudioBookScraper;
+            $this->audioBookScraper = new AudioBookScraper;
         }
 
         private function createQueries(): array
@@ -57,6 +57,7 @@
             $queries['authorQueries'] = $authorQueries;
             $queries['imgQueries'] = $imgQueries;
             $queries['voiceQueries'] = $voiceQueries;
+
             return $queries;
         }
 
@@ -102,35 +103,52 @@
             $queries['authorQueries'] = $authorQueries;
             $queries['imgQueries'] = $imgQueries;
             $queries['voiceQueries'] = $voiceQueries;
+
             return $queries;
         }        
 
         public function getBooks(String $keyword): array
         {
-            $this->bookScraper->setQueries($this->queries);
-            $books = $this->bookScraper->getBooks(
+            $this->audioBookScraper->setQueries($this->queries);
+            $books = $this->audioBookScraper->getBooks(
                 $this->domain,
                 $this->queryUrl,
                 $keyword,
                 '',
                 false);
+            $effectiveBooks = array();
             foreach ($books as $book)
-                $book->setLink('https://audible.it' . $book->getLink());
-            return $books;
+            {
+                if ($book->getTitle() !== '')
+                {
+                    $book->setLink('https://audible.it' . $book->getLink());
+                    array_push($effectiveBooks, $book);
+                }
+            }
+
+            return $effectiveBooks;
         }
 
         public function getNewBooks(): array
         {
-            $this->bookScraper->setQueries($this->queriesNews);
-            $books = $this->bookScraper->getBooks(
+            $this->audioBookScraper->setQueries($this->queriesNews);
+            $books = $this->audioBookScraper->getBooks(
                 $this->domain,
                 $this->queryNewsUrl,
                 '',
                 '',
                 true);
+            $effectiveBooks = array();
             foreach ($books as $book)
-                $book->setLink('https://audible.it' . $book->getLink());
-            return $books;
+            {
+                if ($book->getTitle() !== '')
+                {
+                    $book->setLink('https://audible.it' . $book->getLink());
+                    array_push($effectiveBooks, $book);
+                }
+            }
+
+            return $effectiveBooks;
         }
 
         public function getQueries(): array

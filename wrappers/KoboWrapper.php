@@ -97,7 +97,6 @@
 
         }
 
-
         public function getBooks(String $keyword): array
         {
             $this->bookScraper->setQueries($this->queries);
@@ -108,23 +107,32 @@
                 '&fclanguages=it',
                 false
             );
+
             foreach ($books as $book)
             {
                 $book->setSource('kobo');
             }
+
             return $books;
         }
 
         public function getNewBooks(): array
         {
             $this->bookScraper->setQueries($this->queriesNews);
-            return $this->bookScraper->getBooks(
+            $books = $this->bookScraper->getBooks(
                 '',
                 $this->queryNewsUrl,
                 '',
                 '',
                 true
             );
+
+            foreach ($books as $book)
+            {
+                $book->setSource('kobo');
+            }
+
+            return $books;
         }
 
         public function getQueries(): array
