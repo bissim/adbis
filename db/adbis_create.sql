@@ -31,7 +31,7 @@ create table if not exists book (
   link VARCHAR(250) not null,
   expiration_date TIMESTAMP default CURRENT_TIMESTAMP,
   is_recent TINYINT(1) default 0,
-  source VARCHAR(10) not null
+  src VARCHAR(10) not null
 );
 
 # book table
@@ -61,7 +61,7 @@ create table if not exists review (
   style FLOAT,
   content FLOAT,
   pleasantness FLOAT,
-  expiration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  expiration_date TIMESTAMP default CURRENT_TIMESTAMP,
   is_recent TINYINT(1) default 0
 );
 

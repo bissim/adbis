@@ -65,12 +65,11 @@
                     return false; // error creating connection
                 }
             }
-            else
+            else // a connection already exists
             {
                 throw new \Exception(
                     'A connection has been established already.'
                 );
-                return true; // a connection already exists
             }
         }
 
@@ -104,7 +103,7 @@
                             $row["price"],
                             $row["img"],
                             $row["link"],
-                            $row["source"]
+                            $row["src"]
                         )
                     );
                 }
@@ -133,7 +132,7 @@
                             $row["price"],
                             $row["img"],
                             $row["link"],
-                            $row["source"]
+                            $row["src"]
                         )
                     );
                 }
@@ -147,16 +146,16 @@
         {
             $this->connect();
             $stmt = $this->conn->prepare(
-                "INSERT INTO book (title,author,price,img,link,is_recent,source)
-                VALUES (:title,:author,:price,:img,:link,:is_recent,:source)"
+                "INSERT INTO book (title,author,price,img,link,is_recent,src)
+                VALUES (:title,:author,:price,:img,:link,:is_recent,:src)"
             );
 
             $title = '';
             $author = '';
-            $price = '';
+            $price = 0.0;
             $img = '';
             $link = '';
-            $isRecent = '';
+            $isRecent = 0;
             $source = '';
 
             $stmt->bindParam(':title', $title);
@@ -165,7 +164,7 @@
             $stmt->bindParam(':img', $img);
             $stmt->bindParam(':link', $link);
             $stmt->bindParam(':is_recent', $isRecent);
-            $stmt->bindParam(':source', $source);
+            $stmt->bindParam(':src', $source);
 
             foreach ($books as $book)
             {
@@ -176,6 +175,8 @@
                 $link = $book->getLink();
                 $isRecent = $book->isRecent() ? 1 : 0;
                 $source = $book->getSource();
+
+//                error_log("Price: $price");
 
                 $stmt->execute();
             }
@@ -252,7 +253,7 @@
             $voice = '';
             $img = '';
             $link = '';
-            $isRecent = '';
+            $isRecent = 0;
 
             $stmt->bindParam(':title', $title);
             $stmt->bindParam(':author', $author);
@@ -350,11 +351,11 @@
             $author = '';
             $plot = '';
             $txt = '';
-            $average = '';
-            $style = '';
-            $content = '';
-            $pleasantness = '';
-            $isRecent = '';
+            $average = 0.0;
+            $style = 0.0;
+            $content = 0.0;
+            $pleasantness = 0.0;
+            $isRecent = 0;
 
             $stmt->bindParam(':title', $title);
             $stmt->bindParam(':author', $author);
@@ -377,6 +378,10 @@
                 $content = $review->getContent();
                 $pleasantness = $review->getPleasantness();
                 $isRecent = $review->isRecent() ? 1 : 0;
+
+//                error_log(
+//                    "Average: $average, Style: $style"
+//                );
 
                 $stmt->execute();
             }
