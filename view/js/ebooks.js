@@ -79,7 +79,7 @@ function searchBooks() {
       join: join
     },
     beforeSend: prepareForResults,
-    success: join ? showBoth : showBooks,
+    success: showBoth,
     error: ajaxError
   });
 }
