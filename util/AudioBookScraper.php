@@ -90,13 +90,13 @@
 //                $image = $this->checkEmpty($image);
 //                $link = $this->checkEmpty($link);
 
-                error_log(
-                    "Title: $title, " .
-                    "Author: $author, " .
-                    "Voice: $voice, " .
-                    "Image: $image, " .
-                    "Link: $link"
-                );
+//                error_log(
+//                    "Title: $title, " .
+//                    "Author: $author, " .
+//                    "Voice: $voice, " .
+//                    "Image: $image, " .
+//                    "Link: $link"
+//                );
 
                 $book = new AudioBook(
                     $title,
@@ -107,11 +107,11 @@
                     $new
                 );
 
-                error_log("New audiobook created!");
+//                error_log("New audiobook created!");
 
                 array_push($booksFound, $book);
             }
-            
+
             return $booksFound;
         }
 

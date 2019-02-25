@@ -176,7 +176,10 @@
                 $isRecent = $book->isRecent() ? 1 : 0;
                 $source = $book->getSource();
 
-//                error_log("Price: $price");
+//                error_log(
+//                    "Price: $price, " .
+//                    "Recent: {(int) $isRecent}"
+//                );
 
                 $stmt->execute();
             }
@@ -380,7 +383,9 @@
                 $isRecent = $review->isRecent() ? 1 : 0;
 
 //                error_log(
-//                    "Average: $average, Style: $style"
+//                    "Average: $average, " .
+//                    "Style: $style, " .
+//                    "Recent: {(int) $isRecent}"
 //                );
 
                 $stmt->execute();
