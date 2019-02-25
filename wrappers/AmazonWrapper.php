@@ -30,6 +30,7 @@
             $titleQueries = array();
             $linkQueries = array();
             $authorQueries = array();
+            $authorAltQueries = array();
             $imgQueries = array();
             $priceQueries = array();
 
@@ -46,6 +47,9 @@
                 array_push($authorQueries,
                 '//ul/li[@id=' . $itemId . ']/div/div/div/div[2]/div/div[2]/span[2]/a/text()');
 
+                array_push($authorAltQueries,
+                    '//ul/li[@id=' . $itemId . ']/div/div/div/div[2]/div/div[2]/span[2]/text()');
+
                 array_push($imgQueries,
                 '//ul/li[@id=' . $itemId . ']/div/div/div/div/div/div/a/img/attribute::src');
 
@@ -57,6 +61,7 @@
             $queries['titleQueries'] = $titleQueries;
             $queries['linkQueries'] = $linkQueries;
             $queries['authorQueries'] = $authorQueries;
+            $queries['authorAltQueries'] = $authorAltQueries;
             $queries['imgQueries'] = $imgQueries;
             $queries['priceQueries'] = $priceQueries;
 
@@ -107,6 +112,7 @@
                 $this->queryUrl,
                 $keyword,
                 '',
+                'amazon',
                 $new
             );
             foreach ($books as $book)
@@ -135,6 +141,7 @@
                 $this->queryNewsUrl,
                 '',
                 '',
+                'amazon',
                 true
             );
             foreach ($books as $book)

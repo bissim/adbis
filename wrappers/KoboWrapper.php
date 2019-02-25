@@ -105,6 +105,7 @@
                 $this->queryUrl,
                 $keyword,
                 '&fclanguages=it',
+                'kobo',
                 false
             );
 
@@ -124,6 +125,7 @@
                 $this->queryNewsUrl,
                 '',
                 '',
+                'kobo',
                 true
             );
 
