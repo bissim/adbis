@@ -15,22 +15,22 @@
     {
         public function test()
         {
-            $inizio = $this->microtime_float();
+            $this->start_time();
 
             $amazonWrapper = new AmazonWrapper;
             // $books = $amazonWrapper->getBooks('harry potter');
             // $books = $amazonWrapper->getNewBooks();
 
-            $books = array_merge($amazonWrapper->getBooks('harry potter'),
-                                $amazonWrapper->getNewBooks());
+            $books = array_merge(
+                $amazonWrapper->getBooks('mare'),
+                $amazonWrapper->getNewBooks()
+            );
 
             // check parameters for every book
             foreach ($books as $book)
                 print $book;
 
-            $fine = $this->microtime_float();
-            $tempo_impiegato = $fine - $inizio;
-            $tempo = number_format($tempo_impiegato, 5, ',', '.');
-            echo "Tempo impiegato dallo script: $tempo secondi";
+            $elapsed = $this->get_elapsed();
+            echo "Tempo impiegato dallo script: $elapsed secondi";
         }
     }
