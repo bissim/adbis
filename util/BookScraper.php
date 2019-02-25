@@ -17,6 +17,7 @@
             string $queryUrl,
             string $keyword,
             string $urlSuffix,
+            string $source,
             bool $new
         ): array
         {
@@ -34,12 +35,12 @@
                 $urlSearch .= $urlSuffix;
             }
 
-            $books = $this->searchBooks($urlSearch, $new);
+            $books = $this->searchBooks($urlSearch, $source, $new);
 
             return $books;
         }
 
-        private function searchBooks(string $queryUrl, bool $new) : array
+        private function searchBooks(string $queryUrl, string $source, bool $new) : array
         {
             $xpath = $this->createDOMXPath($queryUrl);
 
@@ -50,17 +51,28 @@
             for ($i=0; $i < $length; $i++)
             {
                 $title = $xpath->query($this->queries['titleQueries'][$i]);
+                $title = trim($this->checkEmpty($title));
                 $author = $xpath->query($this->queries['authorQueries'][$i]);
+                if ($source === 'amazon' && !$author)
+                {
+                    var_dump($author);
+                    $author = $xpath->query($this->queries['authorAltQueries'][$i]);
+                }
+                $author = trim($this->checkEmpty($author));
                 $price = $xpath->query($this->queries['priceQueries'][$i]);
+                $price = trim($this->checkFloat($price));
                 $image = $xpath->query($this->queries['imgQueries'][$i]);
+                $image = trim($this->checkEmpty($image));
                 $link = $xpath->query($this->queries['linkQueries'][$i]);
+                $link = trim($this->checkEmpty($link));
 
                 $book = new Book(
-                    $this->checkEmpty($title),
-                    $this->checkEmpty($author),
-                    $this->checkFloat($price),
-                    $this->checkEmpty($image),
-                    $this->checkEmpty($link),
+                    $title,
+                    $author,
+                    $price,
+                    $image,
+                    $link,
+                    $source,
                     $new
                 );
 
