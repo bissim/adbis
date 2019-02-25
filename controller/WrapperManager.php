@@ -18,7 +18,7 @@
         private $googleWrapper;
         private $koboWrapper;
         private $reviewWrapper;
-        private $AudibleWrapper;
+        private $audibleWrapper;
 
         public function __construct()
         {
@@ -43,7 +43,8 @@
             return $reviews;
         }
 
-        public function getAudioBooks($keyword): array {
+        public function getAudioBooks($keyword): array
+        {
             $books = $this->audibleWrapper->getBooks($keyword);
             return $books;
         }
@@ -61,7 +62,8 @@
             return $reviews;
         }
 
-        public function getNewAudioBooks(): array {
+        public function getNewAudioBooks(): array
+        {
             $books = $this->audibleWrapper->getNewBooks();
             return $books;
         }

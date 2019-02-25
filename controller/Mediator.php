@@ -107,7 +107,8 @@
             return $reviews;
         }
 
-        private function getNewAuBooks(): array {
+        private function getNewAuBooks(): array
+        {
             $dbMng = new DBManager;
             $auBooks = $dbMng->getNewAudioBooks();
             if (empty($auBooks)) {
@@ -197,7 +198,7 @@
             foreach ($dbMng->getAllAudioBooks() as $book)
                 if(($search==='title' && $strComp->compare($keyword,$book->getTitle()))
                     || ($search==='author' && $strComp->compare($keyword,$book->getAuthor())))
-                    array_push($books,$book);
+                    array_push($books, $book);
 
             if (empty($books))
             {
