@@ -139,8 +139,8 @@ function showBoth(res) {
 
 function createBookWithReviewNode(json, resultsDiv) {
   $.each(json, function(i, item) {
-    book = item[0];
-    review = item[1];
+    let book = item[0];
+    let review = item[1];
     let resultNode = "";
 
     // create result node
@@ -180,13 +180,22 @@ function createBookWithReviewNode(json, resultsDiv) {
     let source = book["source"];
     switch (source) {
       case 'amazon':
-        logoNode.attr("src", "./view/img/amazon_logo.png");
+        logoNode
+          .attr("src", "./view/img/amazon_logo.png")
+          .attr("alt", "Amazon")
+          .attr("title", "Amazon");
         break;
       case 'kobo':
-        logoNode.attr("src", "./view/img/kobo_logo.png");
+        logoNode
+          .attr("src", "./view/img/kobo_logo.png")
+          .attr("alt", "Kobo")
+          .attr("title", "Kobo");
         break;
       case 'google':
-        logoNode.attr("src", "./view/img/google_logo.png");
+        logoNode
+          .attr("src", "./view/img/google_logo.png")
+          .attr("alt", "Google Libri")
+          .attr("title", "Google Libri");
         break;
       default:
         console.warn("Unknown source '" + source + "'!");

@@ -14,7 +14,7 @@ let baseSearchUrl = "/adbis/search/";
  * Associate events
  * to loaded page
  */
-$(document).ready(function() {
+$(document).ready(function () {
   // set current page name
   let pageName = determinePageName();
   // console.debug("Hi u'r in " + pageName);
@@ -27,7 +27,7 @@ $(document).ready(function() {
 });
 
     // block form submission from reloading page
-    $("form#contactForm").submit(function(event) {
+    $("form#contactForm").submit(function (event) {
         event.preventDefault(); // prevent page reload
     });
 });
@@ -82,7 +82,8 @@ function showBooks(res) {
 
   if (Object.keys(json).length > 0) {
     let message =
-      "La ricerca ha ottenuto dei risultati! Consultare l'elenco sottostante.";
+      "La ricerca ha ottenuto dei risultati!" +
+      "Consultare l'elenco sottostante.";
     $("#success").html(message);
     
     try {
@@ -101,7 +102,7 @@ function showBooks(res) {
 
 function createBookNodes(json, resultsDiv) {
   // iterate over results array
-  $.each(json, function(i, value) {
+  $.each(json, function (i, value) {
     let resultNode = "";
     
     // create result node
@@ -118,8 +119,13 @@ function createBookNodes(json, resultsDiv) {
     );
     let imgNode = $("<img />")
       .attr("class", "img-responsive center-block")
-      .attr("src", value["img"])
-      .attr("style", "max-width:190px;max-height:190px;");
+      .attr("src", value["img"]);
+    let source = value["source"];
+    if (source !== 'amazon') {
+      imgNode.attr("style", "max-width:190px;max-height:190px;margin-left:36px;margin-right:37px;");
+    } else {
+      imgNode.attr("style", "max-width:190px;max-height:190px;")
+    }
     imgContainerNode.append(imgNode);
     resultNode.append(imgContainerNode);
 
@@ -138,16 +144,24 @@ function createBookNodes(json, resultsDiv) {
     let logoNode = $("<img />")
       .attr("class", "img-responsive center-block")
       .attr("style", "max-height:20px;");
-    let source = value["source"];
     switch (source) {
       case 'amazon':
-        logoNode.attr("src", "./view/img/amazon_logo.png");
+        logoNode
+          .attr("src", "./view/img/amazon_logo.png")
+          .attr("alt", "Amazon")
+          .attr("title", "Amazon");
         break;
       case 'kobo':
-        logoNode.attr("src", "./view/img/kobo_logo.png");
+        logoNode
+          .attr("src", "./view/img/kobo_logo.png")
+          .attr("alt", "Kobo")
+          .attr("title", "Kobo");
         break;
       case 'google':
-        logoNode.attr("src", "./view/img/google_logo.png");
+        logoNode
+          .attr("src", "./view/img/google_logo.png")
+          .attr("alt", "Google Libri")
+          .attr("title", "Google Libri");
         break;
       default:
         console.warn("Unknown source '" + source + "'!");
@@ -163,7 +177,7 @@ function createBookNodes(json, resultsDiv) {
 }
 
 function createAuBookNodes(json, resultsDiv) {
-  $.each(json, function(i, item) {
+  $.each(json, function (i, item) {
     
     let resultNode = "";
 
@@ -187,8 +201,8 @@ function createAuBookNodes(json, resultsDiv) {
     resultNode.append(imgContainerNode);
 
     // create details container
-    let detailsContaineritem = $("<div></div>");
-    detailsContaineritem
+    let detailsContainerItem = $("<div></div>");
+    detailsContainerItem
       .append(
         "<span><a href='" +
           item["link"] +
@@ -196,8 +210,16 @@ function createAuBookNodes(json, resultsDiv) {
           item["title"] +
           "</strong></span></a></span><br />"
       )
+      // .append("<span>di&nbsp;<em>" + item["author"] + "</em></span><br />")
       .append("<span>letto da&nbsp;<em>" + item["voice"] + "</em></span><br />");
-    resultNode.append(detailsContaineritem);
+    let logoNode = $("<img />")
+      .attr("class", "img-responsive center-block")
+      .attr("style", "max-height:20px;")
+      .attr("src", "./view/img/audible_logo.png")
+      .attr("alt", "Audible")
+      .attr("title", "Audible");
+    detailsContainerItem.append(logoNode);
+    resultNode.append(detailsContainerItem);
 
     resultsDiv.append(resultNode);
     resultsDiv.append("<hr />");

@@ -139,8 +139,8 @@ function showBoth(res) {
 
 function createBookWithReviewNode(json, resultsDiv) {
   $.each(json, function(i, item) {
-    book = item[0];
-    review = item[1];
+    let book = item[0];
+    let review = item[1];
     let resultNode = "";
 
     // create result node
@@ -174,10 +174,17 @@ function createBookWithReviewNode(json, resultsDiv) {
       )
       .append("<span>di&nbsp;<em>" + book["author"] + "</em></span><br />")
       .append("<span>letto da&nbsp;<em>" + book["voice"] + "</em></span><br />");
+    let logoNode = $("<img />")
+        .attr("class", "img-responsive center-block")
+        .attr("style", "max-height:20px;")
+        .attr("src", "./view/img/audible_logo.png")
+        .attr("alt", "Audible")
+        .attr("title", "Audible");
+    detailsContainerBook.append(logoNode);
     resultNode.append(detailsContainerBook);
 
     if (review != null) {
-      let collapseNode = $("<div></div").append(
+      let collapseNode = $("<div></div>").append(
         "<br><br><span><a data-toggle='collapse' href='#collapse" +
           i +
           "'>Scopri di più</a><span></div>"
