@@ -2,33 +2,31 @@
     namespace util;
 
     require_once './model/AudioBook.php';
+    require_once './util/Scraper.php';
 
     use \model\AudioBook;
     use \DOMDocument;
     use \DOMXPath;
+    use \util\Scraper;
 
     class AudioBookScraper
+        extends Scraper
     {
-
-        private $queries;
-
-        public function getQueries(): array
-        {
-            return $this->queries;
-        }
-
-        public function setQueries(array $queries)
-        {
-            $this->queries = $queries;
-        }
-
-        public function getBooks(string $domain, string $queryUrl,
-                                    string $keyword, string $urlSuffix,
-                                    bool $new): array
+        public function getBooks(
+            string $domain,
+            string $queryUrl,
+            string $keyword,
+            string $urlSuffix,
+            bool $new
+        ): array
         {
             // create search URL
             $url = $domain . $queryUrl;
-            $keyword = str_replace(' ', '+', strtolower(trim($keyword)));
+            $keyword = str_replace(
+                ' ',
+                '+',
+                strtolower(trim($keyword))
+            );
             $urlSearch = $url . $keyword;
             $urlSuffix = trim($urlSuffix);
             if (!empty($urlSuffix))
@@ -39,41 +37,6 @@
             $books = $this->searchBooks($urlSearch, $new);
 
             return $books;
-        }
-
-        private function getWebPage(string $url) {
-            $options = array(
-                CURLOPT_RETURNTRANSFER => true,   // return web page
-                CURLOPT_HEADER         => false,  // don't return headers
-                CURLOPT_FOLLOWLOCATION => true,   // follow redirects
-                CURLOPT_MAXREDIRS      => 10,     // stop after 10 redirects
-                CURLOPT_ENCODING       => '',     // handle compressed
-                CURLOPT_USERAGENT      => 'adbis', // name of client
-                CURLOPT_AUTOREFERER    => true,   // set referrer on redirect
-                CURLOPT_CONNECTTIMEOUT => 120,    // time-out on connect
-                CURLOPT_TIMEOUT        => 120,    // time-out on response
-            );
-        
-            $ch = curl_init($url);
-            curl_setopt_array($ch, $options);
-            $content  = curl_exec($ch);
-            curl_close($ch);
-            return $content;
-        }
-
-        private function createDOMXPath(string $url): DOMXPath
-        {
-            $page = $this->getWebPage($url);
-            // create DOM
-            $dom = new DOMDocument;
-            libxml_use_internal_errors(true);
-            $dom->loadHTML($page);
-            libxml_clear_errors();
-
-            // create XPath from DOM
-            $xpath = new DOMXPath($dom);
-
-            return $xpath;
         }
 
         private function searchBooks(string $queryUrl, bool $new) : array
@@ -87,19 +50,64 @@
             for ($i=0; $i < $length; $i++)
             {
                 $title = $xpath->query($this->queries['titleQueries'][$i]);
+                $title = $this->nodeExtractor($title);
                 $author = $xpath->query($this->queries['authorQueries'][$i]);
+                $author = $this->nodeExtractor($author);
+                $valid = false;
+                if ($author)
+                {
+                    $valid = stripos("Di:", $author);
+                }
+                // check whether author contains 'Di:' substring
+                if ($new && $author && !$valid)
+                {
+                    $author = $xpath->query($this->queries['authorAltQueries'][$i]);
+                    $author = $author->item(0)->nodeValue;
+                }
+                // clean author field
+                $author = str_replace(
+                    'Di:',
+                    '',
+                    $author
+                );
+                $author = trim($author);
                 $voice = $xpath->query($this->queries['voiceQueries'][$i]);
+                $voice = $this->nodeExtractor($voice);
                 $image = $xpath->query($this->queries['imgQueries'][$i]);
+                $image = $this->nodeExtractor($image);
                 $link = $xpath->query($this->queries['linkQueries'][$i]);
+                $link = $this->nodeExtractor($link);
+
+//                var_dump($title);
+//                var_dump($author);
+//                var_dump($voice);
+//                var_dump($image);
+//                var_dump($link);
+
+//                $title = $this->checkEmpty($title);
+//                $author = $this->checkEmpty($author);
+//                $voice = $this->checkEmpty($voice);
+//                $image = $this->checkEmpty($image);
+//                $link = $this->checkEmpty($link);
+
+                error_log(
+                    "Title: $title, " .
+                    "Author: $author, " .
+                    "Voice: $voice, " .
+                    "Image: $image, " .
+                    "Link: $link"
+                );
 
                 $book = new AudioBook(
-                    $this->checkEmpty($title),
-                    $this->checkEmpty($author),
-                    $this->checkEmpty($voice),
-                    $this->checkEmpty($image),
-                    $this->checkEmpty($link),
+                    $title,
+                    $author,
+                    $voice,
+                    $image,
+                    $link,
                     $new
                 );
+
+                error_log("New audiobook created!");
 
                 array_push($booksFound, $book);
             }
@@ -107,14 +115,15 @@
             return $booksFound;
         }
 
-        private function checkEmpty($result)
+        private function nodeExtractor($node)
         {
-            if ($result != NULL && $result->length > 0)
+            if ($node->item(0))
             {
-                $value = $result[0]->nodeValue;
-                return empty($value) ? '' : $value;
+                return $node->item(0)->nodeValue;
             }
-            return '';
 
+            error_log("Empty node!");
+            return '';
         }
-}
+
+    }

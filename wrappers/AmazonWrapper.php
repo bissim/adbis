@@ -99,7 +99,7 @@
             return $queries;
         }        
 
-        public function getBooks(String $keyword): array
+        public function getBooks(String $keyword, $new = false): array
         {
             $this->bookScraper->setQueries($this->queries);
             $books = $this->bookScraper->getBooks(
@@ -107,15 +107,26 @@
                 $this->queryUrl,
                 $keyword,
                 '',
-                false);
+                $new
+            );
             foreach ($books as $book)
             {
+                if ($new)
+                {
+                    $book->setLink('https://amazon.it' . $book->getLink());
+                    $book->setRecent(true);
+                }
                 $book->setSource('amazon');
             }
 
             return $books;
         }
 
+        /**
+         * @deprecated
+         * Retrieve new Amazon books.
+         * @return array
+         */
         public function getNewBooks(): array
         {
             $this->bookScraper->setQueries($this->queriesNews);
@@ -124,10 +135,12 @@
                 $this->queryNewsUrl,
                 '',
                 '',
-                true);
+                true
+            );
             foreach ($books as $book)
             {
                 $book->setLink('https://amazon.it' . $book->getLink());
+                $book->setRecent(true);
                 $book->setSource('amazon');
             }
 

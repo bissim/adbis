@@ -66,6 +66,7 @@
             $titleQueries = array();
             $linkQueries = array();
             $authorQueries = array();
+            $authorAltQueries = array();
             $imgQueries = array();
             $voiceQueries = array();
 
@@ -82,9 +83,19 @@
                 '//div[@class="bc-tab-content"]/div/div[2]/div[' . $i . ']/div/div/div/div/div/a/attribute::href');
 
                 array_push($authorQueries,
-                '');
+                '//div[@class="bc-popover-container"]/div[' . $i . ']/div/span[1]/ul/li[3]/text()');
                 array_push($authorQueries,
-                '');
+                '//div[@class="bc-popover-container"]/div[' . $i . ']/div/span[1]/ul/li[3]/text()');
+
+                // some audiobooks don't have a subtitle
+                array_push(
+                    $authorAltQueries,
+                    '//div[@class="bc-popover-container"]/div[' . $i . ']/div/span[1]/ul/li[2]/text()'
+                );
+                array_push(
+                    $authorAltQueries,
+                    '//div[@class="bc-popover-container"]/div[' . $i . ']/div/span[1]/ul/li[2]/text()'
+                );
 
                 array_push($imgQueries,
                 '//div[@class="bc-tab-content"]/div/div[1]/div[' . $i . ']/div/div/div/div/div/a/img/attribute::src');
@@ -101,13 +112,14 @@
             $queries['titleQueries'] = $titleQueries;
             $queries['linkQueries'] = $linkQueries;
             $queries['authorQueries'] = $authorQueries;
+            $queries['authorAltQueries'] = $authorAltQueries;
             $queries['imgQueries'] = $imgQueries;
             $queries['voiceQueries'] = $voiceQueries;
 
             return $queries;
         }        
 
-        public function getBooks(String $keyword): array
+        public function getBooks(String $keyword, $new = false): array
         {
             $this->audioBookScraper->setQueries($this->queries);
             $books = $this->audioBookScraper->getBooks(
@@ -115,7 +127,8 @@
                 $this->queryUrl,
                 $keyword,
                 '',
-                false);
+                $new
+            );
             $effectiveBooks = array();
             foreach ($books as $book)
             {
@@ -129,6 +142,11 @@
             return $effectiveBooks;
         }
 
+        /**
+         * @deprecated
+         * Retrieve new Audible books.
+         * @return array
+         */
         public function getNewBooks(): array
         {
             $this->audioBookScraper->setQueries($this->queriesNews);
@@ -137,7 +155,8 @@
                 $this->queryNewsUrl,
                 '',
                 '',
-                true);
+                true
+            );
             $effectiveBooks = array();
             foreach ($books as $book)
             {
