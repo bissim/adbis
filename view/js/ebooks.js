@@ -79,7 +79,7 @@ function searchBooks() {
       join: join
     },
     beforeSend: prepareForResults,
-    success: join ? showBoth : showBooks,
+    success: showBoth,
     error: ajaxError
   });
 }
@@ -159,6 +159,12 @@ function createBookWithReviewNode(json, resultsDiv) {
       .attr("class", "img-responsive center-block")
       .attr("src", book["img"])
       .attr("style", "max-width:190px;max-height:190px;");
+    let source = book["source"];
+    if (source !== 'amazon') {
+      imgNode.attr("style", "max-width:190px;max-height:190px;margin-left:36px;margin-right:37px;");
+    } else {
+      imgNode.attr("style", "max-width:190px;max-height:190px;")
+    }      
     imgContainerNode.append(imgNode);
     resultNode.append(imgContainerNode);
 
@@ -177,7 +183,6 @@ function createBookWithReviewNode(json, resultsDiv) {
     let logoNode = $("<img />")
         .attr("class", "img-responsive center-block")
         .attr("style", "max-height:20px;");
-    let source = book["source"];
     switch (source) {
       case 'amazon':
         logoNode
