@@ -45,5 +45,20 @@
             echo "$result (value ";
             printf("%.3f", $compareValue);
             echo ")<br />";
+
+            $keyword = 'J. K. Rowling';
+            $title = 'Joanne Kathleen Rowling';
+
+            echo "Checking whether '$keyword' and '$title' are similar: ";
+            $firstSet = $tokMan->getTokens($keyword);
+            $secondSet = $tokMan->getTokens($title);
+            $compareValue = (new JaccardIndex)->similarity(
+                $firstSet,
+                $secondSet
+            );
+            $result = (int) $tokMan->compare($keyword, $title);
+            echo "$result (value ";
+            printf("%.3f", $compareValue);
+            echo ")<br />";
         }
     }

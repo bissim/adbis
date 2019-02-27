@@ -11,54 +11,38 @@
          *
          * @var array Words to be removed.
          */
-        private $stopwords = array(
-            'il' => 1,
-            'lo' => 1,
-            'la' => 1,
-            'i' => 1,
-            'gli' => 1,
-            'le' => 1,
-            'un' => 1,
-            'uno' => 1,
-            'una' => 1,
-            'del' => 1,
-            'della' => 1,
-            'dei' => 1,
-            'degli' => 1,
-            'delle' => 1,
-            'sullo' => 1,
-            'sulla' => 1,
-            'sugli' => 1,
-            'sulle' => 1,
-            'col' => 1,
-            'di' => 1,
-            'a' => 1,
-            'da' => 1,
-            'in' => 1,
-            'con' => 1,
-            'su' => 1,
-            'per' => 1,
-            'tra' => 1,
-            'fra' => 1,
-            'e' => 1,
-            'ma' => 1,
-            'mi' => 1,
-            'ti' => 1,
-            'si' => 1,
-            'ci' => 1,
-            'vi' => 1,
-            'me' => 1,
-            'te' => 1,
-            'se' => 1,
-            'ce' => 1,
-            've' => 1,
-            'the' => 1
-        );
+        private $stopwords;
 
         /**
          * @var float Threshold value for similarity.
          */
         private $threshold = 0.5;
+
+        public function __construct()
+        {
+            $this->initializeStopWords();
+        }
+
+        private function initializeStopWords()
+        {
+            if (!isset($this->stopwords)) // no stop words has been loaded yet
+            {
+                // read data from file
+                $stopWordsFile = './util/stopwords.txt';
+                $fh = fopen($stopWordsFile, 'r');
+                $data = fread($fh, filesize($stopWordsFile));
+                fclose($fh);
+
+                // save data into associative file
+                $this->stopwords = array();
+                $tempArray = explode("\n", $data);
+                foreach ($tempArray as $line)
+                {
+                    $tmp = explode(" ", $line);
+                    $this->stopwords[$tmp[0]] = $tmp[1];
+                }
+            }
+        }
 
         /**
          * Splits a string into tokens; split occurs over spaces.
@@ -169,17 +153,31 @@
             }
             else // check whether keyword tokens are all in title
             {
-                return ($this->isContained($keywordSet,$titleSet) ||
-                    $this->isContained($titleSet,$keywordSet));
+                return (
+                    $this->isContained($keywordSet, $titleSet) ||
+                    $this->isContained($titleSet, $keywordSet)
+                );
             }
 
         }
 
-        // check if all words in set1 are in set2
-        private function isContained($set1, $set2): bool {
+        /**
+         * check if all words in set1 are in set2
+         *
+         * @param $set1 - First set of words
+         * @param $set2 - Second set of words
+         *
+         * @return bool
+         */
+        private function isContained($set1, $set2): bool
+        {
             foreach ($set1 as $s1)
+            {
                 if (!in_array($s1, $set2))
+                {
                     return false;
+                }
+            }
             return true;
         }
     }
