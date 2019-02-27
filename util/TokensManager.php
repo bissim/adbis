@@ -58,7 +58,7 @@
         /**
          * @var float Threshold value for similarity.
          */
-        private $threshold = 0.6;
+        private $threshold = 0.5;
 
         /**
          * Splits a string into tokens; split occurs over spaces.
@@ -160,15 +160,17 @@
             }
             else // check whether keyword tokens are all in title
             {
-                foreach ($keywordSet as $token)
-                {
-                    if (!in_array($token, $titleSet))
-                    {
-                        return false;
-                    }
-                }
-
-                return true;
+                return ($this->isContained($keywordSet,$titleSet) ||
+                    $this->isContained($titleSet,$keywordSet));
             }
+
+        }
+
+        // check if all words in set1 are in set2
+        private function isContained($set1, $set2): bool {
+            foreach ($set1 as $s1)
+                if (!in_array($s1, $set2))
+                    return false;
+            return true;
         }
     }
