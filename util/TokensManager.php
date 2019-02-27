@@ -95,6 +95,15 @@
             $sws = &$this->stopwords;
             $this->lowercaseTokens($words);
 
+            // remove words with length less or equal than 1
+            $words = array_filter(
+                $words,
+                function ($w)
+                {
+                    return (strlen($w) > 1);
+                }
+            );
+
             // if we have at least 2 words, remove stopwords
             if (count($words) > 1)
             {

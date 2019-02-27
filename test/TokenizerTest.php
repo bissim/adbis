@@ -13,7 +13,7 @@
     {
         public function test()
         {
-            $keyword = 'I vitelli dei Romani sono belli il mese di Gennaio';
+            $keyword = 'I vitelli di J. K. Rowling sono belli il mese di Gennaio';
             echo "Tokenize '$keyword'...<br />";
             echo '<br />';
 
