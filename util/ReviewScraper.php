@@ -66,6 +66,9 @@
             {
                 $attributes = $this->extractAttributes($link);
 
+                if ($attributes['title'] != NULL &&
+                    $attributes['author'] != NULL)
+
                 // create a Review object and put it in array
                 $review = new Review(
                     $attributes['title'],
