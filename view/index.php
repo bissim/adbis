@@ -46,6 +46,8 @@
         <!-- <h2>Nuovi eBook</h2> -->
     </div>
 
+    <div id="resLoad" class="loader" style="display:none;"></div>
+
     <hr />
 
     <!-- Footer -->

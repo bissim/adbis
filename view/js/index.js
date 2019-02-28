@@ -15,6 +15,8 @@ let baseSearchUrl = "/adbis/search/";
  * to loaded page
  */
 $(document).ready(function () {
+  $("div#resLoad").show();
+
   // set current page name
   let pageName = determinePageName();
   // console.debug("Hi u'r in " + pageName);
@@ -101,6 +103,7 @@ function showBooks(res) {
 }
 
 function createBookNodes(json, resultsDiv) {
+  $("div#resLoad").hide();
   // iterate over results array
   $.each(json, function (i, value) {
     let resultNode = "";
