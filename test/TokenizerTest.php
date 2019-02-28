@@ -27,7 +27,7 @@
             $tokens = $tokMan->removeStopWords($tokens);
             echo 'Removed stop words from set: ';
             var_dump($tokens);
-            echo '<br /><br />';
+            echo '<br /><br /><hr />';
             unset($keyword);
             unset($tokens);
 
@@ -35,28 +35,30 @@
             $title = 'Harry Potter e il prigioniero di Azkaban';
 
             echo "Checking whether '$keyword' and '$title' are similar: ";
-            $firstSet = $tokMan->getTokens($keyword);
-            $secondSet = $tokMan->getTokens($title);
-            $compareValue = (new JaccardIndex)->similarity(
-                $firstSet,
-                $secondSet
-            );
-            $result = (int) $tokMan->compare($keyword, $title);
-            echo "$result (value ";
-            printf("%.3f", $compareValue);
-            echo ")<br />";
+            $this->similarityTest($tokMan, $keyword, $title);
 
             $keyword = 'J. K. Rowling';
             $title = 'Joanne Kathleen Rowling';
 
             echo "Checking whether '$keyword' and '$title' are similar: ";
-            $firstSet = $tokMan->getTokens($keyword);
-            $secondSet = $tokMan->getTokens($title);
+            $this->similarityTest($tokMan, $keyword, $title);
+
+            $keyword = 'Figlie Mare';
+            $title = 'Eine Liebe in Apulien: Sommerroman (German Edition)';
+
+            echo "Checking whether '$keyword' and '$title' are similar: ";
+            $this->similarityTest($tokMan, $keyword, $title);
+        }
+
+        private function similarityTest(TokensManager $tokensManager, string $keyword, string $target)
+        {
+            $firstSet = $tokensManager->getTokens($keyword);
+            $secondSet = $tokensManager->getTokens($target);
             $compareValue = (new JaccardIndex)->similarity(
                 $firstSet,
                 $secondSet
             );
-            $result = (int) $tokMan->compare($keyword, $title);
+            $result = (int) $tokensManager->compare($keyword, $target);
             echo "$result (value ";
             printf("%.3f", $compareValue);
             echo ")<br />";
