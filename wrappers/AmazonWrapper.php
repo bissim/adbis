@@ -115,17 +115,22 @@
                 'amazon',
                 $new
             );
+            $effectiveBooks = array();
             foreach ($books as $book)
             {
-                if ($new)
+                if ($book->getTitle() !== '')
                 {
-                    $book->setLink('https://amazon.it' . $book->getLink());
-                    $book->setRecent(true);
+                    if ($new)
+                    {
+                        $book->setLink('https://amazon.it' . $book->getLink());
+                        $book->setRecent(true);
+                    }
+                    $book->setSource('amazon');
+                    array_push($effectiveBooks, $book);
                 }
-                $book->setSource('amazon');
             }
 
-            return $books;
+            return $effectiveBooks;
         }
 
         /**

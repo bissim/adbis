@@ -22,7 +22,7 @@
             // $books = $amazonWrapper->getNewBooks();
 
             $books = array_merge(
-                $amazonWrapper->getBooks('mare'),
+                $amazonWrapper->getBooks('finestra mare'),
                 $amazonWrapper->getNewBooks()
             );
 

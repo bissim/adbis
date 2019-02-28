@@ -129,12 +129,17 @@
                 true
             );
 
+            $effectiveBooks = array();
             foreach ($books as $book)
             {
-                $book->setSource('kobo');
+                if ($book->getTitle() !== '')
+                {
+                    $book->setSource('kobo');
+                    array_push($effectiveBooks, $book);
+                }
             }
 
-            return $books;
+            return $effectiveBooks;
         }
 
         public function getQueries(): array
