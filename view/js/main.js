@@ -351,7 +351,7 @@ function createBookWithReviewNode(json, resultsDiv) {
     resultNode.append(detailsContainerBook);
 
     if (review != null) {
-      let collapseNode = $("<div></div").append(
+      let collapseNode = $("<div></div>").append(
         "<br><br><span><a data-toggle='collapse' href='#collapse" +
           i +
           "'>Scopri di più</a><span></div>"
