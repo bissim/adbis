@@ -133,6 +133,7 @@ function createBookNodes(json, resultsDiv) {
     resultNode.append(imgContainerNode);
 
     // create details container
+    let bookAuthor = (value["author"] !== '')? value["author"]: "AA. VV.";
     let detailsContainerNode = $("<div></div>");
     detailsContainerNode
       .append(
@@ -142,7 +143,7 @@ function createBookNodes(json, resultsDiv) {
           value["title"] +
           "</strong></span></a></span><br />"
       )
-      .append("<span>di&nbsp;<em>" + value["author"] + "</em></span><br />")
+      .append("<span>di&nbsp;<em>" + bookAuthor + "</em></span><br />")
       .append("<span>Prezzo:&nbsp;" + value["price"] + "&euro;</span><br />");
     let logoNode = $("<img />")
       .attr("class", "img-responsive center-block")

@@ -33,6 +33,9 @@ $(document).ready(function() {
   });
 });
 
+/**
+ * Change search field placeholder
+ */
 function changePH() {
   let id = $(this).attr('id');
   switch(id) {
@@ -113,7 +116,6 @@ function prepareForResults() {
  * Show results for book query in page.
  * @param res
  */
-
 function showBoth(res) {
   // console.warn("implement me pls ___;-;");
 
@@ -137,6 +139,11 @@ function showBoth(res) {
 
 }
 
+/**
+ *
+ * @param json
+ * @param resultsDiv
+ */
 function createBookWithReviewNode(json, resultsDiv) {
   $.each(json, function(i, item) {
     let book = item[0];
@@ -163,6 +170,7 @@ function createBookWithReviewNode(json, resultsDiv) {
     resultNode.append(imgContainerNode);
 
     // create details container
+    let bookAuthor = (book["author"] !== '')? book["author"]: "AA. VV.";
     let detailsContainerBook = $("<div></div>");
     detailsContainerBook
       .append(
@@ -172,7 +180,7 @@ function createBookWithReviewNode(json, resultsDiv) {
           book["title"] +
           "</strong></span></a></span><br />"
       )
-      .append("<span>di&nbsp;<em>" + book["author"] + "</em></span><br />")
+      .append("<span>di&nbsp;<em>" + bookAuthor + "</em></span><br />")
       .append("<span>letto da&nbsp;<em>" + book["voice"] + "</em></span><br />");
     let logoNode = $("<img />")
         .attr("class", "img-responsive center-block")
@@ -185,12 +193,12 @@ function createBookWithReviewNode(json, resultsDiv) {
 
     if (review != null) {
       let collapseNode = $("<div></div>").append(
-        "<br><br><span><a data-toggle='collapse' href='#collapse" +
+        "<br /><br /><span><a data-toggle='collapse' href='#collapse" +
           i +
           "'>Scopri di più</a><span></div>"
       );
       detailsContainerBook.append(collapseNode);
-      detailsContainerBook.append("<br/><br/><br/>");
+      detailsContainerBook.append("<br /><br /><br />");
 
       let detailsContainerReview = $("<div></div>")
         .attr("id", "collapse" + i)
