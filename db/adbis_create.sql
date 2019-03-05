@@ -34,10 +34,10 @@ create table if not exists book (
   src VARCHAR(10) not null
 );
 
-# book table
-drop table if exists audioBook;
+# audiobook table
+drop table if exists audiobook;
 
-create table if not exists audioBook (
+create table if not exists audiobook (
   id INTEGER(4) auto_increment unique,
   title VARCHAR(400) not null,
   author VARCHAR(150) not null,
@@ -65,6 +65,7 @@ create table if not exists review (
   is_recent TINYINT(1) default 0
 );
 
+
 #
 # PROCEDURES CREATION
 #
@@ -72,21 +73,41 @@ delimiter //
 create procedure prune()
   begin
     delete from book
-    where TIMESTAMPDIFF(DAY, `expiration_date`, NOW()) > 30;
+      where TIMESTAMPDIFF(DAY, `expiration_date`, NOW()) > 30;
 
-    delete from audioBook
-    where TIMESTAMPDIFF(DAY, `expiration_date`, NOW()) > 30;
+    delete from audiobook
+      where TIMESTAMPDIFF(DAY, `expiration_date`, NOW()) > 30;
 
     delete from review
-    where TIMESTAMPDIFF(DAY, `expiration_date`, NOW()) > 30;
-  end//
+      where TIMESTAMPDIFF(DAY, `expiration_date`, NOW()) > 30;
+  end //
 
+create procedure update_recents()
+  begin
+    update book
+      set is_recent = 0
+      where TIMESTAMPDIFF(DAY, `expiration_date`, NOW()) > 7 AND is_recent = 1;
+
+    update audiobook
+      set is_recent = 0
+      where TIMESTAMPDIFF(DAY, `expiration_date`, NOW()) > 7 AND is_recent = 1;
+
+    update review
+      set is_recent = 0
+      where TIMESTAMPDIFF(DAY, `expiration_date`, NOW()) > 7 AND is_recent = 1;
+  end //
 delimiter ;
+
 
 #
 # EVENTS CREATION
 #
 create event if not exists pruner
-  on schedule every 30 second
+  on schedule every 30 day -- TODO check interval
 do
   call prune();
+
+create event if not exists recents_updater
+  on schedule every 7 day -- TODO check interval
+do
+  call update_recents();
