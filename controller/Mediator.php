@@ -25,7 +25,11 @@
          * @return string
          * @throws \Throwable
          */
-        public function retrieve(string $table, string $search, string $keyword): string
+        public function retrieve(
+            string $table,
+            string $search,
+            string $keyword
+        ): string
         {
             try
             {
@@ -85,7 +89,8 @@
         {
             $dbMng = new DBManager;
             $books = $dbMng->getNewBooks();
-            if (empty($books)) {
+            if (empty($books))
+            {
                 $wrapperMng = new WrapperManager;
                 $books = $wrapperMng->getNewBooks();
                 $dbMng->addBooks($books);
@@ -99,7 +104,8 @@
         {
             $dbMng = new DBManager;
             $reviews = $dbMng->getNewReviews();
-            if (empty($reviews)) {
+            if (empty($reviews))
+            {
                 $wrapperMng = new WrapperManager;
                 $reviews = $wrapperMng->getNewReviews();
                 $dbMng->addReviews($reviews);
@@ -111,7 +117,8 @@
         {
             $dbMng = new DBManager;
             $auBooks = $dbMng->getNewAudioBooks();
-            if (empty($auBooks)) {
+            if (empty($auBooks))
+            {
                 $wrapperMng = new WrapperManager;
                 $auBooks = $wrapperMng->getNewAudioBooks();
                 $dbMng->addAudioBooks($auBooks);
@@ -134,16 +141,20 @@
             $dbMng = new DBManager;
             $strComp = new TokensManager;
             foreach ($dbMng->getAllBooks() as $book)
-                if(($search==='title' && $strComp->compare($keyword,$book->getTitle()))
-                    || ($search==='author' && $strComp->compare($keyword,$book->getAuthor())))
+                if (
+                    ($search === 'title' && $strComp->compare($keyword, $book->getTitle()))
+                    || ($search === 'author' && $strComp->compare($keyword, $book->getAuthor()))
+                )
                     array_push($books,$book);
 
             if (empty($books))
             {
                 $wrapperMng = new WrapperManager;
-                foreach($wrapperMng->getBooks($keyword) as $book)
-                if(($search==='title' && $strComp->compare($keyword,$book->getTitle()))
-                    || ($search==='author' && $strComp->compare($keyword,$book->getAuthor())))
+                foreach ($wrapperMng->getBooks($keyword) as $book)
+                if (
+                    ($search === 'title' && $strComp->compare($keyword, $book->getTitle()))
+                    || ($search === 'author' && $strComp->compare($keyword, $book->getAuthor()))
+                )
                     array_push($books,$book);
                 $dbMng->addBooks($books);
             }
@@ -165,16 +176,20 @@
             $dbMng = new DBManager;
             $strComp = new TokensManager;
             foreach ($dbMng->getAllReviews() as $review)
-                if(($search==='title' && $strComp->compare($keyword,$review->getTitle()))
-                    || ($search==='author' && $strComp->compare($keyword,$review->getAuthor())))
+                if (
+                    ($search === 'title' && $strComp->compare($keyword,$review->getTitle())) ||
+                    ($search === 'author' && $strComp->compare($keyword,$review->getAuthor()))
+                )
                     array_push($reviews,$review);
 
             if (empty($reviews))
             {
                 $wrapperMng = new WrapperManager;
-                foreach($wrapperMng->getReviews($keyword) as $review)
-                    if(($search==='title' && $strComp->compare($keyword,$review->getTitle()))
-                        || ($search==='author' && $strComp->compare($keyword,$review->getAuthor())))
+                foreach ($wrapperMng->getReviews($keyword) as $review)
+                    if (
+                        ($search === 'title' && $strComp->compare($keyword, $review->getTitle())) ||
+                        ($search === 'author' && $strComp->compare($keyword, $review->getAuthor()))
+                    )
                         array_push($reviews,$review);
                 $dbMng->addReviews($reviews);
             }
@@ -196,16 +211,20 @@
             $dbMng = new DBManager;
             $strComp = new TokensManager;
             foreach ($dbMng->getAllAudioBooks() as $book)
-                if(($search==='title' && $strComp->compare($keyword,$book->getTitle()))
-                    || ($search==='author' && $strComp->compare($keyword,$book->getAuthor())))
+                if (
+                    ($search === 'title' && $strComp->compare($keyword, $book->getTitle())) ||
+                    ($search === 'author' && $strComp->compare($keyword, $book->getAuthor()))
+                )
                     array_push($books, $book);
 
             if (empty($books))
             {
                 $wrapperMng = new WrapperManager;
-                foreach($wrapperMng->getAudioBooks($keyword) as $book)
-                if(($search==='title' && $strComp->compare($keyword,$book->getTitle()))
-                    || ($search==='author' && $strComp->compare($keyword,$book->getAuthor())))
+                foreach ($wrapperMng->getAudioBooks($keyword) as $book)
+                if (
+                    ($search === 'title' && $strComp->compare($keyword, $book->getTitle())) ||
+                    ($search === 'author' && $strComp->compare($keyword, $book->getAuthor()))
+                )
                     array_push($books,$book);
                 $dbMng->addAudioBooks($books);
             }
@@ -235,8 +254,10 @@
 
                 foreach ($reviews as $review)
                 {
-                    if($comp->compare($book->getTitle(),$review->getTitle())
-                     && $comp->compare($book->getAuthor(),$review->getAuthor()))
+                    if (
+                        $comp->compare($book->getTitle(), $review->getTitle()) &&
+                        $comp->compare($book->getAuthor(), $review->getAuthor())
+                    )
                         $reviewOfBook = $review;
                 }
                 $item = array($book, $reviewOfBook);
@@ -255,23 +276,26 @@
          */
         private function getEither(string $search, string $keyword): array
         {
-            $books = $this->getAudioBooks($search, $keyword);
+            $audiobooks = $this->getAudioBooks($search, $keyword);
             $reviews = $this->getReviews($search, $keyword);
 
             $items = array();
             $comp = new TokensManager;
 
-            foreach ($books as $book) // TODO Y U ARRAY
+            foreach ($audiobooks as $audiobook) // TODO Y U ARRAY
             {
-                $reviewOfBook = NULL;
+                $audiobookReview = NULL;
 
                 foreach ($reviews as $review)
                 {
-                    if ($comp->compare($book->getTitle(),$review->getTitle())
-                     && $comp->compare($book->getAuthor(),$review->getAuthor()))
-                        $reviewOfBook = $review;
+                    if (
+                        $comp->isTokenContained($audiobook->getTitle(), $review->getTitle()) &&
+                        $comp->isTokenContained($audiobook->getAuthor(), $review->getAuthor())
+                    )
+                        $audiobookReview = $review;
                 }
-                $item = array($book, $reviewOfBook);
+
+                $item = array($audiobook, $audiobookReview);
                 array_push($items, $item); 
             }
 

@@ -132,18 +132,18 @@
 
         /**
          * @param string $keyword
-         * @param string $title
+         * @param string $target
          *
          * @return bool
          */
-        public function compare(string $keyword = "", string $title = ""): bool
+        public function compare(string $keyword = "", string $target = ""): bool
         {
             $keywordSet = $this->removeStopWords($this->getTokens($keyword));
-            $titleSet = $this->removeStopWords($this->getTokens($title));
+            $targetSet = $this->removeStopWords($this->getTokens($target));
 
             $value = $this->compareTokens(
                 $keywordSet,
-                $titleSet
+                $targetSet
             );
 
             //return $value >= $this->threshold? true: false;
@@ -154,11 +154,28 @@
             else // check whether keyword tokens are all in title
             {
                 return (
-                    $this->isContained($keywordSet, $titleSet) ||
-                    $this->isContained($titleSet, $keywordSet)
+                    $this->isContained($keywordSet, $targetSet) ||
+                    $this->isContained($targetSet, $keywordSet)
                 );
             }
 
+        }
+
+        /**
+         * Check whether tokens from keyword string are
+         * contained into target string.
+         *
+         * @param string $keyword
+         * @param string $target
+         *
+         * @return bool
+         */
+        public function isTokenContained(string $keyword, string $target): bool
+        {
+            return $this->isContained(
+                $this->getTokens($keyword),
+                $this->getTokens($target)
+            );
         }
 
         /**
@@ -169,7 +186,7 @@
          *
          * @return bool
          */
-        private function isContained($set1, $set2): bool
+        private function isContained(array $set1, array $set2): bool
         {
             foreach ($set1 as $s1)
             {
