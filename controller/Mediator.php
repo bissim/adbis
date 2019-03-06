@@ -255,8 +255,8 @@
                 foreach ($reviews as $review)
                 {
                     if (
-                        $comp->compare($book->getTitle(), $review->getTitle()) &&
-                        $comp->compare($book->getAuthor(), $review->getAuthor())
+                        $comp->isTokenContained($book->getTitle(), $review->getTitle()) &&
+                        $comp->isTokenContained($book->getAuthor(), $review->getAuthor())
                     )
                         $reviewOfBook = $review;
                 }
