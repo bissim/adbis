@@ -172,9 +172,12 @@
          */
         public function isTokenContained(string $keyword, string $target): bool
         {
+            $keywordSet = $this->removeStopWords($this->getTokens($keyword));
+            $targetSet = $this->removeStopWords($this->getTokens($target));
+
             return $this->isContained(
-                $this->getTokens($keyword),
-                $this->getTokens($target)
+                $keywordSet,
+                $targetSet
             );
         }
 
