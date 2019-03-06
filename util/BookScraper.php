@@ -53,12 +53,12 @@
                 $title = $xpath->query($this->queries['titleQueries'][$i]);
                 $title = trim($this->checkEmpty($title));
                 $author = $xpath->query($this->queries['authorQueries'][$i]);
+                $author = trim($this->checkEmpty($author));
                 if ($source === 'amazon' && !$author)
                 {
-                    var_dump($author);
                     $author = $xpath->query($this->queries['authorAltQueries'][$i]);
+                    $author = trim($this->checkEmpty($author));
                 }
-                $author = trim($this->checkEmpty($author));
                 $price = $xpath->query($this->queries['priceQueries'][$i]);
                 $price = trim($this->checkFloat($price));
                 $image = $xpath->query($this->queries['imgQueries'][$i]);
