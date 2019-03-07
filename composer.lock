@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9f715b94284950172032f9d41bd65cad",
+    "content-hash": "2bcea461808d1cc0d3c3a670926f3616",
     "packages": [
         {
             "name": "mikecao/flight",
@@ -48,6 +48,43 @@
             "description": "Flight is a fast, simple, extensible framework for PHP. Flight enables you to quickly and easily build RESTful web applications.",
             "homepage": "http://flightphp.com",
             "time": "2018-11-23T23:05:33+00:00"
+        },
+        {
+            "name": "neitanod/forceutf8",
+            "version": "v2.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/neitanod/forceutf8.git",
+                "reference": "30980a8ca2787a7730d370eac310b8987eb68229"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/neitanod/forceutf8/zipball/30980a8ca2787a7730d370eac310b8987eb68229",
+                "reference": "30980a8ca2787a7730d370eac310b8987eb68229",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "ForceUTF8\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Sebastián Grignoli",
+                    "email": "grignoli@gmail.com"
+                }
+            ],
+            "description": "PHP Class Encoding featuring popular Encoding::toUTF8() function --formerly known as forceUTF8()-- that fixes mixed encoded strings.",
+            "homepage": "https://github.com/neitanod/forceutf8",
+            "time": "2018-10-10T23:03:52+00:00"
         },
         {
             "name": "nlp-tools/nlp-tools",
