@@ -54,10 +54,9 @@
                 $title = trim($this->checkEmpty($title));
                 $author = $xpath->query($this->queries['authorQueries'][$i]);
                 $author = trim($this->checkEmpty($author));
-                if ($source === 'amazon' && !$author)
+                if ($source === 'amazon')
                 {
-                    $author = $xpath->query($this->queries['authorAltQueries'][$i]);
-                    $author = trim($this->checkEmpty($author));
+                    $author = str_replace(' e', '', $author);
                 }
                 $price = $xpath->query($this->queries['priceQueries'][$i]);
                 $price = trim($this->checkFloat($price));
