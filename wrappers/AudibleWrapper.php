@@ -13,7 +13,6 @@
         private $queriesNews;
         private $domain = '';
         private $queryUrl = 'https://www.audible.it/search?keywords=';
-        // ?keywords=harry+potter&ref=a_hp_t1_header_search';
         private $queryNewsUrl = 'https://www.audible.it/?source_code=OMDtmSearch0511160001&msclkid=e67212ba5f161e6758ed4efd5dfa7a17';
 
         public function __construct()
@@ -33,8 +32,6 @@
 
             for ($i=1; $i<=8; $i++)
             {
-                $itemId = '"result_' . $i . '"';
-
                 array_push($titleQueries,
                 '//div[@id="center-3"]/div/span/ul/li[' . $i . ']/div/div/div/div/div/div/span/ul/li/h3/a/text()');
 
@@ -83,19 +80,9 @@
                 '//div[@class="bc-tab-content"]/div/div[2]/div[' . $i . ']/div/div/div/div/div/a/attribute::href');
 
                 array_push($authorQueries,
-                '//div[@class="bc-popover-container"]/div[' . $i . ']/div/span[1]/ul/li[3]/text()');
+                '//div[@class="bc-popover-container"]/div[' . $i . ']/div/span[1]/ul/li[position() = 3 or position() = 2]/text()');
                 array_push($authorQueries,
-                '//div[@class="bc-popover-container"]/div[' . $i . ']/div/span[1]/ul/li[3]/text()');
-
-                // some audiobooks don't have a subtitle
-                array_push(
-                    $authorAltQueries,
-                    '//div[@class="bc-popover-container"]/div[' . $i . ']/div/span[1]/ul/li[2]/text()'
-                );
-                array_push(
-                    $authorAltQueries,
-                    '//div[@class="bc-popover-container"]/div[' . $i . ']/div/span[1]/ul/li[2]/text()'
-                );
+                '//div[@class="bc-popover-container"]/div[' . $i . ']/div/span[1]/ul/li[position() = 3 or position() = 2]/text()');
 
                 array_push($imgQueries,
                 '//div[@class="bc-tab-content"]/div/div[1]/div[' . $i . ']/div/div/div/div/div/a/img/attribute::src');
@@ -112,20 +99,19 @@
             $queries['titleQueries'] = $titleQueries;
             $queries['linkQueries'] = $linkQueries;
             $queries['authorQueries'] = $authorQueries;
-            $queries['authorAltQueries'] = $authorAltQueries;
             $queries['imgQueries'] = $imgQueries;
             $queries['voiceQueries'] = $voiceQueries;
 
             return $queries;
         }        
 
-        public function getBooks(String $keyword, $new = false): array
+        public function getBooks(String $keyword, bool $new = false): array
         {
             $this->audioBookScraper->setQueries($this->queries);
             $books = $this->audioBookScraper->getBooks(
                 $this->domain,
                 $this->queryUrl,
-                $keyword,
+                $new? '': $keyword,
                 '',
                 $new
             );

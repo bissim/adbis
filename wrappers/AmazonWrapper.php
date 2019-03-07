@@ -105,7 +105,7 @@
             $books = $this->bookScraper->getBooks(
                 $this->domain,
                 $this->queryUrl,
-                $keyword,
+                $new? '': $keyword,
                 '',
                 'amazon',
                 $new
