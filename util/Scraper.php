@@ -20,22 +20,28 @@
 
         protected function getWebPage(string $url)
         {
+            $headers = array(
+                "Content-type: text/html; charset=\"utf-8\"",
+            );
+
             $options = array(
-                CURLOPT_RETURNTRANSFER => true,   // return web page
-                CURLOPT_HEADER         => false,  // don't return headers
-                CURLOPT_FOLLOWLOCATION => true,   // follow redirects
-                CURLOPT_MAXREDIRS      => 10,     // stop after 10 redirects
-                CURLOPT_ENCODING       => '',     // handle compressed
-                CURLOPT_USERAGENT      => 'adbis', // name of client
-                CURLOPT_AUTOREFERER    => true,   // set referrer on redirect
-                CURLOPT_CONNECTTIMEOUT => 120,    // time-out on connect
-                CURLOPT_TIMEOUT        => 120,    // time-out on response
+                CURLOPT_RETURNTRANSFER => true,     // return web page
+                CURLOPT_HEADER         => false,    // don't return headers
+                CURLOPT_FOLLOWLOCATION => true,     // follow redirects
+                CURLOPT_MAXREDIRS      => 10,       // stop after 10 redirects
+                CURLOPT_ENCODING       => '',       // handle compressed
+                CURLOPT_USERAGENT      => 'adbis',  // name of client
+                CURLOPT_AUTOREFERER    => true,     // set referrer on redirect
+                CURLOPT_CONNECTTIMEOUT => 120,      // time-out on connect
+                CURLOPT_TIMEOUT        => 120,      // time-out on response,
+                CURLOPT_HTTPHEADER     => $headers, //
             );
 
             $ch = curl_init($url);
             curl_setopt_array($ch, $options);
-            $content  = curl_exec($ch);
+            $content = curl_exec($ch);
             curl_close($ch);
+
             return $content;
         }
 
@@ -54,17 +60,18 @@
             return $xpath;
         }
 
-        protected function checkEmpty($result)
+        protected function checkEmpty($result): string
         {
             if ($result && $result->length > 0)
             {
                 $value = $result[0]->nodeValue;
                 return empty($value) ? '' : $value;
             }
+
             return '';
         }
 
-        protected function checkFloat($result)
+        protected function checkFloat($result): float
         {
             if ($result && $result->length > 0)
             {
@@ -74,16 +81,18 @@
                 $value = str_replace(',', '.', $value);
                 return (float) \floatval($value);
             }
+
             return 0.0;
         }
 
-        protected function checkNum($entriesValue)
+        protected function checkNum($entriesValue): float
         {
             if ($entriesValue && $entriesValue->length > 0)
             {
                 $value = $entriesValue[0]->nodeValue;
                 return (float) \floatval($value);
             }
-            return 0;
+
+            return 0.0;
         }
     }
