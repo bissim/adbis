@@ -34,9 +34,11 @@
             echo "<hr />";
 
             // test new audiobook retrieval
+            echo "Retrieving new books...<br />";
             $this->start_time();
 
-            $books = $audibleWrapper->getNewBooks();
+//            $books = $audibleWrapper->getNewBooks();
+            $books = $audibleWrapper->getBooks('', true);
 
             $count = count($books);
             echo "$count libri trovati!<br /><br />";
