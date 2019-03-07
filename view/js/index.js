@@ -205,6 +205,7 @@ function createAuBookNodes(json, resultsDiv) {
     resultNode.append(imgContainerNode);
 
     // create details container
+    let bookAuthor = (item["author"] !== '')? item["author"]: "AA. VV.";
     let detailsContainerItem = $("<div></div>");
     detailsContainerItem
       .append(
@@ -214,7 +215,7 @@ function createAuBookNodes(json, resultsDiv) {
           item["title"] +
           "</strong></span></a></span><br />"
       )
-      // .append("<span>di&nbsp;<em>" + item["author"] + "</em></span><br />")
+      .append("<span>di&nbsp;<em>" + bookAuthor + "</em></span><br />")
       .append("<span>letto da&nbsp;<em>" + item["voice"] + "</em></span><br />");
     let logoNode = $("<img />")
       .attr("class", "img-responsive center-block")
