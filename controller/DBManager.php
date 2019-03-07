@@ -190,7 +190,7 @@
         public function getAllAudioBooks(): array
         {
             $this->connect();
-            $sql = "SELECT * FROM audioBook";
+            $sql = "SELECT * FROM audiobook";
             $result = $this->conn->query($sql);
 
             $books = array();
@@ -218,7 +218,7 @@
         public function getNewAudioBooks(): array
         {
             $this->connect();
-            $sql = "SELECT * FROM audioBook WHERE is_recent=1";
+            $sql = "SELECT * FROM audiobook WHERE is_recent=1";
             $result = $this->conn->query($sql);
 
             $books = array();
@@ -247,7 +247,7 @@
         {
             $this->connect();
             $stmt = $this->conn->prepare(
-                "INSERT INTO audioBook (title,author,voice,img,link,is_recent)
+                "INSERT INTO audiobook (title,author,voice,img,link,is_recent)
                 VALUES (:title,:author,:voice,:img,:link,:is_recent)"
             );
 
