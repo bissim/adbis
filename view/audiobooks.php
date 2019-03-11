@@ -55,6 +55,7 @@
               </div>
               <input type="radio" id="searchByTitle" name="search" value="title" checked>&nbsp;Titolo
               <input type="radio" id="searchByAuthor" name="search" value="author">&nbsp;Autore
+              <input type="radio" id="searchByVoice" name="search" value="voice">&nbsp;Doppiatore
               <!-- <input type="checkbox" id="searchBoth" name="join" value="join">&nbsp;Cerca le recensioni associate -->
             </div>
             <br />
