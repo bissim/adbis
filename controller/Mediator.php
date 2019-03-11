@@ -178,7 +178,8 @@
             foreach ($dbMng->getAllReviews() as $review)
                 if (
                     ($search === 'title' && $strComp->compare($keyword,$review->getTitle())) ||
-                    ($search === 'author' && $strComp->compare($keyword,$review->getAuthor()))
+                    ($search === 'author' && $strComp->compare($keyword,$review->getAuthor())) ||
+                    $search === 'voice'
                 )
                     array_push($reviews,$review);
 
@@ -188,7 +189,8 @@
                 foreach ($wrapperMng->getReviews($keyword) as $review)
                     if (
                         ($search === 'title' && $strComp->compare($keyword, $review->getTitle())) ||
-                        ($search === 'author' && $strComp->compare($keyword, $review->getAuthor()))
+                        ($search === 'author' && $strComp->compare($keyword, $review->getAuthor())) ||
+                        $search === 'voice'
                     )
                         array_push($reviews,$review);
                 $dbMng->addReviews($reviews);
@@ -213,7 +215,8 @@
             foreach ($dbMng->getAllAudioBooks() as $book)
                 if (
                     ($search === 'title' && $strComp->compare($keyword, $book->getTitle())) ||
-                    ($search === 'author' && $strComp->compare($keyword, $book->getAuthor()))
+                    ($search === 'author' && $strComp->compare($keyword, $book->getAuthor())) ||
+                    ($search === 'voice' && $strComp->compare($keyword, $book->getVoice()))
                 )
                     array_push($books, $book);
 
@@ -223,7 +226,8 @@
                 foreach ($wrapperMng->getAudioBooks($keyword) as $book)
                 if (
                     ($search === 'title' && $strComp->compare($keyword, $book->getTitle())) ||
-                    ($search === 'author' && $strComp->compare($keyword, $book->getAuthor()))
+                    ($search === 'author' && $strComp->compare($keyword, $book->getAuthor())) ||
+                    ($search === 'voice' && $strComp->compare($keyword, $book->getVoice()))
                 )
                     array_push($books,$book);
                 $dbMng->addAudioBooks($books);
