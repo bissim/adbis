@@ -123,7 +123,6 @@ function showBoth(res) {
   loadingMessage.remove();
   $("div#resLoad").hide();
 
-  console.debug(res);
   let json = JSON.parse(res);
 
   if (Object.keys(json).length>0) {
