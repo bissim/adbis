@@ -75,6 +75,8 @@
                 $author = Encoding::fixUTF8(trim($author));
                 $voice = $xpath->query($this->queries['voiceQueries'][$i]);
                 $voice = $this->nodeExtractor($voice);
+                // fix UTF-8 encoding for voice
+                $voice = Encoding::fixUTF8(trim($voice));
                 $image = $xpath->query($this->queries['imgQueries'][$i]);
                 $image = $this->nodeExtractor($image);
                 $link = $xpath->query($this->queries['linkQueries'][$i]);
