@@ -59,7 +59,7 @@
 
                     return true; // connection has been created
                 }
-                catch (\PDOException $e)
+                catch (\Exception $e)
                 {
                     echo $e->getMessage();
                     return false; // error creating connection
