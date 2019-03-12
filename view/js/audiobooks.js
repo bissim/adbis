@@ -130,11 +130,12 @@ function showBoth(res) {
   let json = JSON.parse(res);
 
   let message = "";
+  let successMessage = $("#success");
   let numResults = Object.keys(json).length;
   if (numResults > 0) {
     message =
-      "La ricerca ha ottenuto " + numResults + " risultati! Consultare l'elenco sottostante.<br/><br/>";
-    let successMessage = $("#success");
+      "La ricerca ha ottenuto " + numResults + " risultati! Consultare l'elenco sottostante.";
+    message += "<br /><br />";
     if (successMessage) {
       successMessage.html(message);
     }
@@ -142,7 +143,7 @@ function showBoth(res) {
     createBookWithReviewNode(json, resultsDiv);  
   } else {
     message = "La ricerca non ha prodotto alcun risultato!";
-    let successMessage = $("#success");
+    message += "<br /><br />";
     if (successMessage) {
       successMessage.html(message);
     }

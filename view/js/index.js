@@ -23,15 +23,16 @@ $(document).ready(function () {
   
   // async call to retrieve results
   $.ajax({
-      url: baseSearchUrl + "news",
-    //   success: showBoth
+    url: baseSearchUrl + "news",
+    beforeSend: prepareForResults,
+    // success: showBoth
     success: showBooks
-});
+  });
 
-    // block form submission from reloading page
-    $("form#contactForm").submit(function (event) {
-        event.preventDefault(); // prevent page reload
-    });
+  // block form submission from reloading page
+  $("form#contactForm").submit(function (event) {
+    event.preventDefault(); // prevent page reload
+  });
 });
 
 /**
@@ -59,7 +60,7 @@ function prepareForResults() {
   // hide and delete former results
   if (!resultsDiv.hidden) {
     resultsDiv.hide();
-    let loadingMessage = $("<p>Caricamento dei risultati in corso...</p>").attr(
+    let loadingMessage = $("<p>Caricamento delle nuove uscite in corso...</p>").attr(
       "id",
       "loadingMessage"
     );
@@ -75,19 +76,25 @@ function prepareForResults() {
  */
 function showBooks(res) {
   // console.debug("hi I'll show books nao");
-  let json = JSON.parse(res);
-  // console.debug("Object received: length " + Object.keys(json).length);
-  // console.debug(res);
-
   let loadingMessage = $("p#loadingMessage");
-  loadingMessage.remove();
+  let json;
 
-  if (Object.keys(json).length > 0) {
-    let message =
-      "La ricerca ha ottenuto dei risultati!" +
-      "Consultare l'elenco sottostante.";
-    $("#success").html(message);
-    
+  try {
+    json = JSON.parse(res);
+  } catch (e) {
+    loadingMessage.html(
+        "Impossibile recuperare le ultime uscite!"
+    );
+    loadingMessage.show();
+    console.error(e.toLocaleString());
+    return;
+  }
+
+  $("div#resLoad").hide();
+
+  let message = "";
+  let numResults = Object.keys(json).length;
+  if (numResults > 0) {
     try {
       // delete temporary message in results container
       let resultsDiv = $("#results");
@@ -96,14 +103,17 @@ function showBooks(res) {
       // show results
       createBookNodes(json['ebooks'], resultsDiv);
       createAuBookNodes(json['aubooks'], resultsDiv);
+      loadingMessage.remove();
     } catch (e) {
-      throw e;
+      console.error(e.toLocaleString());
     }
+  } else {
+    message = "Nessun nuovo prodotto da mostrare!";
+    loadingMessage.html(message);
   }
 }
 
 function createBookNodes(json, resultsDiv) {
-  $("div#resLoad").hide();
   // iterate over results array
   $.each(json, function (i, value) {
     let resultNode = "";
