@@ -38,11 +38,15 @@ $(document).ready(function() {
  */
 function changePH() {
   let id = $(this).attr('id');
+  let word = "";
   switch(id) {
-    case 'searchByAuthor': searchField.attr("placeholder", "Autore"); break;
-    case 'searchByTitle': searchField.attr("placeholder", "Titolo"); break;
-    default : console.debug('unknown input radio');
+    case 'searchByAuthor': word = "Autore"; break;
+    case 'searchByTitle': word = "Titolo"; break;
+    case 'searchByVoice': word = "Doppiatore"; break;
+    default: word = "";
   }
+  searchField.attr("placeholder", word);
+  $("#searchLabel").text(word);
 }
 
 /**
