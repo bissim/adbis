@@ -63,7 +63,6 @@
             $titleQueries = array();
             $linkQueries = array();
             $authorQueries = array();
-            $authorAltQueries = array();
             $imgQueries = array();
             $voiceQueries = array();
 
