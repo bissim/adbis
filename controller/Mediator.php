@@ -145,7 +145,9 @@
                     ($search === 'title' && $strComp->compare($keyword, $book->getTitle()))
                     || ($search === 'author' && $strComp->compare($keyword, $book->getAuthor()))
                 )
-                    array_push($books,$book);
+                {
+                    array_push($books, $book);
+                }
 
             if (empty($books))
             {
@@ -155,7 +157,9 @@
                     ($search === 'title' && $strComp->compare($keyword, $book->getTitle()))
                     || ($search === 'author' && $strComp->compare($keyword, $book->getAuthor()))
                 )
-                    array_push($books,$book);
+                {
+                    array_push($books, $book);
+                }
                 $dbMng->addBooks($books);
             }
 
@@ -181,7 +185,9 @@
                     ($search === 'author' && $strComp->compare($keyword,$review->getAuthor())) ||
                     $search === 'voice'
                 )
-                    array_push($reviews,$review);
+                {
+                    array_push($reviews, $review);
+                }
 
             if (empty($reviews))
             {
@@ -192,7 +198,9 @@
                         ($search === 'author' && $strComp->compare($keyword, $review->getAuthor())) ||
                         $search === 'voice'
                     )
-                        array_push($reviews,$review);
+                    {
+                        array_push($reviews, $review);
+                    }
                 $dbMng->addReviews($reviews);
             }
 
@@ -218,7 +226,9 @@
                     ($search === 'author' && $strComp->compare($keyword, $book->getAuthor())) ||
                     ($search === 'voice' && $strComp->compare($keyword, $book->getVoice()))
                 )
+                {
                     array_push($books, $book);
+                }
 
             if (empty($books))
             {
@@ -229,7 +239,9 @@
                     ($search === 'author' && $strComp->compare($keyword, $book->getAuthor())) ||
                     ($search === 'voice' && $strComp->compare($keyword, $book->getVoice()))
                 )
-                    array_push($books,$book);
+                {
+                    array_push($books, $book);
+                }
                 $dbMng->addAudioBooks($books);
             }
 
@@ -262,7 +274,9 @@
                         $comp->isTokenContained($book->getTitle(), $review->getTitle()) &&
                         $comp->isTokenContained($book->getAuthor(), $review->getAuthor())
                     )
+                    {
                         $reviewOfBook = $review;
+                    }
                 }
                 $item = array($book, $reviewOfBook);
                 array_push($items, $item); 
@@ -296,7 +310,9 @@
                         $comp->isTokenContained($audiobook->getTitle(), $review->getTitle()) &&
                         $comp->isTokenContained($audiobook->getAuthor(), $review->getAuthor())
                     )
+                    {
                         $audiobookReview = $review;
+                    }
                 }
 
                 $item = array($audiobook, $audiobookReview);
