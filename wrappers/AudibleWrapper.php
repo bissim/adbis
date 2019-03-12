@@ -13,7 +13,7 @@
         private $queriesNews;
         private $domain = '';
         private $queryUrl = 'https://www.audible.it/search?keywords=';
-        private $queryNewsUrl = 'https://www.audible.it/?source_code=OMDtmSearch0511160001&msclkid=e67212ba5f161e6758ed4efd5dfa7a17';
+        private $queryNewsUrl = 'https://www.audible.it/search?publication_date=8560986031';
 
         public function __construct()
         {
@@ -39,13 +39,13 @@
                 '//div[@id="center-3"]/div/span/ul/li[' . $i . ']/div/div/div/div/div/div/span/ul/li/h3/a/attribute::href');
 
                 array_push($authorQueries,
-                '//div[@id="center-3"]/div/span/ul/li[' . $i . ']/div/div/div/div/div/div/span/ul/li[2]/span/a/text()');
+                '//div[@id="center-3"]/div/span/ul/li[' . $i . ']/div/div/div/div/div/div/span/ul/li[position() = 3 or position() = 2]/span/a[1]/text()');
 
                 array_push($imgQueries,
                 '//div[@id="center-3"]/div/span/ul/li[' . $i . ']/div/div/div/div/div/div/div/div/a/img/attribute::src');
 
                 array_push($voiceQueries,
-                '//div[@id="center-3"]/div/span/ul/li[' . $i . ']/div/div/div/div/div/div/span/ul/li[3]/span/a/text()');
+                '//div[@id="center-3"]/div/span/ul/li[' . $i . ']/div/div/div/div/div/div/span/ul/li[3]/span/a[1]/text()');
             }
 
             $queries = array();
@@ -60,48 +60,7 @@
 
         private function createQueriesNews(): array
         {
-            $titleQueries = array();
-            $linkQueries = array();
-            $authorQueries = array();
-            $imgQueries = array();
-            $voiceQueries = array();
-
-            for ($i=1; $i<=6; $i++)
-            {
-                array_push($titleQueries,
-                '//div[@class="bc-tab-content"]/div/div[1]/div[' . $i . ']/div/div/div/attribute::aria-label');
-                array_push($titleQueries,
-                '//div[@class="bc-tab-content"]/div/div[2]/div[' . $i . ']/div/div/div/attribute::aria-label');
-
-                array_push($linkQueries, 
-                '//div[@class="bc-tab-content"]/div/div[1]/div[' . $i . ']/div/div/div/div/div/a/attribute::href');
-                array_push($linkQueries, 
-                '//div[@class="bc-tab-content"]/div/div[2]/div[' . $i . ']/div/div/div/div/div/a/attribute::href');
-
-                array_push($authorQueries,
-                '//div[@class="bc-popover-container"]/div[' . $i . ']/div/span[1]/ul/li[position() = 3 or position() = 2]/text()');
-                array_push($authorQueries,
-                '//div[@class="bc-popover-container"]/div[' . $i . ']/div/span[1]/ul/li[position() = 3 or position() = 2]/text()');
-
-                array_push($imgQueries,
-                '//div[@class="bc-tab-content"]/div/div[1]/div[' . $i . ']/div/div/div/div/div/a/img/attribute::src');
-                array_push($imgQueries,
-                '//div[@class="bc-tab-content"]/div/div[2]/div[' . $i . ']/div/div/div/div/div/a/img/attribute::src');
-
-                array_push($voiceQueries,
-                '//div[@class="bc-tab-content"]/div/div[1]/div[' . $i . ']/div/div[@class="bc-section"]/a/text()');
-                array_push($voiceQueries,
-                '//div[@class="bc-tab-content"]/div/div[2]/div[' . $i . ']/div/div[@class="bc-section"]/a/text()');
-            }
-
-            $queries = array();
-            $queries['titleQueries'] = $titleQueries;
-            $queries['linkQueries'] = $linkQueries;
-            $queries['authorQueries'] = $authorQueries;
-            $queries['imgQueries'] = $imgQueries;
-            $queries['voiceQueries'] = $voiceQueries;
-
-            return $queries;
+            return $this->createQueries();
         }        
 
         public function getBooks(String $keyword, bool $new = false): array
