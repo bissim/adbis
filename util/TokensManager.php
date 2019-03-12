@@ -138,6 +138,11 @@
          */
         public function compare(string $keyword = "", string $target = ""): bool
         {
+            if ($keyword === "" || $target == "")
+            {
+                return false;
+            }
+
             $keywordSet = $this->removeStopWords($this->getTokens($keyword));
             $targetSet = $this->removeStopWords($this->getTokens($target));
 
