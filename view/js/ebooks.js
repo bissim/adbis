@@ -128,17 +128,24 @@ function showBoth(res) {
 
   let json = JSON.parse(res);
 
-  if (Object.keys(json).length>0) {
-    let message =
-      "La ricerca ha ottenuto dei risultati! Consultare l'elenco sottostante.<br/><br/>";
+  let message = "";
+  let numResults = Object.keys(json).length;
+  if (numResults > 0) {
+    message =
+      "La ricerca ha ottenuto " + numResults + " risultati! Consultare l'elenco sottostante.<br/><br/>";
     let successMessage = $("#success");
     if (successMessage) {
       successMessage.html(message);
     }
     let resultsDiv = $("#results");
     createBookWithReviewNode(json, resultsDiv);  
+  } else {
+    message = "La ricerca non ha prodotto alcun risultato!";
+    let successMessage = $("#success");
+    if (successMessage) {
+      successMessage.html(message);
+    }
   }
-
 }
 
 /**
