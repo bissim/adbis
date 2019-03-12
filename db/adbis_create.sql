@@ -72,25 +72,17 @@ create table if not exists review (
 delimiter //
 create procedure prune()
   begin
-    # Amazon books pruning
+    # book pruning
     delete from book
-      where TIMESTAMPDIFF(DAY, `expiration_date`, NOW()) > 7 and src = 'amazon';
+      where TIMESTAMPDIFF(DAY, `expiration_date`, NOW()) > 30;
 
-    # Kobo books pruning
-    delete from book
-      where TIMESTAMPDIFF(DAY, `expiration_date`, NOW()) > 7 and src = 'kobo';
-
-    # Google books pruning
-    delete from book
-      where TIMESTAMPDIFF(DAY, `expiration_date`, NOW()) > 10 and src = 'google';
-
-    # Audible audiobook pruning
+    # audiobook pruning
     delete from audiobook
-      where TIMESTAMPDIFF(DAY, `expiration_date`, NOW()) > 7;
+      where TIMESTAMPDIFF(DAY, `expiration_date`, NOW()) > 30;
 
-    # QLibri reviews pruning
+    # review pruning
     delete from review
-      where TIMESTAMPDIFF(DAY, `expiration_date`, NOW()) > 5;
+      where TIMESTAMPDIFF(DAY, `expiration_date`, NOW()) > 30;
   end //
 
 create procedure update_recents()
@@ -114,7 +106,7 @@ delimiter ;
 # EVENTS CREATION
 #
 create event if not exists pruner
-  on schedule every 5 day
+  on schedule every 7 day
   do
     call prune();
 
