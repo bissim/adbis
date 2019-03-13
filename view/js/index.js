@@ -60,7 +60,7 @@ function prepareForResults() {
   // hide and delete former results
   if (!resultsDiv.hidden) {
     resultsDiv.hide();
-    let loadingMessage = $("<p>Caricamento delle nuove uscite in corso...</p>").attr(
+    let loadingMessage = $("<div class='container'><p>Caricamento delle nuove uscite in corso...</p></div>").attr(
       "id",
       "loadingMessage"
     );
@@ -99,9 +99,13 @@ function showBooks(res) {
       // delete temporary message in results container
       let resultsDiv = $("#results");
       resultsDiv.empty();
+      resultsDiv.append("<div class='container'><h1>EBooks più recenti</h1><br/><br/><br/></div>");
   
       // show results
       createBookNodes(json['ebooks'], resultsDiv);
+
+    resultsDiv.append("<div class='container'><h1>AudioBooks più recenti</h1><br/><br/><br/></div>");
+
       createAuBookNodes(json['aubooks'], resultsDiv);
       loadingMessage.remove();
     } catch (e) {
