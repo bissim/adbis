@@ -39,13 +39,13 @@
                 '//div[@id="center-3"]/div/span/ul/li[' . $i . ']/div/div/div/div/div/div/span/ul/li/h3/a/attribute::href');
 
                 array_push($authorQueries,
-                '//div[@id="center-3"]/div/span/ul/li[' . $i . ']/div/div/div/div/div/div/span/ul/li[position() = 3 or position() = 2]/span/a[1]/text()');
+                '//div[@id="center-3"]/div/span/ul/li[' . $i . ']/div/div/div/div/div/div/span/ul/li/span[contains(text(),"Di")]/a[1]/text()');
 
                 array_push($imgQueries,
                 '//div[@id="center-3"]/div/span/ul/li[' . $i . ']/div/div/div/div/div/div/div/div/a/img/attribute::src');
 
                 array_push($voiceQueries,
-                '//div[@id="center-3"]/div/span/ul/li[' . $i . ']/div/div/div/div/div/div/span/ul/li[3]/span/a[1]/text()');
+                '//div[@id="center-3"]/div/span/ul/li[' . $i . ']/div/div/div/div/div/div/span/ul/li/span[contains(text(),"Letto")]/a[1]/text()');
             }
 
             $queries = array();
