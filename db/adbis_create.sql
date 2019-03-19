@@ -72,32 +72,40 @@ create table if not exists review (
 delimiter //
 create procedure prune()
   begin
-    # book pruning
+    # Amazon books pruning
     delete from book
-      where TIMESTAMPDIFF(DAY, `expiration_date`, NOW()) > 30;
+    where TIMESTAMPDIFF(hour, `expiration_date`, NOW()) > 24 and src = 'amazon';
 
-    # audiobook pruning
+    # Kobo books pruning
+    delete from book
+    where TIMESTAMPDIFF(hour, `expiration_date`, NOW()) > 24 and src = 'kobo';
+
+    # Google books pruning
+    delete from book
+    where TIMESTAMPDIFF(hour, `expiration_date`, NOW()) > 36 and src = 'google';
+
+    # Audible audiobook pruning
     delete from audiobook
-      where TIMESTAMPDIFF(DAY, `expiration_date`, NOW()) > 30;
+    where TIMESTAMPDIFF(hour, `expiration_date`, NOW()) > 24;
 
-    # review pruning
+    # QLibri reviews pruning
     delete from review
-      where TIMESTAMPDIFF(DAY, `expiration_date`, NOW()) > 30;
+    where TIMESTAMPDIFF(hour, `expiration_date`, NOW()) > 48;
   end //
 
 create procedure update_recents()
   begin
     update book
       set is_recent = 0
-      where TIMESTAMPDIFF(DAY, `expiration_date`, NOW()) > 7 AND is_recent = 1;
+      where TIMESTAMPDIFF(hour, `expiration_date`, NOW()) > 12 AND is_recent = 1;
 
     update audiobook
       set is_recent = 0
-      where TIMESTAMPDIFF(DAY, `expiration_date`, NOW()) > 7 AND is_recent = 1;
+      where TIMESTAMPDIFF(hour, `expiration_date`, NOW()) > 12 AND is_recent = 1;
 
     update review
       set is_recent = 0
-      where TIMESTAMPDIFF(DAY, `expiration_date`, NOW()) > 7 AND is_recent = 1;
+      where TIMESTAMPDIFF(hour, `expiration_date`, NOW()) > 24 AND is_recent = 1;
   end //
 delimiter ;
 
@@ -106,11 +114,11 @@ delimiter ;
 # EVENTS CREATION
 #
 create event if not exists pruner
-  on schedule every 7 day
+  on schedule every 24 hour
   do
     call prune();
 
 create event if not exists recents_updater
-  on schedule every 7 day
+  on schedule every 12 hour
   do
     call update_recents();
