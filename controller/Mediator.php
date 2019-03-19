@@ -14,6 +14,12 @@
 
     class Mediator
     {
+        /**
+         * The minimum number of items that a query to cache must
+         * return to not query wrappers for results to scrape
+         */
+        private const MIN_ITEMS = 3;
+
         public function __construct()
         {}
 
@@ -89,7 +95,7 @@
         {
             $dbMng = new DBManager;
             $books = $dbMng->getNewBooks();
-            if (empty($books))
+            if (count($books) < Mediator::MIN_ITEMS)
             {
                 $wrapperMng = new WrapperManager;
                 $books = $wrapperMng->getNewBooks();
@@ -117,7 +123,7 @@
         {
             $dbMng = new DBManager;
             $auBooks = $dbMng->getNewAudioBooks();
-            if (empty($auBooks))
+            if (count($auBooks) < Mediator::MIN_ITEMS)
             {
                 $wrapperMng = new WrapperManager;
                 $auBooks = $wrapperMng->getNewAudioBooks();
@@ -149,7 +155,7 @@
                     array_push($books, $book);
                 }
 
-            if (empty($books))
+            if (count($books) < Mediator::MIN_ITEMS)
             {
                 $wrapperMng = new WrapperManager;
                 foreach ($wrapperMng->getBooks($keyword) as $book)
@@ -230,7 +236,7 @@
                     array_push($books, $book);
                 }
 
-            if (empty($books))
+            if (count($books) < Mediator::MIN_ITEMS)
             {
                 $wrapperMng = new WrapperManager;
                 foreach ($wrapperMng->getAudioBooks($keyword) as $book)
