@@ -150,4 +150,12 @@
     
             return $vars;
         }
+
+        public function equals(Book $b): bool {
+            return ($this->title === $b->getTitle() &&
+                    $this->author === $b->getAuthor() &&
+                    $this->price == $b->getPrice() &&
+                    $this->img === $b->getImg() &&
+                    $this->source === $b->getSource());
+        }
     }

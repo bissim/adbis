@@ -135,4 +135,11 @@
     
             return $vars;
         }
+
+        public function equals(AudioBook $b): bool {
+            return ($this->title === $b->getTitle() &&
+                    $this->author === $b->getAuthor() &&
+                    $this->voice == $b->getVoice() &&
+                    $this->img === $b->getImg());
+        }
     }
