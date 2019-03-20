@@ -207,22 +207,31 @@
                     array_push($books, $book);
                 }
 
+            $newBooks = array();
+
             if (!$this->isVarious($books))
             {
                 $scrapedBooks = $this->wrapperMng->getBooks($keyword);
+                $limit = count($books);
+
                 foreach ($scrapedBooks as $book)
                 if (
                     ($search === 'title' && $this->comp->compare($keyword, $book->getTitle()))
                     || ($search === 'author' && $this->comp->compare($keyword, $book->getAuthor()))
                 )
                 {
-                    array_push($books, $book);
+                    $flag = true;
+                    for ($i=0; $i<$limit; $i++)
+                        if ($book->equals($books[$i]))
+                            $flag = false;
+                    if($flag)
+                        array_push($newBooks, $book);
                 }
-                $this->dbMng->addBooks($books);
+                $this->dbMng->addBooks($newBooks);
             }
 
             shuffle($books);
-            return $books;
+            return array_merge($books,$newBooks);
         }
 
         /**
@@ -296,9 +305,13 @@
                     array_push($books, $book);
                 }
 
+            $newBooks = array();
+
             if (!$this->isVarious($books))
             {
                 $scrapedAudioBooks = $this->wrapperMng->getAudioBooks($keyword);
+                $limit = count($books);
+                
                 foreach ($scrapedAudioBooks as $book)
                 if (
                     ($search === 'title' && $this->comp->compare($keyword, $book->getTitle())) ||
@@ -306,13 +319,17 @@
                     ($search === 'voice' && $this->comp->compare($keyword, $book->getVoice()))
                 )
                 {
-                    array_push($books, $book);
+                    $flag = true;
+                    for ($i=0; $i<$limit; $i++)
+                        if ($book->equals($books[$i]))
+                            $flag = false;
+                    if($flag)
+                        array_push($newBooks, $book);
                 }
-                $this->dbMng->addAudioBooks($books);
+                $this->dbMng->addAudioBooks($newBooks);
             }
 
-            shuffle($books);
-            return $books;
+            return array_merge($books,$newBooks);
         }
 
         /**
