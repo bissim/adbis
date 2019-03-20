@@ -8,6 +8,7 @@
     use \DOMDocument;
     use \DOMXPath;
     use \util\Scraper;
+    use \ForceUTF8\Encoding;
 
     class BookScraper
         extends Scraper
@@ -51,9 +52,9 @@
             for ($i=0; $i < $length; $i++)
             {
                 $title = $xpath->query($this->queries['titleQueries'][$i]);
-                $title = trim($this->checkEmpty($title));
+                $title = Encoding::fixUTF8(trim($this->checkEmpty($title)));
                 $author = $xpath->query($this->queries['authorQueries'][$i]);
-                $author = trim($this->checkEmpty($author));
+                $author = Encoding::fixUTF8(trim($this->checkEmpty($author)));
                 if ($source === 'amazon')
                 {
                     $author = str_replace(' e', '', $author);

@@ -8,6 +8,7 @@
     use \DOMDocument;
     use \DOMXPath;
     use \util\Scraper;
+    use \ForceUTF8\Encoding;
 
     class ReviewScraper
         extends Scraper
@@ -93,16 +94,16 @@
             $xpath = $this->createDOMXPath($link);
 
             $entriesTitle = $xpath->query($this->queries['title']);
-            $title = $this->checkEmpty($entriesTitle);
+            $title = Encoding::fixUTF8(trim($this->checkEmpty($entriesTitle)));
 
             $entriesAuthor = $xpath->query($this->queries['author']);
-            $author = $this->checkEmpty($entriesAuthor);
+            $author = Encoding::fixUTF8(trim($this->checkEmpty($entriesAuthor)));
 
             $entriesPlot = $xpath->query($this->queries['plot']);
-            $plot = $this->checkEmpty($entriesPlot);
+            $plot = Encoding::fixUTF8(trim($this->checkEmpty($entriesPlot)));
 
             $entriesText = $xpath->query($this->queries['text']);
-            $text = $this->checkEmpty($entriesText);
+            $text = Encoding::fixUTF8(trim($this->checkEmpty($entriesText)));
 
             $entriesAvg = $xpath->query($this->queries['avg']);
             $avg = $this->checkNum($entriesAvg);
