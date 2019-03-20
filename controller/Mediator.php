@@ -430,7 +430,12 @@
                     // skip diagonal of comparison matrix
                     if ($i === $j) continue;
 
-                    if ($this->comp->compare($books[$i], $books[$j]))
+                    if (
+                        $this->comp->compare(
+                            $books[$i]->getTitle(),
+                            $books[$j]->getTitle()
+                        )
+                    )
                     {
                         // we found two books with unsimilar title
                         return true;
