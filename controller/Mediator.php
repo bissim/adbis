@@ -12,23 +12,54 @@
     use \controller\DBManager;
     use \util\TokensManager;
 
+    /**
+     * Class Mediator
+     * <br />
+     * This is the main class responsible to retrieve books, audiobooks and
+     * reviews from sources. It checks whether wanted results are already
+     * stored in cache before proceeding into querying wrappers.<br />
+     * The main methods, <pre>retrieve(string, string, string)</pre> and
+     * <pre>getNewItems()</pre> return a JSON representation of results.
+     *
+     * @package controller
+     */
     class Mediator
     {
         /**
-         * The minimum number of items that a query to cache must
-         * return to not query wrappers for results to scrape
+         * @var TokensManager - Tokens comparator
          */
-        private const MIN_ITEMS = 3;
-
-        public function __construct()
-        {}
+        private $comp;
+        /**
+         * @var \controller\DBManager - Database manager
+         */
+        private $dbMng;
+        /**
+         * @var \controller\WrapperManager - Wrappers manager
+         */
+        private $wrapperMng;
 
         /**
-         * @param string $table
-         * @param string $search
-         * @param string $keyword
+         * Mediator constructor.
+         * <br />
+         * Initialize various manager for token comparison,
+         * database and wrappers.
+         */
+        public function __construct()
+        {
+            $this->comp = new TokensManager;
+            $this->dbMng = new DBManager;
+            $this->wrapperMng = new WrapperManager;
+        }
+
+        /**
+         * Retrieve results for specified keyword
+         * according to table, table attribute.
          *
-         * @return string
+         * @param string $table - The table to search for.
+         * @param string $search - The table attribute to search for.
+         * @param string $keyword - Keyword for search.
+         *
+         * @return string - JSON codification of results.
          * @throws \Throwable
          */
         public function retrieve(
@@ -81,53 +112,71 @@
             return json_encode($result);
         }
 
+        /**
+         * Retrieve records from book and audiobook tables
+         * whose <pre>is_recent</pre> attribute is <pre>1</pre>.
+         *
+         * @return string - JSON codification of results
+         */
         public function getNewItems(): string
         {
             $res = array();
             $res['ebooks'] = $this->getNewBooks();
             $res['aubooks'] = $this->getNewAuBooks();
+
             return json_encode($res);
-            // return json_encode($this->getNewBooks());
         }
 
-        // Restituisce in formato JSON i nuovi ebook
+        /**
+         * Retrieve records from book table whose
+         * <pre>is_recent</pre> attribute is set to <pre>1</pre>.
+         *
+         * @return array - Set of new books.
+         */
         private function getNewBooks(): array
         {
-            $dbMng = new DBManager;
-            $books = $dbMng->getNewBooks();
-            if (count($books) < Mediator::MIN_ITEMS)
+            $books = $this->dbMng->getNewBooks();
+            if (!$this->isVarious($books))
             {
-                $wrapperMng = new WrapperManager;
-                $books = $wrapperMng->getNewBooks();
-                $dbMng->addBooks($books);
+               $books = $this->wrapperMng->getNewBooks();
+                $this->dbMng->addBooks($books);
             }
 
             shuffle($books);
             return $books;
         }
 
+        /**
+         * @deprecated
+         * Retrieve records from review table whose
+         * <pre>is_recent</pre> attribute is set to <pre>1</pre>.
+         *
+         * @return array - Set of new reviews.
+         */
         private function getNewReviews(): array
         {
-            $dbMng = new DBManager;
-            $reviews = $dbMng->getNewReviews();
+            $reviews = $this->dbMng->getNewReviews();
             if (empty($reviews))
             {
-                $wrapperMng = new WrapperManager;
-                $reviews = $wrapperMng->getNewReviews();
-                $dbMng->addReviews($reviews);
+                $reviews = $this->wrapperMng->getNewReviews();
+                $this->dbMng->addReviews($reviews);
             }
             return $reviews;
         }
 
+        /**
+         * Retrieve records from audiobook table whose
+         * <pre>is_recent</pre> attribute is set to <pre>1</pre>.
+         *
+         * @return array - Set of new audiobooks.
+         */
         private function getNewAuBooks(): array
         {
-            $dbMng = new DBManager;
-            $auBooks = $dbMng->getNewAudioBooks();
-            if (count($auBooks) < Mediator::MIN_ITEMS)
+            $auBooks = $this->dbMng->getNewAudioBooks();
+            if (!$this->isVarious($auBooks))
             {
-                $wrapperMng = new WrapperManager;
-                $auBooks = $wrapperMng->getNewAudioBooks();
-                $dbMng->addAudioBooks($auBooks);
+                $auBooks = $this->wrapperMng->getNewAudioBooks();
+                $this->dbMng->addAudioBooks($auBooks);
             }
 
             shuffle($auBooks);
@@ -135,38 +184,41 @@
         }
 
         /**
-         * @param string $search
-         * @param string $keyword
+         * Retrieve books for specified keyword according to specified
+         * attribute: it can be <pre>title</pre> or <pre>author</pre>.
          *
-         * @return array
+         * @param string $search - The search attribute.
+         * @param string $keyword - The search keyword.
+         *
+         * @return array - Set of books.
          * @throws \Exception
          */
         private function getBooks(string $search, string $keyword): array
         {
             $books = array();
-            $dbMng = new DBManager;
-            $strComp = new TokensManager;
-            foreach ($dbMng->getAllBooks() as $book)
+            $cacheBooks = $this->dbMng->getAllBooks();
+
+            foreach ($cacheBooks as $book)
                 if (
-                    ($search === 'title' && $strComp->compare($keyword, $book->getTitle()))
-                    || ($search === 'author' && $strComp->compare($keyword, $book->getAuthor()))
+                    ($search === 'title' && $this->comp->compare($keyword, $book->getTitle()))
+                    || ($search === 'author' && $this->comp->compare($keyword, $book->getAuthor()))
                 )
                 {
                     array_push($books, $book);
                 }
 
-            if (count($books) < Mediator::MIN_ITEMS)
+            if (!$this->isVarious($books))
             {
-                $wrapperMng = new WrapperManager;
-                foreach ($wrapperMng->getBooks($keyword) as $book)
+                $scrapedBooks = $this->wrapperMng->getBooks($keyword);
+                foreach ($scrapedBooks as $book)
                 if (
-                    ($search === 'title' && $strComp->compare($keyword, $book->getTitle()))
-                    || ($search === 'author' && $strComp->compare($keyword, $book->getAuthor()))
+                    ($search === 'title' && $this->comp->compare($keyword, $book->getTitle()))
+                    || ($search === 'author' && $this->comp->compare($keyword, $book->getAuthor()))
                 )
                 {
                     array_push($books, $book);
                 }
-                $dbMng->addBooks($books);
+                $this->dbMng->addBooks($books);
             }
 
             shuffle($books);
@@ -174,21 +226,25 @@
         }
 
         /**
-         * @param string $search
-         * @param string $keyword
+         * Retrieve reviews for specified keyword according to specified
+         * attribute: it can be <pre>title</pre> or <pre>author</pre> or
+         * <pre>voice</pre>.
          *
-         * @return array
+         * @param string $search - The search attribute.
+         * @param string $keyword - The search keyword.
+         *
+         * @return array - Set of reviews.
          * @throws \Exception
          */
         private function getReviews(string $search, string $keyword): array
         {
             $reviews = array();
-            $dbMng = new DBManager;
-            $strComp = new TokensManager;
-            foreach ($dbMng->getAllReviews() as $review)
+            $cachedReviews = $this->dbMng->getAllReviews();
+
+            foreach ($cachedReviews as $review)
                 if (
-                    ($search === 'title' && $strComp->compare($keyword,$review->getTitle())) ||
-                    ($search === 'author' && $strComp->compare($keyword,$review->getAuthor())) ||
+                    ($search === 'title' && $this->comp->compare($keyword,$review->getTitle())) ||
+                    ($search === 'author' && $this->comp->compare($keyword,$review->getAuthor())) ||
                     $search === 'voice'
                 )
                 {
@@ -197,17 +253,17 @@
 
             if (empty($reviews))
             {
-                $wrapperMng = new WrapperManager;
-                foreach ($wrapperMng->getReviews($keyword) as $review)
+                $scrapedReviews = $this->wrapperMng->getReviews($keyword);
+                foreach ($scrapedReviews as $review)
                     if (
-                        ($search === 'title' && $strComp->compare($keyword, $review->getTitle())) ||
-                        ($search === 'author' && $strComp->compare($keyword, $review->getAuthor())) ||
+                        ($search === 'title' && $this->comp->compare($keyword, $review->getTitle())) ||
+                        ($search === 'author' && $this->comp->compare($keyword, $review->getAuthor())) ||
                         $search === 'voice'
                     )
                     {
                         array_push($reviews, $review);
                     }
-                $dbMng->addReviews($reviews);
+                $this->dbMng->addReviews($reviews);
             }
 
             shuffle($reviews);
@@ -215,40 +271,44 @@
         }
 
         /**
-         * @param string $search
-         * @param string $keyword
+         * Retrieve audiobooks for specified keyword according to specified
+         * attribute: it can be <pre>title</pre> or <pre>author</pre> or
+         * <pre>voice</pre>.
          *
-         * @return array
+         * @param string $search - The search attribute.
+         * @param string $keyword - The search keyword.
+         *
+         * @return array - Set of audiobooks.
          * @throws \Exception
          */
         private function getAudioBooks(string $search, string $keyword): array
         {
             $books = array();
-            $dbMng = new DBManager;
-            $strComp = new TokensManager;
-            foreach ($dbMng->getAllAudioBooks() as $book)
+            $cachedAudioBooks = $this->dbMng->getAllAudioBooks();
+
+            foreach ($cachedAudioBooks as $book)
                 if (
-                    ($search === 'title' && $strComp->compare($keyword, $book->getTitle())) ||
-                    ($search === 'author' && $strComp->compare($keyword, $book->getAuthor())) ||
-                    ($search === 'voice' && $strComp->compare($keyword, $book->getVoice()))
+                    ($search === 'title' && $this->comp->compare($keyword, $book->getTitle())) ||
+                    ($search === 'author' && $this->comp->compare($keyword, $book->getAuthor())) ||
+                    ($search === 'voice' && $this->comp->compare($keyword, $book->getVoice()))
                 )
                 {
                     array_push($books, $book);
                 }
 
-            if (count($books) < Mediator::MIN_ITEMS)
+            if (!$this->isVarious($books))
             {
-                $wrapperMng = new WrapperManager;
-                foreach ($wrapperMng->getAudioBooks($keyword) as $book)
+                $scrapedAudioBooks = $this->wrapperMng->getAudioBooks($keyword);
+                foreach ($scrapedAudioBooks as $book)
                 if (
-                    ($search === 'title' && $strComp->compare($keyword, $book->getTitle())) ||
-                    ($search === 'author' && $strComp->compare($keyword, $book->getAuthor())) ||
-                    ($search === 'voice' && $strComp->compare($keyword, $book->getVoice()))
+                    ($search === 'title' && $this->comp->compare($keyword, $book->getTitle())) ||
+                    ($search === 'author' && $this->comp->compare($keyword, $book->getAuthor())) ||
+                    ($search === 'voice' && $this->comp->compare($keyword, $book->getVoice()))
                 )
                 {
                     array_push($books, $book);
                 }
-                $dbMng->addAudioBooks($books);
+                $this->dbMng->addAudioBooks($books);
             }
 
             shuffle($books);
@@ -256,10 +316,14 @@
         }
 
         /**
-         * @param string $search
-         * @param string $keyword
+         * Retrieve books and related reviews for specified keyword
+         * according to specified attribute: it can be <pre>title</pre>
+         * or <pre>author</pre> or <pre>voice</pre>.
          *
-         * @return array
+         * @param string $search - The search attribute.
+         * @param string $keyword - The search keyword.
+         *
+         * @return array - Set of books and related reviews.
          * @throws \Exception
          */
         private function getBoth(string $search, string $keyword): array
@@ -268,7 +332,6 @@
             $reviews = $this->getReviews($search, $keyword);
 
             $items = array();
-            $comp = new TokensManager;
 
             foreach ($books as $book) // TODO Y U ARRAY
             {
@@ -277,8 +340,8 @@
                 foreach ($reviews as $review)
                 {
                     if (
-                        $comp->isTokenContained($book->getTitle(), $review->getTitle()) &&
-                        $comp->isTokenContained($book->getAuthor(), $review->getAuthor())
+                        $this->comp->isTokenContained($book->getTitle(), $review->getTitle()) &&
+                        $this->comp->isTokenContained($book->getAuthor(), $review->getAuthor())
                     )
                     {
                         $reviewOfBook = $review;
@@ -292,10 +355,14 @@
         }
 
         /**
-         * @param string $search
-         * @param string $keyword
+         * Retrieve audiobooks and related reviews for specified keyword
+         * according to specified attribute: it can be <pre>title</pre> or
+         * <pre>author</pre> or <pre>voice</pre>.
          *
-         * @return array
+         * @param string $search - The search attribute.
+         * @param string $keyword - The search keyword.
+         *
+         * @return array - Set of audiobooks and related reviews.
          * @throws \Exception
          */
         private function getEither(string $search, string $keyword): array
@@ -304,7 +371,6 @@
             $reviews = $this->getReviews($search, $keyword);
 
             $items = array();
-            $comp = new TokensManager;
 
             foreach ($audiobooks as $audiobook) // TODO Y U ARRAY
             {
@@ -313,8 +379,8 @@
                 foreach ($reviews as $review)
                 {
                     if (
-                        $comp->isTokenContained($audiobook->getTitle(), $review->getTitle()) &&
-                        $comp->isTokenContained($audiobook->getAuthor(), $review->getAuthor())
+                        $this->comp->isTokenContained($audiobook->getTitle(), $review->getTitle()) &&
+                        $this->comp->isTokenContained($audiobook->getAuthor(), $review->getAuthor())
                     )
                     {
                         $audiobookReview = $review;
@@ -326,6 +392,37 @@
             }
 
             return $items;
-        }        
+        }
 
+        /**
+         * Check whether input book array has records with different titles,
+         * i.e. is various.
+         *
+         * @param array $books - The set to check for variety
+         *
+         * @return bool - true if set is various, false otherwise
+         */
+        private function isVarious(array $books): bool
+        {
+            $numBooks = count($books);
+
+            for ($i = 0; $i < $numBooks; $i++)
+            {
+                for ($j = $i; $j < $numBooks; $j++)
+                {
+                    // skip diagonal of comparison matrix
+                    if ($i === $j) continue;
+
+                    if ($this->comp->compare($books[$i], $books[$j]))
+                    {
+                        // we found two books with unsimilar title
+                        return true;
+                    }
+                }
+            }
+
+            // we compared all books in array
+            // didn't find any mismatch
+            return false;
+        }
     }
