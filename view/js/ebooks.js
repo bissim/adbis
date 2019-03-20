@@ -170,7 +170,7 @@ function createBookWithReviewNode(json, resultsDiv) {
     // create image container
     let imgContainerNode = $("<div></div>").attr(
       "style",
-      "float:left;width:200px;height:200px;margin:2px 4px 2px 4px;"
+      "float:left;width:200px;height:200px;margin:2px 30px 2px 30px;"
     );
     let imgNode = $("<img />")
       .attr("class", "img-responsive center-block")
@@ -179,8 +179,6 @@ function createBookWithReviewNode(json, resultsDiv) {
     let source = book["source"];
     if (source !== 'amazon') {
       imgNode.attr("style", "max-width:190px;max-height:190px;margin-left:36px;margin-right:37px;");
-    } else {
-      imgNode.attr("style", "max-width:190px;max-height:190px;")
     }      
     imgContainerNode.append(imgNode);
     resultNode.append(imgContainerNode);
