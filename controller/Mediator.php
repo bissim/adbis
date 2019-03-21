@@ -307,7 +307,7 @@
 
             $newBooks = array();
 
-            if (!$this->isVarious($books))
+            if (!$this->isVariousAudio($books, $search))
             {
                 $scrapedAudioBooks = $this->wrapperMng->getAudioBooks($keyword);
                 $limit = count($books);
@@ -452,4 +452,37 @@
             // didn't find any mismatch
             return false;
         }
+
+        private function isVariousAudio(array $books, string $search): bool
+        {
+            $numBooks = count($books);
+
+            for ($i = 0; $i < $numBooks; $i++)
+            {
+                for ($j = $i; $j < $numBooks; $j++)
+                {
+                    // skip diagonal of comparison matrix
+                    if ($i === $j) continue;
+
+                    if (
+                            ($search==="author" && !$this->comp->compare(
+                            $books[$i]->getTitle(),
+                            $books[$j]->getTitle()))
+                        ||
+                            ($search==="voice" && !$this->comp->compare(
+                            $books[$i]->getAuthor(),
+                            $books[$j]->getAuthor()))
+                    )
+                    {
+                        // we found two books with unsimilar title
+                        return true;
+                    }
+                }
+            }
+
+            // we compared all books in array
+            // didn't find any mismatch
+            return false;
+        }
+
     }
