@@ -431,9 +431,14 @@
                     if ($i === $j) continue;
 
                     if (
-                        $this->comp->compare(
+                        !$this->comp->compare(
                             $books[$i]->getTitle(),
                             $books[$j]->getTitle()
+                        )
+                        &&
+                        $this->comp->compare(
+                            $books[$i]->getAuthor(),
+                            $books[$j]->getAuthor()
                         )
                     )
                     {
