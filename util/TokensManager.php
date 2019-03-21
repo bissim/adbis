@@ -76,12 +76,14 @@
          */
         public function removeStopWords(array $words): array
         {
+            $filtered = $words;
+
             $sws = &$this->stopwords;
-            $this->lowercaseTokens($words);
+            $this->lowercaseTokens($filtered);
 
             // remove words with length less or equal than 1
-            $words = array_filter(
-                $words,
+            $filtered = array_filter(
+                $filtered,
                 function ($w)
                 {
                     return (strlen($w) > 1);
@@ -89,10 +91,10 @@
             );
 
             // if we have at least 2 words, remove stopwords
-            if (count($words) > 1)
+            if (count($filtered) > 1)
             {
-                $words = array_filter(
-                    $words,
+                $filtered = array_filter(
+                    $filtered,
                     function ($w) use ($sws)
                     {
                         // if utf-8: mb_strtolower($w, "utf-8")
@@ -101,7 +103,7 @@
                 );
             }
 
-            return $words;
+            return count($filtered) > 0 ? $filtered : $words;
         }
 
         /**
