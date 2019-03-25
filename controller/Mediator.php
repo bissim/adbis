@@ -207,31 +207,7 @@
                     array_push($books, $book);
                 }
 
-            $newBooks = array();
-
-            if (!$this->isVarious($books))
-            {
-                $scrapedBooks = $this->wrapperMng->getBooks($keyword);
-                $limit = count($books);
-
-                foreach ($scrapedBooks as $book)
-                if (
-                    ($search === 'title' && $this->comp->compare($keyword, $book->getTitle()))
-                    || ($search === 'author' && $this->comp->compare($keyword, $book->getAuthor()))
-                )
-                {
-                    $flag = true;
-                    for ($i=0; $i<$limit; $i++)
-                        if ($book->equals($books[$i]))
-                            $flag = false;
-                    if($flag)
-                        array_push($newBooks, $book);
-                }
-                $this->dbMng->addBooks($newBooks);
-            }
-
-            shuffle($books);
-            return array_merge($books,$newBooks);
+            return $books;
         }
 
         /**
@@ -248,34 +224,18 @@
         private function getReviews(string $search, string $keyword): array
         {
             $reviews = array();
-            $cachedReviews = $this->dbMng->getAllReviews();
-
-            foreach ($cachedReviews as $review)
-                if (
-                    ($search === 'title' && $this->comp->compare($keyword,$review->getTitle())) ||
-                    ($search === 'author' && $this->comp->compare($keyword,$review->getAuthor())) ||
-                    $search === 'voice'
+            
+            $scrapedReviews = $this->wrapperMng->getReviews($keyword);
+            foreach ($scrapedReviews as $review)
+            if (
+                ($search === 'title' && $this->comp->compare($keyword, $review->getTitle())) ||
+                ($search === 'author' && $this->comp->compare($keyword, $review->getAuthor())) ||
+                $search === 'voice'
                 )
                 {
                     array_push($reviews, $review);
                 }
-
-            if (empty($reviews))
-            {
-                $scrapedReviews = $this->wrapperMng->getReviews($keyword);
-                foreach ($scrapedReviews as $review)
-                    if (
-                        ($search === 'title' && $this->comp->compare($keyword, $review->getTitle())) ||
-                        ($search === 'author' && $this->comp->compare($keyword, $review->getAuthor())) ||
-                        $search === 'voice'
-                    )
-                    {
-                        array_push($reviews, $review);
-                    }
-                $this->dbMng->addReviews($reviews);
-            }
-
-            shuffle($reviews);
+            $this->dbMng->addReviews($reviews);
             return $reviews;
         }
 
@@ -346,7 +306,33 @@
         private function getBoth(string $search, string $keyword): array
         {
             $books = $this->getBooks($search, $keyword);
-            $reviews = $this->getReviews($search, $keyword);
+            $reviews = array();
+
+            if (!$this->isVarious($books))
+            {
+                $newBooks = array();
+                $scrapedBooks = $this->wrapperMng->getBooks($keyword);
+                $limit = count($books);
+
+                foreach ($scrapedBooks as $book)
+                if (
+                    ($search === 'title' && $this->comp->compare($keyword, $book->getTitle()))
+                    || ($search === 'author' && $this->comp->compare($keyword, $book->getAuthor()))
+                )
+                {
+                    $flag = true;
+                    for ($i=0; $i<$limit; $i++)
+                        if ($book->equals($books[$i]))
+                            $flag = false;
+                    if($flag)
+                        array_push($newBooks, $book);
+                }
+                $this->dbMng->addBooks($newBooks);
+                $books = array_merge($books,$newBooks);
+                $reviews = $this->getReviews($search,$keyword);
+            }
+            else
+                $reviews = $this->getCachedReviews($search, $keyword);
 
             $items = array();
 
@@ -371,6 +357,23 @@
             return $items;
         }
 
+        private function getCachedReviews(string $search, string $keyword): array
+        {
+            $allReviews = $this->dbMng->getAllReviews();
+            $reviews = array();
+
+            foreach ($allReviews as $review)
+                if (
+                    ($search === 'title' && $this->comp->compare($keyword,$review->getTitle())) ||
+                    ($search === 'author' && $this->comp->compare($keyword,$review->getAuthor())) ||
+                    $search === 'voice'
+                )
+                {
+                    array_push($reviews, $review);
+                }
+            return $reviews;
+        }
+        
         /**
          * Retrieve audiobooks and related reviews for specified keyword
          * according to specified attribute: it can be <pre>title</pre> or
@@ -385,7 +388,34 @@
         private function getEither(string $search, string $keyword): array
         {
             $audiobooks = $this->getAudioBooks($search, $keyword);
-            $reviews = $this->getReviews($search, $keyword);
+            $reviews = array();
+
+            if (!$this->isVariousAudio($audiobooks, $search))
+            {
+                $newBooks = array();
+                $scrapedAudioBooks = $this->wrapperMng->getAudioBooks($keyword);
+                $limit = count($audiobooks);
+                
+                foreach ($scrapedAudioBooks as $book)
+                if (
+                    ($search === 'title' && $this->comp->compare($keyword, $book->getTitle())) ||
+                    ($search === 'author' && $this->comp->compare($keyword, $book->getAuthor())) ||
+                    ($search === 'voice' && $this->comp->compare($keyword, $book->getVoice()))
+                )
+                {
+                    $flag = true;
+                    for ($i=0; $i<$limit; $i++)
+                        if ($book->equals($audiobooks[$i]))
+                            $flag = false;
+                    if($flag)
+                        array_push($newBooks, $book);
+                }
+                $this->dbMng->addAudioBooks($newBooks);
+                $audiobooks = array_merge($audiobooks, $newBooks);
+                $reviews = $this->getReviews($search,$keyword);
+            }
+            else
+                $reviews = $this->getCachedReviews($search,$keyword);
 
             $items = array();
 
@@ -422,6 +452,7 @@
         private function isVarious(array $books): bool
         {
             $numBooks = count($books);
+            $variaty = 0;
 
             for ($i = 0; $i < $numBooks; $i++)
             {
@@ -443,19 +474,20 @@
                     )
                     {
                         // we found two books with unsimilar title
-                        return true;
+                        $variaty++;
                     }
                 }
             }
 
             // we compared all books in array
             // didn't find any mismatch
-            return false;
+            return ($variaty > 12);
         }
 
         private function isVariousAudio(array $books, string $search): bool
         {
             $numBooks = count($books);
+            $variaty = 0;
 
             for ($i = 0; $i < $numBooks; $i++)
             {
@@ -475,14 +507,14 @@
                     )
                     {
                         // we found two books with unsimilar title
-                        return true;
+                        $variaty++;
                     }
                 }
             }
 
             // we compared all books in array
             // didn't find any mismatch
-            return false;
+            return ($variaty > 5);
         }
 
     }
