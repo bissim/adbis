@@ -19,7 +19,8 @@
             string $queryUrl,
             string $keyword,
             string $urlSuffix,
-            bool $new
+            bool $new,
+            string $source
         ): array
         {
             // create search URL
@@ -36,12 +37,12 @@
                 $urlSearch .= $urlSuffix;
             }
 
-            $books = $this->searchBooks($urlSearch, $new);
+            $books = $this->searchBooks($urlSearch, $new, $source);
 
             return $books;
         }
 
-        private function searchBooks(string $queryUrl, bool $new) : array
+        private function searchBooks(string $queryUrl, bool $new, string $source) : array
         {
             $xpath = $this->createDOMXPath($queryUrl);
 
@@ -84,6 +85,7 @@
                     $voice,
                     $image,
                     $link,
+                    $source,
                     $new
                 );
 
