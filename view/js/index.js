@@ -259,10 +259,10 @@ function createAuBookNodes(json, resultsDiv) {
       }
 
     logoNode
-    .attr("style", "max-height:" + dim + ";")
-    .attr("src", src)
-    .attr("alt", alt)
-    .attr("title", title);
+      .attr("style", "max-height:" + dim + ";")
+      .attr("src", src)
+      .attr("alt", alt)
+      .attr("title", title);
 
     detailsContainerItem.append(logoNode);
     resultNode.append(detailsContainerItem);
