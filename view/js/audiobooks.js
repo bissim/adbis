@@ -194,11 +194,39 @@ function createBookWithReviewNode(json, resultsDiv) {
       .append("<span>di&nbsp;<em>" + bookAuthor + "</em></span><br />")
       .append("<span>letto da&nbsp;<em>" + book["voice"] + "</em></span><br />");
     let logoNode = $("<img />")
-        .attr("class", "img-responsive center-block")
-        .attr("style", "max-height:20px;")
-        .attr("src", "./view/img/audible_logo.png")
-        .attr("alt", "Audible")
-        .attr("title", "Audible");
+        .attr("class", "img-responsive center-block");
+
+    let source = book["source"];
+
+    let dim = "";
+    let src = "./view/img/";
+    let alt = "";
+    let title = "";
+    
+    switch (source) {
+      case 'audible':
+        dim = "30px";
+        src += "audible_logo.png";
+        alt = "Audible";
+        title = "Audible";
+        break;
+      case 'ilnarratore':
+        dim = "50px";
+        src += "ilnarratore_logo.png";
+        alt = "IlNarratore";
+        title = "IlNarratore";
+        break;
+      default:
+        console.warn("Unknown source '" + source + "'!");
+        break;
+    }
+    
+    logoNode
+      .attr("style", "max-height:" + dim + ";")
+      .attr("src", src)
+      .attr("alt", alt)
+      .attr("title", title);
+    
     detailsContainerBook.append(logoNode);
     resultNode.append(detailsContainerBook);
 
