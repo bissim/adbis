@@ -136,10 +136,10 @@
         private function getNewBooks(): array
         {
             $books = $this->dbMng->getNewBooks();
-            if (!$this->isVarious($books))
+            if (empty($books))
             {
                $books = $this->wrapperMng->getNewBooks();
-                $this->dbMng->addBooks($books);
+               $this->dbMng->addBooks($books);
             }
 
             shuffle($books);
@@ -173,7 +173,7 @@
         private function getNewAuBooks(): array
         {
             $auBooks = $this->dbMng->getNewAudioBooks();
-            if (!$this->isVarious($auBooks))
+            if (empty($auBooks))
             {
                 $auBooks = $this->wrapperMng->getNewAudioBooks();
                 $this->dbMng->addAudioBooks($auBooks);
