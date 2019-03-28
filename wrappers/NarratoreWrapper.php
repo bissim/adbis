@@ -33,19 +33,19 @@
             for ($i=1; $i<=8; $i++)
             {
                 array_push($titleQueries,
-                '/html/body/div[@id="search"]/div/div[@class="span9 main_content"]/div/div/div/div/div/h4/a/text()');
+                '/html/body/div[@id="search"]/div/div[@class="span9 main_content"]/div/div/div[' . $i . ']/div/div/h4/a/text()');
 
                 array_push($linkQueries, 
-                '/html/body/div[@id="search"]/div/div[@class="span9 main_content"]/div/div/div/div/div/h4/a/attribute::href');
+                '/html/body/div[@id="search"]/div/div[@class="span9 main_content"]/div/div/div[' . $i . ']/div/div/h4/a/attribute::href');
 
                 array_push($authorQueries,
-                '/html/body/div[@id="search"]/div/div[@class="span9 main_content"]/div/div/div/div/div/h4/a/text()');
+                '/html/body/div[@id="search"]/div/div[@class="span9 main_content"]/div/div/div[' . $i . ']/div/div/h4/a/text()');
 
                 array_push($imgQueries,
-                '/html/body/div[@id="search"]/div/div[@class="span9 main_content"]/div/div/div/div/div/div/a/img/attribute::src');
+                '/html/body/div[@id="search"]/div/div[@class="span9 main_content"]/div/div/div[' . $i . ']/div/div/div/a/img/attribute::src');
 
                 array_push($voiceQueries,
-                '/html/body/div[@id="search"]/div/div[@class="span9 main_content"]/div/div/div/div/div/div/div[@class="minh10"]/div[1]');
+                '/html/body/div[@id="search"]/div/div[@class="span9 main_content"]/div/div/div[' . $i . ']/div/div/div/div[@class="minh10"]/div[1]');
             }
 
             $queries = array();
