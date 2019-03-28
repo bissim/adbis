@@ -205,7 +205,8 @@
                             $row["author"],
                             $row["voice"],
                             $row["img"],
-                            $row["link"]
+                            $row["link"],
+                            $row["src"]
                         )
                     );
                 }
@@ -233,7 +234,8 @@
                             $row["author"],
                             $row["voice"],
                             $row["img"],
-                            $row["link"]
+                            $row["link"],
+                            $row["src"]
                         )
                     );
                 }
@@ -247,8 +249,8 @@
         {
             $this->connect();
             $stmt = $this->conn->prepare(
-                "INSERT INTO audiobook (title,author,voice,img,link,is_recent)
-                VALUES (:title,:author,:voice,:img,:link,:is_recent)"
+                "INSERT INTO audiobook (title,author,voice,img,link,is_recent,src)
+                VALUES (:title,:author,:voice,:img,:link,:is_recent,:src)"
             );
 
             $title = '';
@@ -256,6 +258,7 @@
             $voice = '';
             $img = '';
             $link = '';
+            $source = '';
             $isRecent = 0;
 
             $stmt->bindParam(':title', $title);
@@ -263,6 +266,7 @@
             $stmt->bindParam(':voice', $voice);
             $stmt->bindParam(':img', $img);
             $stmt->bindParam(':link', $link);
+            $stmt->bindParam(':src', $source);
             $stmt->bindParam(':is_recent', $isRecent);
 
             foreach ($books as $book)
@@ -272,6 +276,7 @@
                 $voice = $book->getVoice();
                 $img = $book->getImg();
                 $link = $book->getLink();
+                $source = $book->getSource();
                 $isRecent = $book->isRecent() ? 1 : 0;
 
                 $stmt->execute();
