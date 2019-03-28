@@ -21,6 +21,7 @@
     require './test/GoogleWrapperTest.php';
     require './test/KoboWrapperTest.php';
     require './test/AudibleWrapperTest.php';
+    require './test/NarratoreWrapperTest.php';
     require './test/MediatorTest.php';
     require './test/BookTest.php';
     require './test/ReviewTest.php';
@@ -225,6 +226,10 @@
 
     Flight::route('/test/audiobook', function () {
         (new \test\AudibleWrapperTest)->test();
+    });
+
+    Flight::route('/test/narratore', function () {
+        (new \test\NarratoreWrapperTest)->test();
     });
 
     Flight::route('/test/mediator', function () {
