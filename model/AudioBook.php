@@ -16,6 +16,7 @@
         private $img;
         private $link;
         private $recent;
+        private $source;
 
         // Constructor
         public function __construct(
@@ -24,6 +25,7 @@
             string $voice,
             string $image,
             string $link,
+            string $source,
             bool $recent = false
         )
         {
@@ -33,6 +35,7 @@
             $this->voice = $voice;
             $this->img = $image;
             $this->link = $link;
+            $this->source = $source;
             $this->recent = $recent;
         }
 
@@ -65,6 +68,11 @@
         public function getLink(): string
         {
             return $this->link;
+        }
+
+        public function getSource(): string
+        {
+            return $this->source;
         }
 
         public function isRecent(): bool
@@ -101,6 +109,11 @@
         public function setLink(string $link)
         {
             $this->link = $link;
+        }
+
+        public function setSource(string $source)
+        {
+            $this->source = $source;
         }
 
         public function setRecent(bool $recent)
