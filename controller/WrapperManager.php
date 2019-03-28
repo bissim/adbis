@@ -6,12 +6,14 @@
     require './wrappers/GoogleWrapper.php';
     require './wrappers/ReviewWrapper.php';
     require './wrappers/AudibleWrapper.php';
+    require './wrappers/NarratoreWrapper.php';
 
     use \wrappers\GoogleWrapper;
     use \wrappers\AmazonWrapper;
     use \wrappers\KoboWrapper;
     use \wrappers\ReviewWrapper;
     use \wrappers\AudibleWrapper;
+    use \wrappers\NarratoreWrapper;
 
     class WrapperManager {
         private $amazonWrapper;
@@ -19,6 +21,7 @@
         private $koboWrapper;
         private $reviewWrapper;
         private $audibleWrapper;
+        private $narrWrapper;
 
         public function __construct()
         {
@@ -27,6 +30,7 @@
             $this->koboWrapper = new KoboWrapper;
             $this->reviewWrapper = new ReviewWrapper;
             $this->audibleWrapper = new AudibleWrapper;
+            $this->narrWrapper = new NarratoreWrapper;
         }
 
         public function getBooks($keyword): array
@@ -49,7 +53,10 @@
 
         public function getAudioBooks($keyword): array
         {
-            $books = $this->audibleWrapper->getBooks($keyword);
+            $books = array_merge(
+                $this->audibleWrapper->getBooks($keyword),
+                $this->narrWrapper->getBooks($keyword)
+            );
 
             return $books;
         }
@@ -73,8 +80,10 @@
 
         public function getNewAudioBooks(): array
         {
-//            $books = $this->audibleWrapper->getNewBooks();
-            $books = $this->audibleWrapper->getBooks('', true);
+            $books = array_merge(
+                $this->audibleWrapper->getBooks('', true),
+                $this->narrWrapper->getNewBooks()
+            );
 
             return $books;
         }
