@@ -45,7 +45,8 @@ create table if not exists audiobook (
   img VARCHAR(250),
   link VARCHAR(250) not null,
   expiration_date TIMESTAMP default CURRENT_TIMESTAMP,
-  is_recent TINYINT(1) default 0
+  is_recent TINYINT(1) default 0,
+  src VARCHAR(15) not null
 );
 
 # review table
