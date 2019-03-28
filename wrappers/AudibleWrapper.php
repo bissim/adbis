@@ -71,7 +71,8 @@
                 $this->queryUrl,
                 $new? '': $keyword,
                 '',
-                $new
+                $new,
+                'audible'
             );
             $effectiveBooks = array();
             foreach ($books as $book)
@@ -99,7 +100,8 @@
                 $this->queryNewsUrl,
                 '',
                 '',
-                true
+                true,
+                'audible'
             );
             $effectiveBooks = array();
             foreach ($books as $book)
