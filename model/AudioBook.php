@@ -13,6 +13,7 @@
         private $title;
         private $author;
         private $voice;
+        private $price;
         private $img;
         private $link;
         private $recent;
@@ -23,6 +24,7 @@
             string $title,
             string $author,
             string $voice,
+            float $price,
             string $image,
             string $link,
             string $source,
@@ -33,6 +35,7 @@
             $this->title = $title;
             $this->author = $author;
             $this->voice = $voice;
+            $this->price = $price;
             $this->img = $image;
             $this->link = $link;
             $this->source = $source;
@@ -58,6 +61,11 @@
         public function getVoice(): string
         {
             return $this->voice;
+        }
+
+        public function getPrice(): float
+        {
+            return $this->price;
         }
 
         public function getImg(): string
@@ -101,6 +109,11 @@
             $this->voice = $voice;
         }
 
+        public function setPrice(float $price)
+        {
+            $this->price = $price;
+        }
+
         public function setImg(string $img)
         {
             $this->img = $img;
@@ -126,9 +139,11 @@
             $desc = "ID: $this->id";
             $desc .= "<br />Title: $this->title";
             $desc .= "<br />Author: $this->author";
+            $desc .= "<br />Price: $this->price";
             $desc .= "<br />Voice: $this->voice";
             $desc .= "<br />Imagine: $this->img";
             $desc .= "<br />Link: $this->link";
+            $desc .= "<br />Source: $this->source";
             $this->recent?
                 $desc .= "<br /><strong>New!</strong>":
                 null;
