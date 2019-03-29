@@ -73,6 +73,9 @@
                 // fix UTF-8 encoding for voice
                 $voice = Encoding::fixUTF8(trim($voice));
 
+                $price = $xpath->query($this->queries['priceQueries'][$i]);
+                $price = trim($this->checkFloat($price));
+
                 $image = $xpath->query($this->queries['imgQueries'][$i]);
                 $image = $this->nodeExtractor($image);
 
@@ -83,6 +86,7 @@
                     $title,
                     $author,
                     $voice,
+                    $price,
                     $image,
                     $link,
                     $source,
