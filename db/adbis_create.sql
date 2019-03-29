@@ -41,6 +41,7 @@ create table if not exists audiobook (
   id INTEGER(4) auto_increment unique,
   title VARCHAR(400) not null,
   author VARCHAR(150) not null,
+  price FLOAT not null,
   voice VARCHAR(150) not null,
   img VARCHAR(250),
   link VARCHAR(250) not null,
