@@ -161,6 +161,33 @@ function createBookWithReviewNode(json, resultsDiv) {
     let review = item[1];
     let resultNode = "";
 
+    let source = book["source"];
+    let dim = "";
+    let src = "./view/img/";
+    let alt = "";
+    let title = "";
+    let price = "";
+
+    switch (source) {
+      case 'audible':
+        dim = "30px";
+        src += "audible_logo.png";
+        alt = "Audible";
+        title = "Audible";
+        price = "Gratuito previo abbonamento";
+        break;
+      case 'ilnarratore':
+        dim = "50px";
+        src += "ilnarratore_logo.png";
+        alt = "IlNarratore";
+        title = "IlNarratore";
+        price = book["price"]+"&euro;";
+        break;
+      default:
+        console.warn("Unknown source '" + source + "'!");
+        break;
+      }
+
     // create result node
     resultNode = $("<div></div>")
       .attr("id", "resultNode" + (i + 1))
@@ -192,35 +219,11 @@ function createBookWithReviewNode(json, resultsDiv) {
           "</strong></span></a></span><br />"
       )
       .append("<span>di&nbsp;<em>" + bookAuthor + "</em></span><br />")
-      .append("<span>letto da&nbsp;<em>" + book["voice"] + "</em></span><br />");
+      .append("<span>letto da&nbsp;<em>" + book["voice"] + "</em></span><br />")
+      .append("<span>Prezzo:&nbsp;" + price + "</span><br />")
     let logoNode = $("<img />")
         .attr("class", "img-responsive center-block");
 
-    let source = book["source"];
-
-    let dim = "";
-    let src = "./view/img/";
-    let alt = "";
-    let title = "";
-    
-    switch (source) {
-      case 'audible':
-        dim = "30px";
-        src += "audible_logo.png";
-        alt = "Audible";
-        title = "Audible";
-        break;
-      case 'ilnarratore':
-        dim = "50px";
-        src += "ilnarratore_logo.png";
-        alt = "IlNarratore";
-        title = "IlNarratore";
-        break;
-      default:
-        console.warn("Unknown source '" + source + "'!");
-        break;
-    }
-    
     logoNode
       .attr("style", "max-height:" + dim + ";")
       .attr("src", src)
