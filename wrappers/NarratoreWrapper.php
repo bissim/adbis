@@ -27,6 +27,7 @@
             $titleQueries = array();
             $linkQueries = array();
             $authorQueries = array();
+            $priceQueries = array();
             $imgQueries = array();
             $voiceQueries = array();
 
@@ -41,6 +42,9 @@
                 array_push($authorQueries,
                 '/html/body/div[@id="search"]/div/div[@class="span9 main_content"]/div/div/div[' . $i . ']/div/div/h4/a/text()');
 
+                array_push($priceQueries,
+                '/html/body/div[@id="search"]/div/div[@class="span9 main_content"]/div/div/div[' . $i . ']/div/div/div/div[@class="minh4"]/div/h4');
+
                 array_push($imgQueries,
                 '/html/body/div[@id="search"]/div/div[@class="span9 main_content"]/div/div/div[' . $i . ']/div/div/div/a/img/attribute::src');
 
@@ -52,6 +56,7 @@
             $queries['titleQueries'] = $titleQueries;
             $queries['linkQueries'] = $linkQueries;
             $queries['authorQueries'] = $authorQueries;
+            $queries['priceQueries'] = $priceQueries;
             $queries['imgQueries'] = $imgQueries;
             $queries['voiceQueries'] = $voiceQueries;
 
@@ -64,6 +69,7 @@
             $titleQueries = array();
             $linkQueries = array();
             $authorQueries = array();
+            $priceQueries = array();
             $imgQueries = array();
             $voiceQueries = array();
 
@@ -78,6 +84,9 @@
                 array_push($authorQueries,
                 '/html/body/div[@id="homepage"]/div/div[2]/div[' . $i . ']/div/div/div/h4/a/text()');
 
+                array_push($priceQueries,
+                '/html/body/div[@id="homepage"]/div/div[2]/div[' . $i . ']/div/div/div/div[@class="tet-center btn_box_group"]/div[@class="minh4"]/div/h4');
+
                 array_push($imgQueries,
                 '/html/body/div[@id="homepage"]/div/div[2]/div[' . $i . ']/div/div/div/div[@class="carousel minh2"]/a/img/attribute::src');
 
@@ -89,6 +98,7 @@
             $queries['titleQueries'] = $titleQueries;
             $queries['linkQueries'] = $linkQueries;
             $queries['authorQueries'] = $authorQueries;
+            $queries['priceQueries'] = $priceQueries;
             $queries['imgQueries'] = $imgQueries;
             $queries['voiceQueries'] = $voiceQueries;
 

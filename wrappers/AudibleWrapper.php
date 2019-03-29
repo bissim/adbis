@@ -27,6 +27,7 @@
             $titleQueries = array();
             $linkQueries = array();
             $authorQueries = array();
+            $priceQueries = array();
             $imgQueries = array();
             $voiceQueries = array();
 
@@ -41,6 +42,9 @@
                 array_push($authorQueries,
                 '//div[@id="center-3"]/div/span/ul/li[' . $i . ']/div/div/div/div/div/div/span/ul/li/span[contains(text(),"Di")]/a[1]/text()');
 
+                array_push($priceQueries,
+                '/nope');
+                
                 array_push($imgQueries,
                 '//div[@id="center-3"]/div/span/ul/li[' . $i . ']/div/div/div/div/div/div/div/div/a/img/attribute::src');
 
@@ -52,6 +56,7 @@
             $queries['titleQueries'] = $titleQueries;
             $queries['linkQueries'] = $linkQueries;
             $queries['authorQueries'] = $authorQueries;
+            $queries['priceQueries'] = $priceQueries;
             $queries['imgQueries'] = $imgQueries;
             $queries['voiceQueries'] = $voiceQueries;
 
