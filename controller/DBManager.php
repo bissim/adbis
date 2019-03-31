@@ -35,65 +35,43 @@
             $this->port = $configs['connection']['port'];
         }
 
-        /**
-         * @return bool
-         * @throws \Exception
-         */
-        private function connect(): bool
+        private function connect()
         {
             if (!$this->conn) // there is no existing connection
             {
-                try // to create connection
-                {
-                    $this->conn = new \PDO(
-                        "mysql:host=$this->serverName;dbname=$this->dbName",
-                        $this->username,
-                        $this->password
-                    );
+                $this->conn = new PDO(
+                    "mysql:host=$this->serverName;dbname=$this->dbName",
+                    $this->username,
+                    $this->password
+                );
 
-                    // set the PDO error mode to exception
-                    $this->conn->setAttribute(
-                        \PDO::ATTR_ERRMODE,
-                        \PDO::ERRMODE_EXCEPTION
-                    );
-
-                    return true; // connection has been created
-                }
-                catch (\Exception $e)
-                {
-                    echo $e->getMessage();
-                    return false; // error creating connection
-                }
-            }
-            else // a connection already exists
-            {
-                throw new \Exception(
-                    'A connection has been established already.'
+                // set the PDO error mode to exception
+                $this->conn->setAttribute(
+                    PDO::ATTR_ERRMODE,
+                    PDO::ERRMODE_EXCEPTION
                 );
             }
         }
 
-        private function disconnect(): bool
+        private function disconnect()
         {
             if ($this->conn)
             {
                 $this->conn = null;
-                return true;
             }
-
-            return false;
         }
         
         public function getAllBooks(): array
         {
             $this->connect();
+
             $sql = "SELECT * FROM book";
             $result = $this->conn->query($sql);
 
             $books = array();
             if ($result->rowCount() > 0)
             {
-                while ($row = $result->fetch(\PDO::FETCH_ASSOC))
+                while ($row = $result->fetch(PDO::FETCH_ASSOC))
                 {
                     array_push(
                         $books,
@@ -116,13 +94,14 @@
         public function getNewBooks(): array
         {
             $this->connect();
+
             $sql = "SELECT * FROM book WHERE is_recent=1";
             $result = $this->conn->query($sql);
 
             $books = array();
             if ($result->rowCount() > 0)
             {
-                while ($row = $result->fetch(\PDO::FETCH_ASSOC))
+                while ($row = $result->fetch(PDO::FETCH_ASSOC))
                 {
                     array_push(
                         $books,
@@ -145,6 +124,7 @@
         public function addBooks(array $books)
         {
             $this->connect();
+
             $stmt = $this->conn->prepare(
                 "INSERT INTO book (title,author,price,img,link,is_recent,src)
                 VALUES (:title,:author,:price,:img,:link,:is_recent,:src)"
@@ -176,11 +156,6 @@
                 $isRecent = $book->isRecent() ? 1 : 0;
                 $source = $book->getSource();
 
-//                error_log(
-//                    "Price: $price, " .
-//                    "Recent: {(int) $isRecent}"
-//                );
-
                 $stmt->execute();
             }
 
@@ -190,13 +165,14 @@
         public function getAllAudioBooks(): array
         {
             $this->connect();
+
             $sql = "SELECT * FROM audiobook";
             $result = $this->conn->query($sql);
 
             $books = array();
             if ($result->rowCount() > 0)
             {
-                while ($row = $result->fetch(\PDO::FETCH_ASSOC))
+                while ($row = $result->fetch(PDO::FETCH_ASSOC))
                 {
                     array_push(
                         $books,
@@ -220,13 +196,14 @@
         public function getNewAudioBooks(): array
         {
             $this->connect();
+
             $sql = "SELECT * FROM audiobook WHERE is_recent=1";
             $result = $this->conn->query($sql);
 
             $books = array();
             if ($result->rowCount() > 0)
             {
-                while ($row = $result->fetch(\PDO::FETCH_ASSOC))
+                while ($row = $result->fetch(PDO::FETCH_ASSOC))
                 {
                     array_push(
                         $books,
@@ -250,6 +227,7 @@
         public function addAudioBooks(array $books)
         {
             $this->connect();
+
             $stmt = $this->conn->prepare(
                 "INSERT INTO audiobook (title,author,price,voice,img,link,is_recent,src)
                 VALUES (:title,:author,:price,:voice,:img,:link,:is_recent,:src)"
@@ -293,13 +271,14 @@
         public function getAllReviews(): array
         {
             $this->connect();
+
             $sql = "SELECT * FROM review";
             $result = $this->conn->query($sql);
 
             $books = array();
             if ($result->rowCount() > 0)
             {
-                while ($row = $result->fetch(\PDO::FETCH_ASSOC))
+                while ($row = $result->fetch(PDO::FETCH_ASSOC))
                 {
                     array_push(
                         $books,
@@ -324,6 +303,7 @@
         public function getNewReviews(): array
         {
             $this->connect();
+
             $sql = "SELECT * FROM review WHERE is_recent=1";
             $result = $this->conn->query($sql);
 
@@ -355,6 +335,7 @@
         public function addReviews(array $reviews)
         {
             $this->connect();
+
             $stmt = $this->conn->prepare(
                 "INSERT INTO review (title,author,plot,txt,average,style,content,pleasantness,is_recent)
                 VALUES (:title,:author,:plot,:txt,:average,:style,:content,:pleasantness,:is_recent)"
@@ -391,12 +372,6 @@
                 $content = $review->getContent();
                 $pleasantness = $review->getPleasantness();
                 $isRecent = $review->isRecent() ? 1 : 0;
-
-//                error_log(
-//                    "Average: $average, " .
-//                    "Style: $style, " .
-//                    "Recent: {(int) $isRecent}"
-//                );
 
                 $stmt->execute();
             }

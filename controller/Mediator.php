@@ -135,7 +135,16 @@
          */
         private function getNewBooks(): array
         {
-            $books = $this->dbMng->getNewBooks();
+            try
+            {
+                $books = $this->dbMng->getNewBooks();
+            }
+            catch (\Exception $e)
+            {
+                error_log($e->getMessage());
+                $books = array();
+            }
+
             if (empty($books))
             {
                $books = $this->wrapperMng->getNewBooks();
@@ -172,7 +181,16 @@
          */
         private function getNewAuBooks(): array
         {
-            $auBooks = $this->dbMng->getNewAudioBooks();
+            try
+            {
+                $auBooks = $this->dbMng->getNewAudioBooks();
+            }
+            catch (\Exception $e)
+            {
+                error_log($e->getMessage());
+                $auBooks = array();
+            }
+
             if (empty($auBooks))
             {
                 $auBooks = $this->wrapperMng->getNewAudioBooks();

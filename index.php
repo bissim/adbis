@@ -40,7 +40,8 @@
     Flight::map('error', function (Throwable $th) {
         // Handle error
     //    echo $th->getTraceAsString();
-        echo "An error occurred in {$th->getFile()}, check server logs";
+//        echo "An error occurred in {$th->getFile()}, check server logs";
+        echo $th->getMessage();
         error_log(
             "An error occurred: {$th->getMessage()}" .
             " in {$th->getFile()}" .
