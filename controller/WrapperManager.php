@@ -21,7 +21,7 @@
         private $koboWrapper;
         private $reviewWrapper;
         private $audibleWrapper;
-        private $narrWrapper;
+        private $ilnarratoreWrapper;
 
         public function __construct()
         {
@@ -30,7 +30,7 @@
             $this->koboWrapper = new KoboWrapper;
             $this->reviewWrapper = new ReviewWrapper;
             $this->audibleWrapper = new AudibleWrapper;
-            $this->narrWrapper = new NarratoreWrapper;
+            $this->ilnarratoreWrapper = new NarratoreWrapper;
         }
 
         public function getBooks($keyword): array
@@ -55,7 +55,7 @@
         {
             $books = array_merge(
                 $this->audibleWrapper->getBooks($keyword),
-                $this->narrWrapper->getBooks($keyword)
+                $this->ilnarratoreWrapper->getBooks($keyword)
             );
 
             return $books;
@@ -82,7 +82,7 @@
         {
             $books = array_merge(
                 $this->audibleWrapper->getBooks('', true),
-                $this->narrWrapper->getNewBooks()
+                $this->ilnarratoreWrapper->getNewBooks()
             );
 
             return $books;

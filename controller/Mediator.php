@@ -217,6 +217,7 @@
             $cacheBooks = $this->dbMng->getAllBooks();
 
             foreach ($cacheBooks as $book)
+            {
                 if (
                     ($search === 'title' && $this->comp->compare($keyword, $book->getTitle()))
                     || ($search === 'author' && $this->comp->compare($keyword, $book->getAuthor()))
@@ -224,6 +225,7 @@
                 {
                     array_push($books, $book);
                 }
+            }
 
             return $books;
         }
@@ -339,22 +341,31 @@
                 )
                 {
                     $flag = true;
-                    for ($i=0; $i<$limit; $i++)
+                    for ($i = 0; $i < $limit; $i++)
+                    {
                         if ($book->equals($books[$i]))
+                        {
                             $flag = false;
-                    if($flag)
+                        }
+                    }
+                    if ($flag)
+                    {
                         array_push($newBooks, $book);
+                    }
                 }
+
                 $this->dbMng->addBooks($newBooks);
-                $books = array_merge($books,$newBooks);
-                $reviews = $this->getReviews($search,$keyword);
+                $books = array_merge($books, $newBooks);
+                $reviews = $this->getReviews($search, $keyword);
             }
             else
+            {
                 $reviews = $this->getCachedReviews($search, $keyword);
+            }
 
             $items = array();
 
-            foreach ($books as $book) // TODO Y U ARRAY
+            foreach ($books as $book)
             {
                 $reviewOfBook = NULL;
 
@@ -368,6 +379,7 @@
                         $reviewOfBook = $review;
                     }
                 }
+
                 $item = array($book, $reviewOfBook);
                 array_push($items, $item); 
             }
