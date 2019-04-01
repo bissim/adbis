@@ -278,8 +278,19 @@ function showBoth(res) {
   try {
     json = JSON.parse(res);
   } catch (e) {
+    let destination = "";
+    switch (pageName) {
+      case '':
+        destination = "le ultime uscite";
+        break;
+      case 'ebooks':
+      case 'audiobooks':
+      default:
+        destination = 'i risultati';
+        break;
+    }
     loadingMessage.html(
-        "Impossibile recuperare le ultime uscite!"
+      `Impossibile recuperare ${destination}!`
     );
     loadingMessage.show();
     console.error(e.toLocaleString());
@@ -355,7 +366,7 @@ function showBooks(res) {
         );
 
       // show books
-      createResults(json['ebooks'], resultsDiv);
+      createItemNodes(json['ebooks'], resultsDiv);
       loadingMessage.empty();
 
       // show audiobooks
@@ -365,7 +376,7 @@ function showBooks(res) {
           "  <h1 style='margin-bottom: 40px;'>Audiobook pi&ugrave; recenti</h1>" +
           "</div>"
         );
-      createResults(json['aubooks'], resultsDiv);
+      createItemNodes(json['aubooks'], resultsDiv);
     } catch (e) {
       console.error(e.toLocaleString());
     }
