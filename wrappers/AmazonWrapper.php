@@ -33,24 +33,26 @@
             $imgQueries = array();
             $priceQueries = array();
 
+            $commonXPath = "//*[@id=\"search\"]/div[1]/div[2]/div/span[3]/div[1]";
+
             for ($i=1; $i<=15; $i++)
             {
-                $itemId = '"result_' . $i . '"';
-
                 array_push($titleQueries,
-                '//ul/li[@id=' . $itemId . ']/div/div/div/div[2]/div/div/a/h2');
+                "$commonXPath/div[$i]/div/div/div/div[2]/div[2]/div/div[1]/div/div/div[1]/h5/a/span/text()");
 
                 array_push($linkQueries, 
-                '//ul/li[@id=' . $itemId . ']/div/div/div/div[2]/div/div/a/attribute::href');
+                "$commonXPath/div[$i]/div/div/div/div[2]/div[2]/div/div[1]/div/div/div[1]/h5/a/attribute::href");
 
                 array_push($authorQueries,
-                '//ul/li[@id=' . $itemId . ']/div/div/div/div[2]/div/div[2]/span[2]//text()');
+                "$commonXPath/div[$i]/div/div/div/div[2]/div[2]/div/div[1]/div/div/div[1]/div//text()"); // TODO extract substring
 
                 array_push($imgQueries,
-                '//ul/li[@id=' . $itemId . ']/div/div/div/div/div/div/a/img/attribute::src');
+                "$commonXPath/div[$i]/div/div/div/div[2]/div[1]/div/div/span/a/div/img/attribute::src");
 
                 array_push($priceQueries,
-                '//ul/li[@id=' . $itemId . ']/div/div/div/div[2]/div[2]/div[1]/div/a/span[2]/text()');
+                "$commonXPath/div[$i]/div/div/div/div[2]/div[2]/div/div[2]/div[1]/div/div[1]/div[2]/div/a/span/span[2]/span[1]/text()"); // TODO extract nonzero price
+                // alternative price, extract from following
+                // $commonXPath/div[$i]/div/div/div/div[2]/div[2]/div/div[2]/div[1]/div/div[2]/div/span
             }
 
             $queries = array();
@@ -71,22 +73,24 @@
             $imgQueries = array();
             $priceQueries = array();
 
+            $commonXPath = "//div[@id=\"zg-center-div\"]/ol";
+
             for ($i=1; $i<=15; $i++)
             {
                 array_push($titleQueries,
-                '//div[@id="zg-center-div"]/ol/li[' . $i . ']/span/div/span/a/div/text()');
+                "$commonXPath/li[$i]/span/div/span/a/div/text()");
 
                 array_push($linkQueries, 
-                '//div[@id="zg-center-div"]/ol/li[' . $i . ']/span/div/span/a/attribute::href');
+                "$commonXPath/li[$i]/span/div/span/a/attribute::href");
 
                 array_push($authorQueries,
-                '//div[@id="zg-center-div"]/ol/li[' . $i . ']/span/div/span/div[1]');
+                "$commonXPath/li[$i]/span/div/span/div[1]");
 
                 array_push($imgQueries,
-                '//div[@id="zg-center-div"]/ol/li[' . $i . ']/span/div/span/a/span/div/img/attribute::src');
+                "$commonXPath/li[$i]/span/div/span/a/span/div/img/attribute::src");
 
                 array_push($priceQueries,
-                '//div[@id="zg-center-div"]/ol/li[' . $i . ']/span/div/span/div/*[contains(.,"EUR")]');
+                "$commonXPath/li[$i]/span/div/span/div/*[contains(.,\"EUR\")]");
             }
 
             $queries = array();
