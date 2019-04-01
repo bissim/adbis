@@ -44,7 +44,7 @@
                 "$commonXPath/div[$i]/div/div/div/div[2]/div[2]/div/div[1]/div/div/div[1]/h5/a/attribute::href");
 
                 array_push($authorQueries,
-                "$commonXPath/div[$i]/div/div/div/div[2]/div[2]/div/div[1]/div/div/div[1]/div//text()"); // TODO extract substring
+                "$commonXPath/div[$i]/div/div/div/div[2]/div[2]/div/div[1]/div/div/div[1]//div/*[2]/text()"); // TODO extract substring
 
                 array_push($imgQueries,
                 "$commonXPath/div[$i]/div/div/div/div[2]/div[1]/div/div/span/a/div/img/attribute::src");
