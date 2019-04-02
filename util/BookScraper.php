@@ -61,6 +61,11 @@
                 }
                 $price = $xpath->query($this->queries['priceQueries'][$i]);
                 $price = trim($this->checkFloat($price));
+                if ($price == 0.0 && $source === 'amazon')
+                {
+                    $price = $xpath->query($this->queries['priceAltQueries'][$i]);
+                    $price = trim($this->checkFloat($price));
+                }
                 $image = $xpath->query($this->queries['imgQueries'][$i]);
                 $image = trim($this->checkEmpty($image));
                 $link = $xpath->query($this->queries['linkQueries'][$i]);

@@ -32,27 +32,41 @@
             $authorQueries = array();
             $imgQueries = array();
             $priceQueries = array();
+            $priceAltQueries = array();
 
             $commonXPath = "//*[@id=\"search\"]/div[1]/div[2]/div/span[3]/div[1]";
 
             for ($i=1; $i<=15; $i++)
             {
-                array_push($titleQueries,
-                "$commonXPath/div[$i]/div/div/div/div[2]/div[2]/div/div[1]/div/div/div[1]/h5/a/span/text()");
+                array_push(
+                    $titleQueries,
+                    "$commonXPath/div[$i]/div/div/div/div[2]/div[2]/div/div[1]/div/div/div[1]/h5/a/span/text()"
+                );
 
-                array_push($linkQueries, 
-                "$commonXPath/div[$i]/div/div/div/div[2]/div[2]/div/div[1]/div/div/div[1]/h5/a/attribute::href");
+                array_push(
+                    $linkQueries,
+                    "$commonXPath/div[$i]/div/div/div/div[2]/div[2]/div/div[1]/div/div/div[1]/h5/a/attribute::href"
+                );
 
-                array_push($authorQueries,
-                "$commonXPath/div[$i]/div/div/div/div[2]/div[2]/div/div[1]/div/div/div[1]//div/*[2]/text()"); // TODO extract substring
+                array_push(
+                    $authorQueries,
+                    "$commonXPath/div[$i]/div/div/div/div[2]/div[2]/div/div[1]/div/div/div[1]//div/*[2]/text()"
+                );
 
-                array_push($imgQueries,
-                "$commonXPath/div[$i]/div/div/div/div[2]/div[1]/div/div/span/a/div/img/attribute::src");
+                array_push(
+                    $imgQueries,
+                    "$commonXPath/div[$i]/div/div/div/div[2]/div[1]/div/div/span/a/div/img/attribute::src"
+                );
 
-                array_push($priceQueries,
-                "$commonXPath/div[$i]/div/div/div/div[2]/div[2]/div/div[2]/div[1]/div/div[1]/div[2]/div/a/span/span[2]/span[1]/text()"); // TODO extract nonzero price
-                // alternative price, extract from following
-                // $commonXPath/div[$i]/div/div/div/div[2]/div[2]/div/div[2]/div[1]/div/div[2]/div/span
+                array_push(
+                    $priceQueries,
+                    "$commonXPath/div[$i]/div/div/div/div[2]/div[2]/div/div[2]/div[1]/div/div[1]/div[2]/div/a/span/span[2]/span[1]/text()"
+                );
+
+                array_push( // alternative price
+                    $priceAltQueries,
+                    "$commonXPath/div[$i]/div/div/div/div[2]/div[2]/div/div[2]/div[1]/div/div[2]/div/span/text()"
+                );
             }
 
             $queries = array();
@@ -61,6 +75,7 @@
             $queries['authorQueries'] = $authorQueries;
             $queries['imgQueries'] = $imgQueries;
             $queries['priceQueries'] = $priceQueries;
+            $queries['priceAltQueries'] = $priceAltQueries;
 
             return $queries;
         }
