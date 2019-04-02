@@ -227,6 +227,7 @@
                 }
             }
 
+            shuffle($books);
             return $books;
         }
 
@@ -309,7 +310,7 @@
                 $this->dbMng->addAudioBooks($newBooks);
             }
 
-            return array_merge($books,$newBooks);
+            return array_merge($books, $newBooks);
         }
 
         /**
@@ -363,6 +364,7 @@
                 $reviews = $this->getCachedReviews($search, $keyword);
             }
 
+            shuffle($books);
             $items = array();
 
             foreach ($books as $book)
@@ -401,6 +403,7 @@
                 {
                     array_push($reviews, $review);
                 }
+
             return $reviews;
         }
         
@@ -437,7 +440,7 @@
                     for ($i=0; $i<$limit; $i++)
                         if ($book->equals($audiobooks[$i]))
                             $flag = false;
-                    if($flag)
+                    if ($flag)
                         array_push($newBooks, $book);
                 }
                 $this->dbMng->addAudioBooks($newBooks);
@@ -445,8 +448,11 @@
                 $reviews = $this->getReviews($search,$keyword);
             }
             else
+            {
                 $reviews = $this->getCachedReviews($search,$keyword);
+            }
 
+            shuffle($audiobooks);
             $items = array();
 
             foreach ($audiobooks as $audiobook) // TODO Y U ARRAY
