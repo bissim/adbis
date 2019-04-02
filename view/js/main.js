@@ -561,38 +561,21 @@ function populateResultNode(i, item, resultNode) {
 
   // create image container
   let imgContainerNode = $("<div></div>")
+    .addClass("d-flex align-items-center")
     .css({
       float: "left",
       width: "200px",
       height: "200px",
-      margin: "2px 40px 2px 20px"
+      margin: "2px 20px 2px 20px"
     });
-  if (source === "audible" || source === "ilnarratore") {
-    imgContainerNode
-      .css({
-        marginRight: "20px"
-      });
-  }
-  let imgNode = $("<img />")
-    .addClass("img-responsive center-block")
+  let imgNode = $("<img src=\"\" />")
+    .addClass("img-responsive")
     .attr("src", item["img"])
     .css({
       maxWidth: "180px",
-      maxHeight: "180px"
+      maxHeight: "180px",
+      margin: "0 auto"
     });
-  if (source !== 'amazon') {
-    imgNode
-      .css({
-        marginLeft: "36px",
-        marginRight: "37px"
-      });
-    // } else {
-    //   imgNode
-    //     .css({
-    //       maxWidth: "190px",
-    //       maxHeight: "190px"
-    //     });
-  }
   imgContainerNode.append(imgNode);
   resultNode.append(imgContainerNode);
 
