@@ -514,48 +514,57 @@ function createResults(json, resultsDiv) {
  * @param resultNode
  */
 function populateResultNode(i, item, resultNode) {
-  let source = item["source"];
+  let itemSource = item['source'];
   let logoHeight = "18px";
-  let src = "./view/img/";
-  let alt = "";
-  let title = "";
-  let price = item["price"];
-  price = price.toFixed(2);
-  price += "&nbsp;&euro;";
+  let logoSrc = "./view/img/";
+  let logoAlt = "Libro da ";
+  let logoTitle = "";
+  let itemTitle = item['title'];
+  let itemAuthor = (item['author'] !== '')? item['author']: "AA. VV.";
+  let itemPrice = item['price'];
 
-  switch (source) {
+  // check item data
+  if (itemTitle === "") {
+    return;
+  }
+
+  // fix price representation
+  itemPrice = itemPrice.toFixed(2);
+  itemPrice += "&nbsp;&euro;";
+
+  switch (itemSource) {
     case 'amazon':
-      src += "amazon_logo.png";
-      alt = "Amazon";
-      title = "Amazon";
+      logoSrc += "amazon_logo.png";
+      logoAlt = "Amazon";
+      logoTitle = "Amazon";
       break;
     case 'audible':
-      src += "audible_logo.png";
-      alt = "Audible";
-      title = "Audible";
-      price = "Gratuito previo abbonamento";
+      logoSrc += "audible_logo.png";
+      logoAlt = "Audible";
+      logoTitle = "Audible";
+      itemPrice = "Gratuito previo abbonamento";
       break;
     case 'google':
-      src += "google_logo.png";
-      alt = "Google";
-      title = "Google";
+      logoSrc += "google_logo.png";
+      logoAlt = "Google";
+      logoTitle = "Google";
       break;
     case 'ilnarratore':
       logoHeight = "26px";
-      src += "ilnarratore_logo.png";
-      alt = "IlNarratore";
-      title = "IlNarratore";
+      logoSrc += "ilnarratore_logo.png";
+      logoAlt = "IlNarratore";
+      logoTitle = "IlNarratore";
       break;
     case 'kobo':
-      src += "kobo_logo.png";
-      alt = "Kobo";
-      title = "Kobo";
+      logoSrc += "kobo_logo.png";
+      logoAlt = "Kobo";
+      logoTitle = "Kobo";
       break;
     default:
-      src += "unknown_logo.png";
-      alt = "Unknown";
-      title = "???";
-      console.warn("Unknown source '" + source + "'!");
+      logoSrc += "unknown_logo.png";
+      logoAlt = "Unknown";
+      logoTitle = "???";
+      console.warn(`Unknown source '${itemSource}'!`);
       break;
   }
 
@@ -566,11 +575,12 @@ function populateResultNode(i, item, resultNode) {
       float: "left",
       width: "200px",
       height: "200px",
-      margin: "2px 20px 2px 20px"
+      margin: "2px 20px"
     });
-  let imgNode = $("<img src=\"\" />")
+  let imgNode = $("<img src=\"\" alt=\"\" />")
     .addClass("img-responsive")
     .attr("src", item["img"])
+    .attr("alt", `Copertina di '${itemTitle}'`)
     .css({
       maxWidth: "180px",
       maxHeight: "180px",
@@ -580,7 +590,6 @@ function populateResultNode(i, item, resultNode) {
   resultNode.append(imgContainerNode);
 
   // create details container
-  let itemAuthor = (item["author"] !== '')? item["author"]: "AA. VV.";
   let detailsContainerNode = $("<div></div>")
     .attr("id", "details" + (i + 1))
     .css({
@@ -595,44 +604,41 @@ function populateResultNode(i, item, resultNode) {
   // create book title
   let titleRow = $("<span></span>");
   let titleAnchor = $("<a></a>")
-    .attr("href", item["link"])
+    .attr("href", item['link'])
     .append(
       $("<strong></strong>")
-        .append(item["title"])
+        .append(itemTitle)
     );
-  let logoNode = $("<img />")
+  let logoNode = $("<img src=\"\" alt=\"\" />")
     .addClass("img-responsive center-block")
-    .attr("src", src)
-    .attr("alt", alt)
-    .attr("title", title)
+    .attr("src", logoSrc)
+    .attr("alt", logoAlt)
+    .attr("title", logoTitle)
     .css({
       maxHeight: logoHeight,
-      margin: "4px 2px",
-      padding: "2px"
+      margin: "0px 8px 4px 0px"
     });
 
   titleRow
     .append(logoNode)
-    .append("&nbsp;")
     .append(titleAnchor);
 
   detailsContainerNode
     .append(titleRow)
     .append("<br />")
-    .append("<span>di&nbsp;<em>" + itemAuthor + "</em></span>")
+    .append(`<span>di&nbsp;<em>${itemAuthor}</em></span>`)
     .append("<br />");
-  if (pageName === 'audiobooks') {
+  if (itemSource === 'audible' || itemSource === 'ilnarratore') {
     detailsContainerNode
       .append(
-        "<span>letto da&nbsp;<em>" + item["voice"] + "</em></span>"
+        `<span>letto da&nbsp;<em>${item["voice"]}</em></span>`
       )
       .append("<br />");
   }
   detailsContainerNode
-    .append("<span>Prezzo:&nbsp;" + price + "</span>")
+    .append(`<span>prezzo:&nbsp;${itemPrice}</span>`)
     .append("<br />");
 
-  // detailsContainerNode.append(logoNode);
   resultNode.append(detailsContainerNode);
 }
 
