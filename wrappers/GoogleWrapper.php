@@ -12,6 +12,12 @@
         public function __construct()
         {}
 
+        /**
+         * @param string $keyword
+         *
+         * @return array
+         * @throws \Exception - invocation may fail due to unexpected result
+         */
         public function getBooks(string $keyword): array
         {
             $keyword = str_replace(

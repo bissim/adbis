@@ -35,9 +35,20 @@
 
         public function getBooks($keyword): array
         {
+            $googleBooks = array();
+
+            try
+            {
+                $googleBooks = $this->googleWrapper->getBooks($keyword);
+            }
+            catch (\Exception $e)
+            {
+                error_log($e->getMessage());
+            }
+
             $books = array_merge(
                 $this->amazonWrapper->getBooks($keyword),
-                $this->googleWrapper->getBooks($keyword),
+                $googleBooks,
                 $this->koboWrapper->getBooks($keyword)
             );
 
