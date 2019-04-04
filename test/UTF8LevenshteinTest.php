@@ -2,11 +2,11 @@
     namespace test;
 
     require_once './test/BasicTest.php';
-    require_once './controller/UTF8Levenshtein.php';
+    require_once './util/UTF8Levenshtein.php';
 
     use \test\BasicTest;
     use \util\ErrorHandler;
-    use \controller\UTF8Levenshtein;
+    use \util\UTF8Levenshtein;
 
     set_error_handler(array(new ErrorHandler, 'errorHandler'));
 
