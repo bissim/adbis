@@ -88,7 +88,11 @@ create procedure prune()
 
     # Audible audiobook pruning
     delete from audiobook
-    where TIMESTAMPDIFF(hour, `expiration_date`, NOW()) > 24;
+    where TIMESTAMPDIFF(hour, `expiration_date`, NOW()) > 24 and src = 'audible';
+
+    # ilNarratore audiobook pruning
+    delete from audiobook
+    where TIMESTAMPDIFF(hour, `expiration_date`, NOW()) > 36 and src = 'ilnarratore';
 
     # QLibri reviews pruning
     delete from review
