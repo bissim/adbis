@@ -76,7 +76,7 @@ function disableSearchButton() {
     cancelButton.prop("disabled", true);
   }
 
-  if (searchField.val().length > 2) {
+  if (searchField.val().length > 3) {
     sendButton.prop("disabled", false);
   } else {
     sendButton.prop("disabled", true);
@@ -89,85 +89,31 @@ function disableSearchButton() {
 function changePH() {
   let id = $(this).attr('id');
   let word = "";
+
   switch (id) {
-    case 'searchByAuthor': word = "Autore"; break;
-    case 'searchByTitle': word = "Titolo"; break;
-    case 'searchByVoice': word = "Doppiatore"; break;
-    default: word = "";
+    case 'searchByAuthor':
+      word = "Autore";
+      break;
+    case 'searchByTitle':
+      word = "Titolo";
+      break;
+    case 'searchByVoice':
+      word = "Doppiatore";
+      break;
+    default:
+      word = "";
+      break;
   }
+
   searchField.attr("placeholder", word);
   $("#searchLabel").text(word);
-}
-
-/**
- * Generic function to search for books or reviews.
- */
-function search() {
-  // Si distingue il caso di ricerca per autore e ricerca per titolo
-  let id = $(this).attr("id");
-
-  let keyword, search, table;
-  switch (id) {
-    case "bookAutBtn":
-      keyword = $("input[id = bookAut]").val();
-      search = "author";
-      table = "book";
-      break;
-
-    case "bookTitBtn":
-      keyword = $("input[id = bookTit]").val();
-      search = "title";
-      table = "book";
-      break;
-
-    case "reviewAutBtn":
-      keyword = $("input[id = reviewAut]").val();
-      search = "author";
-      table = "review";
-      break;
-
-    case "reviewTitBtn":
-      keyword = $("input[id = reviewTit]").val();
-      search = "title";
-      table = "review";
-      break;
-
-    default:
-      console.error("Unknown button ID!");
-      break;
-  }
-
-  // Si effettua la chiamata AJAX
-  let searchUrl = baseSearchUrl + table;
-  // console.debug("Sending request to " + searchUrl + "...");
-  if (table === "book") {
-    $.ajax({
-      url: searchUrl,
-      data: {
-        search: search,
-        keyword: keyword
-      },
-      // Si stampano i risultati ottenuti
-      success: showBooks,
-      error: ajaxError
-    });
-  } else if (table === "review") {
-    $.ajax({
-      url: searchUrl,
-      data: {
-        search: search,
-        keyword: keyword
-      },
-      success: showReviews,
-      error: ajaxError
-    });
-  }
 }
 
 /**
  * Specific function to search for books.
  */
 function searchBooks() {
+  $("div#resultsTitle").hide();
   $("div#loadbox")
     .show()
     .children()
@@ -176,9 +122,9 @@ function searchBooks() {
   let keyword = searchField.val();
   let join = true;
   // console.debug(
-  //   "Searching for " + search.toString() + " " + keyword.toString() + "..."
+  //   `Searching for ${search.toString()} ${keyword.toString()}...`
   // );
-  // console.debug("Both? " + join);
+  // console.debug(`Both? ${join}`);
 
   let endpoint = "";
   switch (pageName) {
@@ -202,29 +148,6 @@ function searchBooks() {
     },
     beforeSend: prepareForResults,
     success: showBoth,
-    error: ajaxError
-  });
-}
-
-/**
- * Specific function to search for reviews.
- */
-function searchReviews() {
-  let search = $("input[name = search]:checked, #sentMessage").val();
-  let keyword = searchField.val();
-  // console.debug("Searching for " + search.toString() + " " + keyword.toString() + "...");
-
-  // AJAX call
-  let searchUrl = baseSearchUrl + "review";
-  // console.debug("GET " + searchUrl + "...");
-  $.ajax({
-    url: searchUrl,
-    data: {
-      search: search,
-      keyword: keyword
-    },
-    beforeSend: prepareForResults,
-    success: showReviews,
     error: ajaxError
   });
 }
@@ -271,7 +194,6 @@ function showBoth(res) {
     .hide();
   let loadingMessage = $("span#loadingMessage")
     .empty();
-  $("div#resultsTitle").show();
 
   let json;
 
@@ -332,7 +254,7 @@ function showBooks(res) {
   try {
     json = JSON.parse(res);
     numResults = Object.keys(json).length;
-    console.debug("Object received: length " + numResults);
+    // console.debug(`Object received: length ${numResults}`);
   } catch (e) {
     loadingMessage.html(
       "Impossibile recuperare i risultati!"
@@ -351,7 +273,7 @@ function showBooks(res) {
   if (numResults > 0) {
     if (pageName.length > 0) {
       message =
-        "La ricerca ha ottenuto " + numResults + " risultati! Consultare l'elenco sottostante.";
+        `La ricerca ha ottenuto ${numResults} risultati! Consultare l'elenco sottostante.`;
       $("#success").html(message);
     }
 
@@ -419,6 +341,9 @@ function createItemNodes(json, resultsDiv) {
  * @param resultsDiv
  */
 function createResults(json, resultsDiv) {
+  if (pageName !== "") {
+    $("div#resultsTitle").show();
+  }
   $.each(json, function (i, item) {
     let book = item[0];
     let review = item[1];
@@ -471,21 +396,21 @@ function createResults(json, resultsDiv) {
         })
         .append("<h4>Punteggi</h4>")
         .append(
-            "<span>Voto: <strong>" + review.avg + "</strong></span><br />"
+          `<span>Voto: <strong>${review.avg}</strong></span><br />`
         )
-        .append("<span>Stile: " + review.style + "</span><br />")
-        .append("<span>Contenuto: " + review.content + "</span><br />")
-        .append("<span>Piacevolezza: " + review.pleasantness + "</span>");
+        .append(`<span>Stile: ${review.style}</span><br />`)
+        .append(`<span>Contenuto: ${review.content}</span><br />`)
+        .append(`<span>Piacevolezza: ${review.pleasantness}</span>`);
 
       detailsContainerReview.append(statsContainer);
 
       // create plot and review container
       let plotContainer = $("<div></div>")
         .append("<h4>Trama</h4>")
-        .append("<p>" + review.plot + "</p>");
+        .append(`<p>${review.plot}</p>`);
       let reviewTextContainer = $("<div></div>")
         .append("<h4>Recensione di un utente</h4>")
-        .append("<p>" + review.text + "</p>");
+        .append(`<p>${review.text}</p>`);
       let textContainer = $("<div></div>")
         .attr("id", "text" + (i + 1))
         .css({
@@ -517,7 +442,7 @@ function populateResultNode(i, item, resultNode) {
   let itemSource = item['source'];
   let logoHeight = "18px";
   let logoSrc = "./view/img/";
-  let logoAlt = "Libro da ";
+  let logoAlt = "";
   let logoTitle = "";
   let itemTitle = item['title'];
   let itemAuthor = (item['author'] !== '')? item['author']: "AA. VV.";
@@ -535,34 +460,34 @@ function populateResultNode(i, item, resultNode) {
   switch (itemSource) {
     case 'amazon':
       logoSrc += "amazon_logo.png";
-      logoAlt = "Amazon";
+      logoAlt = "Libro da Amazon";
       logoTitle = "Amazon";
       break;
     case 'audible':
       logoSrc += "audible_logo.png";
-      logoAlt = "Audible";
+      logoAlt = "Audiolibro da Audible";
       logoTitle = "Audible";
       itemPrice = "Gratuito previo abbonamento";
       break;
     case 'google':
       logoSrc += "google_logo.png";
-      logoAlt = "Google";
+      logoAlt = "Libro da Google";
       logoTitle = "Google";
       break;
     case 'ilnarratore':
       logoHeight = "26px";
       logoSrc += "ilnarratore_logo.png";
-      logoAlt = "IlNarratore";
+      logoAlt = "Audiolibro da IlNarratore";
       logoTitle = "IlNarratore";
       break;
     case 'kobo':
       logoSrc += "kobo_logo.png";
-      logoAlt = "Kobo";
+      logoAlt = "Libro da Kobo";
       logoTitle = "Kobo";
       break;
     default:
       logoSrc += "unknown_logo.png";
-      logoAlt = "Unknown";
+      logoAlt = "Libro da fonte sconosciuta";
       logoTitle = "???";
       console.warn(`Unknown source '${itemSource}'!`);
       break;
@@ -580,7 +505,7 @@ function populateResultNode(i, item, resultNode) {
   let imgNode = $("<img src=\"\" alt=\"\" />")
     .addClass("img-responsive")
     .attr("src", item["img"])
-    .attr("alt", `Copertina di '${itemTitle}'`)
+    .attr("alt", `Copertina di '${itemTitle}' di ${itemAuthor}`)
     .css({
       maxWidth: "180px",
       maxHeight: "180px",
@@ -636,43 +561,10 @@ function populateResultNode(i, item, resultNode) {
       .append("<br />");
   }
   detailsContainerNode
-    .append(`<span>prezzo:&nbsp;${itemPrice}</span>`)
+    .append(`<span><strong>${itemPrice}</strong></span>`)
     .append("<br />");
 
   resultNode.append(detailsContainerNode);
-}
-
-/**
- * Show results for review query in page.
- * @param res
- */
-function showReviews(res) {
-  // console.debug("Object received: " + res);
-
-  // create object from JSON
-  let json = JSON.parse(res);
-
-  let loadingMessage = $("span#loadingMessage");
-  loadingMessage.empty();
-
-  if (Object.keys(json).length>0) {
-    let message =
-      "La ricerca ha ottenuto dei risultati! Consultare l'elenco sottostante.";
-    $("#success").html(message);
-
-    let resultsDiv = $("#results");
-
-    try {
-      let resultsDiv = $("#results");
-      // delete temporary message in results container
-      resultsDiv.empty();
-  
-      // show result
-      createReviewNodes(json, resultsDiv);
-    } catch (e) {
-      throw e;
-    }
-  }
 }
 
 /**
