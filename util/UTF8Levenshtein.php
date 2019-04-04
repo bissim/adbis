@@ -1,12 +1,5 @@
 <?php
-    /**
-     * Created by PhpStorm.
-     * User: bisim
-     * Date: 26/09/2018
-     * Time: 09:51
-     */
-
-    namespace controller;
+    namespace util;
 
 
     /**
@@ -15,7 +8,7 @@
      * Credits to <strong>luciole75w</strong>
      * Source: http://it2.php.net/manual/en/function.levenshtein.php#113702
      *
-     * @package controller
+     * @package util
      */
     class UTF8Levenshtein
     {
