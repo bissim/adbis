@@ -19,8 +19,7 @@
 
             // test audiobook retrieval
             $narratoreWrapper = new NarratoreWrapper;
-            $books = $narratoreWrapper->getNewBooks();
-            // $books = $narratoreWrapper->getBooks("umberto eco");
+            $books = $narratoreWrapper->getBooks('guerra e pace');
 
             $count = count($books);
             echo "$count libri trovati!<br /><br />";
@@ -36,5 +35,17 @@
             // test new audiobook retrieval
             echo "Retrieving new books...<br />";
             $this->start_time();
+            $books = $narratoreWrapper->getNewBooks();
+            // $books = $narratoreWrapper->getBooks("umberto eco");
+
+            $count = count($books);
+            echo "$count libri trovati!<br /><br />";
+
+            foreach ($books as $book)
+                print $book;
+
+            $tempo = $this->get_elapsed();
+            unset($books);
+            echo "Tempo impiegato dallo script: $tempo secondi<br />";
         }
     }

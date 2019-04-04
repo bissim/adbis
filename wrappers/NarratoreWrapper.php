@@ -31,25 +31,39 @@
             $imgQueries = array();
             $voiceQueries = array();
 
+            $commonXPath = "/html/body/div[@id=\"search\"]/div/div[@class=\"span9 main_content\"]/div/div";
+
             for ($i=1; $i<=8; $i++)
             {
-                array_push($titleQueries,
-                '/html/body/div[@id="search"]/div/div[@class="span9 main_content"]/div/div/div[' . $i . ']/div/div/h4/a/text()');
+                array_push(
+                    $titleQueries,
+                    "$commonXPath/div[$i]/div/div/h4/a/text()"
+                );
 
-                array_push($linkQueries, 
-                '/html/body/div[@id="search"]/div/div[@class="span9 main_content"]/div/div/div[' . $i . ']/div/div/h4/a/attribute::href');
+                array_push(
+                    $linkQueries,
+                    "$commonXPath/div[$i]/div/div/h4/a/attribute::href"
+                );
 
-                array_push($authorQueries,
-                '/html/body/div[@id="search"]/div/div[@class="span9 main_content"]/div/div/div[' . $i . ']/div/div/h4/a/text()');
+                array_push(
+                    $authorQueries,
+                    "$commonXPath/div[$i]/div/div/h4/a/text()"
+                );
 
-                array_push($priceQueries,
-                '/html/body/div[@id="search"]/div/div[@class="span9 main_content"]/div/div/div[' . $i . ']/div/div/div/div[@class="minh4"]/div/h4');
+                array_push(
+                    $priceQueries,
+                    "$commonXPath/div[$i]/div/div/div/div[@class=\"minh4\"]/div/h4"
+                );
 
-                array_push($imgQueries,
-                '/html/body/div[@id="search"]/div/div[@class="span9 main_content"]/div/div/div[' . $i . ']/div/div/div/a/img/attribute::src');
+                array_push(
+                    $imgQueries,
+                    "$commonXPath/div[$i]/div/div/div/a/img/attribute::src"
+                );
 
-                array_push($voiceQueries,
-                '/html/body/div[@id="search"]/div/div[@class="span9 main_content"]/div/div/div[' . $i . ']/div/div/div/div[@class="minh10"]/div[1]');
+                array_push(
+                    $voiceQueries,
+                    "$commonXPath/div[$i]/div/div/div/div[@class=\"minh10\"]/div[1]"
+                );
             }
 
             $queries = array();
@@ -73,25 +87,39 @@
             $imgQueries = array();
             $voiceQueries = array();
 
+            $commonXPath = "/html/body/div[@id=\"homepage\"]/div/div[2]";
+
             for ($i=3; $i<=10; $i++)
             {
-                array_push($titleQueries,
-                '/html/body/div[@id="homepage"]/div/div[2]/div[' . $i . ']/div/div/div/h4/a/text()');
+                array_push(
+                    $titleQueries,
+                    "$commonXPath/div[$i]/div/div/div/h4/a/text()"
+                );
 
-                array_push($linkQueries, 
-                '/html/body/div[@id="homepage"]/div/div[2]/div[' . $i . ']/div/div/div/h4/a/attribute::href');
+                array_push(
+                    $linkQueries,
+                    "$commonXPath/div[$i]/div/div/div/h4/a/attribute::href"
+                );
 
-                array_push($authorQueries,
-                '/html/body/div[@id="homepage"]/div/div[2]/div[' . $i . ']/div/div/div/h4/a/text()');
+                array_push(
+                    $authorQueries,
+                    "$commonXPath/div[$i]/div/div/div/h4/a/text()"
+                );
 
-                array_push($priceQueries,
-                '/html/body/div[@id="homepage"]/div/div[2]/div[' . $i . ']/div/div/div/div[@class="tet-center btn_box_group"]/div[@class="minh4"]/div/h4');
+                array_push(
+                    $priceQueries,
+                    "$commonXPath/div[$i]/div/div/div/div[@class=\"tet-center btn_box_group\"]/div[@class=\"minh4\"]/div/h4"
+                );
 
-                array_push($imgQueries,
-                '/html/body/div[@id="homepage"]/div/div[2]/div[' . $i . ']/div/div/div/div[@class="carousel minh2"]/a/img/attribute::src');
+                array_push(
+                    $imgQueries,
+                    "$commonXPath/div[$i]/div/div/div/div[@class=\"carousel minh2\"]/a/img/attribute::src"
+                );
 
-                array_push($voiceQueries,
-                '/html/body/div[@id="homepage"]/div/div[2]/div[' . $i . ']/div/div/div/div[@class="tet-center btn_box_group"]/div[@class="minh10"]/div[1]');
+                array_push(
+                    $voiceQueries,
+                    "$commonXPath/div[$i]/div/div/div/div[@class=\"tet-center btn_box_group\"]/div[@class=\"minh10\"]/div[1]"
+                );
             }
 
             $queries = array();
@@ -103,7 +131,7 @@
             $queries['voiceQueries'] = $voiceQueries;
 
             return $queries;
-        }        
+        }
 
         public function getBooks(String $keyword, bool $new = false): array
         {
@@ -117,16 +145,37 @@
                 'ilnarratore'
             );
             $effectiveBooks = array();
+
             foreach ($books as $book)
             {
-                $t = $book->getTitle();
+                $title = $book->getTitle();
                 if ($book->getTitle() !== '')
                 {
-                    $book->setTitle(substr(strstr($t, "-"),1));
-                    $book->setAuthor(substr($t, 0, strpos($t, "-")));
-                    $book->setImg('https://IlNarratore.com/' . $book->getImg());
-                    $book->setLink('https://IlNarratore.com/' . $book->getLink());
-                    $book->setVoice(str_replace("Voce narrante: ", "", $book->getVoice()));
+                    $book->setTitle(
+                        trim(
+                            substr(
+                                strstr($title, "-"),
+                                1
+                            )
+                        )
+                    );
+                    $book->setAuthor(
+                        trim(
+                            substr($title, 0, strpos($title, "-"))
+                        )
+                    );
+                    $book->setImg('https://ilnarratore.com/' . $book->getImg());
+                    $book->setLink('https://ilnarratore.com/' . $book->getLink());
+                    $book->setVoice(
+                        trim(
+                            str_replace(
+                                "Voce narrante: ",
+                                "",
+                                $book->getVoice()
+                            )
+                        )
+                    );
+
                     array_push($effectiveBooks, $book);
                 }
             }
@@ -153,14 +202,47 @@
             $effectiveBooks = array();
             foreach ($books as $book)
             {
-                $t = $book->getTitle();
+                $title = $book->getTitle();
                 if ($book->getTitle() !== '')
                 {
-                    $book->setTitle(substr(strstr($t, "-"),1));
-                    $book->setAuthor(substr($t, 0, strpos($t, "-")));
-                    $book->setLink('https://IlNarratore.com/' . $book->getLink());
-                    $book->setImg('https://IlNarratore.com/' . $book->getImg());
-                    $book->setVoice(str_replace("Voce narrante: ", "", $book->getVoice()));
+                    $book->setTitle(
+                        trim(
+                            substr( // extract substring from start to needle
+                                strstr( // calculate first needle position
+                                    $title,
+                                    "-"
+                                ),
+                                1
+                            )
+                        )
+                    );
+                    $book->setAuthor(
+                        trim(
+                            substr(
+                                $title,
+                                0,
+                                strpos($title, "-")
+                            )
+                        )
+                    );
+                    $book->setLink('https://ilnarratore.com/' . $book->getLink());
+                    $book->setImg('https://ilnarratore.com/' . $book->getImg());
+                    $voice = str_replace(
+                        "Voce narrante: ",
+                        "",
+                        $book->getVoice()
+                    );
+                    $needle = strpos($voice, ",");
+                    $book->setVoice(
+                        trim(
+                            substr(
+                                $voice,
+                                0,
+                                $needle? $needle: strlen($voice)
+                            )
+                        )
+                    );
+
                     array_push($effectiveBooks, $book);
                 }
             }
