@@ -55,21 +55,24 @@
                 $title = Encoding::fixUTF8(trim($this->checkEmpty($title)));
                 $author = $xpath->query($this->queries['authorQueries'][$i]);
                 $author = Encoding::fixUTF8(trim($this->checkEmpty($author)));
-                if ($source === 'amazon')
-                {
-                    $author = str_replace(' e', '', $author);
-                }
                 $price = $xpath->query($this->queries['priceQueries'][$i]);
                 $price = trim($this->checkFloat($price));
-                if ($price == 0.0 && $source === 'amazon')
-                {
-                    $price = $xpath->query($this->queries['priceAltQueries'][$i]);
-                    $price = trim($this->checkFloat($price));
-                }
                 $image = $xpath->query($this->queries['imgQueries'][$i]);
                 $image = trim($this->checkEmpty($image));
                 $link = $xpath->query($this->queries['linkQueries'][$i]);
                 $link = trim($this->checkEmpty($link));
+
+                // fix Amazon attributes
+                if ($source === 'amazon')
+                {
+                    $author = str_replace(' e', '', $author);
+                    if ($price == 0.0)
+                    {
+                        $price = $xpath->query($this->queries['priceAltQueries'][$i]);
+                        $price = trim($this->checkFloat($price));
+                    }
+                    $link = "https://www.amazon.it$link";
+                }
 
                 $book = new Book(
                     $title,
