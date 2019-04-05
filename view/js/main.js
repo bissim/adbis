@@ -359,7 +359,6 @@ function createResults(json, resultsDiv) {
 
     // now append review to item node
     if (review != null) {
-      let collapseNode = $("<span></span>");
       let chevron = $("<i></i>")
         .addClass("fas fa-chevron-down");
       let findMore = $("<a></a>")
@@ -373,12 +372,11 @@ function createResults(json, resultsDiv) {
         .append("&nbsp;")
         .append(chevron);
 
-      collapseNode
+      let collapseNode = $("<span></span>")
         .append(findMore);
 
       resultNode
         .children("div#details" + (i + 1))
-        // .append("<br />")
         .append(collapseNode);
 
       let detailsContainerReview = $("<div></div>")
@@ -460,34 +458,29 @@ function populateResultNode(i, item, resultNode) {
   switch (itemSource) {
     case 'amazon':
       logoSrc += "amazon_logo.png";
-      logoAlt = "Libro da Amazon";
-      logoTitle = "Amazon";
+      logoAlt = logoTitle = "Libro da Amazon";
       break;
     case 'audible':
       logoSrc += "audible_logo.png";
-      logoAlt = "Audiolibro da Audible";
-      logoTitle = "Audible";
+      logoAlt = logoTitle = "Audiolibro da Audible";
       itemPrice = "Gratuito previo abbonamento";
       break;
     case 'google':
       logoSrc += "google_logo.png";
-      logoAlt = "Libro da Google";
-      logoTitle = "Google";
+      logoAlt = logoTitle = "Libro da Google";
       break;
     case 'ilnarratore':
       logoHeight = "26px";
       logoSrc += "ilnarratore_logo.png";
-      logoAlt = "Audiolibro da IlNarratore";
-      logoTitle = "IlNarratore";
+      logoAlt = logoTitle = "Audiolibro da IlNarratore";
       break;
     case 'kobo':
       logoSrc += "kobo_logo.png";
-      logoAlt = "Libro da Kobo";
-      logoTitle = "Kobo";
+      logoAlt = logoTitle = "Libro da Kobo";
       break;
     default:
       logoSrc += "unknown_logo.png";
-      logoAlt = "Libro da fonte sconosciuta";
+      logoAlt = "Libro da fonte non nota";
       logoTitle = "???";
       console.warn(`Unknown source '${itemSource}'!`);
       break;
@@ -530,6 +523,8 @@ function populateResultNode(i, item, resultNode) {
   let titleRow = $("<span></span>");
   let titleAnchor = $("<a></a>")
     .attr("href", item['link'])
+    .attr("rel", "noopener noreferrer")
+    .attr("target", "_blank")
     .append(
       $("<strong></strong>")
         .append(itemTitle)
