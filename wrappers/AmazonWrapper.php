@@ -136,7 +136,6 @@
                 {
                     if ($new)
                     {
-                        $book->setLink('https://www.amazon.it' . $book->getLink());
                         $book->setRecent(true);
                     }
                     $book->setSource('amazon');
@@ -165,7 +164,6 @@
             );
             foreach ($books as $book)
             {
-                $book->setLink('https://www.amazon.it' . $book->getLink());
                 $book->setRecent(true);
                 $book->setSource('amazon');
             }
