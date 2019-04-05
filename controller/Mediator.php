@@ -489,6 +489,7 @@
         {
             $numBooks = count($books);
             $variaty = 0;
+            $treshold = ($numBooks - 1) * $numBooks / 3;
 
             for ($i = 0; $i < $numBooks; $i++)
             {
@@ -517,13 +518,14 @@
 
             // we compared all books in array
             // didn't find any mismatch
-            return ($variaty > 12);
+            return ($variaty > $treshold);
         }
 
         private function isVariousAudio(array $books, string $search): bool
         {
             $numBooks = count($books);
             $variaty = 0;
+            $treshold = ($numBooks - 1) * $numBooks / 3;
 
             for ($i = 0; $i < $numBooks; $i++)
             {
@@ -550,7 +552,7 @@
 
             // we compared all books in array
             // didn't find any mismatch
-            return ($variaty > 5);
+            return ($variaty > $treshold);
         }
 
     }
