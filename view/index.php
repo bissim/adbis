@@ -30,16 +30,14 @@
     ?>
 
     <!-- Main Content -->
-    <div class="container">
-      <div id="results" class="row">
-        <!-- <h2>Nuovi eBook</h2> -->
-      </div>
+    <main class="container">
+      <div id="results" class="row"></div>
 
       <!-- Loadbox -->
       <?php
           include 'loadbox.php';
       ?>
-    </div>
+    </main>
 
     <hr />
 

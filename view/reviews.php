@@ -42,7 +42,7 @@
     ?>
 
     <!-- Main Content -->
-    <div class="container">
+    <main class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <form name="sentMessage" id="contactForm" novalidate>
@@ -66,7 +66,7 @@
       </div>
       <div id="resultsTitle" class="row" style="display:none;"><h3>Risultati di ricerca</h3></div>
       <div id="results" class="row" style="display:none;"></div>
-    </div>
+    </main>
 
     <hr />
 

@@ -17,7 +17,7 @@
     <br />
     <div class="control-group" style="margin-top: 5px;">
       <button id="sendMessageButton" type="submit" class="btn btn-primary">Cerca</button>
-      <button id="clear" type="button" class="btn btn-primary" disabled>Azzera</button>
+      <button id="clear" type="button" class="btn btn-primary" style="display: none;" disabled>Azzera</button>
       <button id="deepSearch" type="button" class="btn btn-primary" style="display: none;">Riprova</button>
     </div>
     <br/>

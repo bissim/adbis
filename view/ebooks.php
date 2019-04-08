@@ -30,7 +30,7 @@
     ?>
 
     <!-- Main Content -->
-    <div class="container">
+    <main class="container">
       <div class="row">
         <h2>Ebook</h2>
       </div>
@@ -51,7 +51,7 @@
       <?php
           include 'loadbox.php';
       ?>
-    </div>
+    </main>
 
     <hr />
  

@@ -30,7 +30,7 @@
     ?>
 
     <!-- Main Content -->
-    <div class="container">
+    <main class="container">
       <div class="row">
         <h2>Audiobook</h2>
       </div>
@@ -52,7 +52,7 @@
       <?php
           include 'loadbox.php';
       ?>
-    </div>
+    </main>
 
     <hr />
  
