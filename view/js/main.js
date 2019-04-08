@@ -1,6 +1,7 @@
 // search page elements
 let sendButton = $("button[type = submit]#sendMessageButton");
 let deepButton = $("button#deepSearch");
+let clearButton = $("button#clear");
 let searchField = $("input[type = text]#keyword");
 
 // page name
@@ -13,8 +14,8 @@ let pageName;
 let baseSearchUrl = "/adbis/search/";
 
 $(document).ready(function () {
-    determinePageName();
-    sessionStorage.setItem("deepSearch", "hide");
+  determinePageName();
+  sessionStorage.setItem("deepSearch", "hide");
 
   switch (pageName) {
     case "":
@@ -37,9 +38,9 @@ $(document).ready(function () {
     case "ebooks":
     default:
       $("input[type = radio]").click(changePH);
-      $("button#sendMessageButton").click(searchCache);
+      sendButton.click(searchCache);
       deepButton.click(deepSearch);
-      $("button#clear").click(clearResults);
+      clearButton.click(clearResults);
 
       // async call to retrieve results
       // sendButton.click(searchBooks);
@@ -81,7 +82,7 @@ function enableSearch() {
   $("input[type = radio]#searchByAuthor").prop("disabled", false);
   $("input[type = radio]#searchByVoice").prop("disabled", false);
   sendButton.prop("disabled", false);
-  $("button#clear").prop("disabled", false);
+  clearButton.prop("disabled", false);
   deepButton.prop("disabled", false);
 }
 
@@ -94,7 +95,7 @@ function disableSearch() {
   $("input[type = radio]#searchByAuthor").prop("disabled", true);
   $("input[type = radio]#searchByVoice").prop("disabled", true);
   sendButton.prop("disabled", true);
-  $("button#clear").prop("disabled", true);
+  clearButton.prop("disabled", true);
   deepButton.prop("disabled", true);
 }
 
@@ -136,7 +137,7 @@ function changePH() {
       word = "Doppiatore";
       break;
     default:
-      word = "";
+      word = "Cerca";
       break;
   }
 
@@ -477,7 +478,8 @@ function createResults(json, resultsDiv) {
   });
 
   // enable clear button
-  $("button#clear").prop("disabled", false);
+  clearButton.prop("disabled", false);
+  clearButton.show();
 }
 
 /**
@@ -692,7 +694,10 @@ function clearResults() {
   $("div#resultsTitle").hide();
   $("div#results").empty();
   $("div#success").empty();
-  $("button#clear").prop("disabled", true);
+  clearButton.prop("disabled", true);
+  clearButton.hide();
+  sessionStorage.setItem("deepSearch", "hide");
+  deepButton.hide();
 }
 
 /**
