@@ -6,6 +6,12 @@ let searchField = $("input[type = text]#keyword");
 // page name
 let pageName;
 
+/**
+ * Base endpoint for entity search.
+ * @type {string}
+ */
+let baseSearchUrl = "/adbis/search/";
+
 $(document).ready(function () {
     determinePageName();
     sessionStorage.setItem("deepSearch", "hide");
@@ -25,18 +31,24 @@ $(document).ready(function () {
         success: showBooks
       });
       break;
-    case "ebooks":
     case "audiobooks":
+      $("input[type = radio]#searchByVoice").show();
+      $("label#voiceLabel").show();
+    case "ebooks":
     default:
       $("input[type = radio]").click(changePH);
+      $("button#sendMessageButton").click(searchCache);
+      deepButton.click(deepSearch);
+      $("button#clear").click(clearResults);
 
       // async call to retrieve results
       // sendButton.click(searchBooks);
       // deepButton.click(searchBooks);
 
       // check search textfield
-      searchField.keyup(disableSearchButton);
-      searchField.focusout(disableSearchButton);
+      searchField
+        .keyup(disableSearchButton)
+        .focusout(disableSearchButton);
 
       // block form submission from reloading page
       $("form#contactForm").submit(function (event) {
@@ -47,23 +59,43 @@ $(document).ready(function () {
 });
 
 /**
- * Base endpoint for entity search.
- * @type {string}
- */
-let baseSearchUrl = "/adbis/search/";
-
-/**
  * Determines which page
  * is currently browsed
  */
 function determinePageName() {
   try {
     pageName = document.location.href.match(/[^\/]+$/)[0];
-    // console.log("Page " + pageName);
+    // console.log(`Page ${pageName}`);
   } catch (e) {
     // console.warn("I guess we're in main page here");
     pageName = "";
   }
+}
+
+/**
+ * Enable search form
+ */
+function enableSearch() {
+  searchField.prop("disabled", false);
+  $("input[type = radio]#searchByTitle").prop("disabled", false);
+  $("input[type = radio]#searchByAuthor").prop("disabled", false);
+  $("input[type = radio]#searchByVoice").prop("disabled", false);
+  sendButton.prop("disabled", false);
+  $("button#clear").prop("disabled", false);
+  deepButton.prop("disabled", false);
+}
+
+/**
+ * Disable search form
+ */
+function disableSearch() {
+  searchField.prop("disabled", true);
+  $("input[type = radio]#searchByTitle").prop("disabled", true);
+  $("input[type = radio]#searchByAuthor").prop("disabled", true);
+  $("input[type = radio]#searchByVoice").prop("disabled", true);
+  sendButton.prop("disabled", true);
+  $("button#clear").prop("disabled", true);
+  deepButton.prop("disabled", true);
 }
 
 /**
@@ -79,7 +111,7 @@ function disableSearchButton() {
     cancelButton.prop("disabled", true);
   }
 
-  if (searchField.val().length > 3) {
+  if (searchField.val().length > 2) {
     sendButton.prop("disabled", false);
   } else {
     sendButton.prop("disabled", true);
@@ -112,12 +144,21 @@ function changePH() {
   $("#searchLabel").text(word);
 }
 
+function searchCache() {
+  searchBooks('cache');
+}
+
+function deepSearch() {
+  searchBooks('scraping');
+}
+
 /**
  * Specific function to search for books.
  */
 function searchBooks(depth) {
-
-    depth == 'cache' ? sessionStorage.setItem('deepSearch', 'show') : sessionStorage.setItem('deepSearch', 'hide');
+  depth === 'cache'?
+    sessionStorage.setItem('deepSearch', 'show'):
+    sessionStorage.setItem('deepSearch', 'hide');
     
   $("div#resultsTitle").hide();
   $("div#loadbox")
@@ -157,6 +198,7 @@ function searchBooks(depth) {
  */
 function prepareForResults() {
   // console.debug("Preparing for results...");
+  disableSearch();
 
   // let resultsContainerDiv = $("#resultsContainer");
   let resultsDiv = $("#results");
@@ -189,6 +231,8 @@ function prepareForResults() {
  * @param res
  */
 function showBoth(res) {
+  enableSearch();
+
   $("div#loadbox")
     .children()
     .hide();
@@ -216,6 +260,7 @@ function showBoth(res) {
     );
     loadingMessage.show();
     console.error(e.toLocaleString());
+    // console.error(res);
     return;
   }
 
@@ -224,9 +269,9 @@ function showBoth(res) {
   let numResults = Object.keys(json).length;
   if (numResults > 0) {
     message =
-        "La ricerca ha ottenuto " + numResults + " risultati! " +
-        "Consultare l'elenco sottostante.";
-    message += "<br /><br />";
+        `La ricerca ha ottenuto ${numResults} risultati!
+        Consultare l'elenco sottostante.`;
+    message += `<br /><br />`;
     if (successMessage) {
       successMessage.html(message);
     }
@@ -239,7 +284,9 @@ function showBoth(res) {
       successMessage.html(message);
     }
   }
-    sessionStorage.getItem("deepSearch") == 'show' ? deepButton.show() : deepButton.hide();
+    sessionStorage.getItem("deepSearch") === 'show'?
+      deepButton.show():
+      deepButton.hide();
 
 }
 
@@ -248,7 +295,6 @@ function showBoth(res) {
  * @param res
  */
 function showBooks(res) {
-  // console.debug("hi I'll show books nao");
   let loadingMessage = $("span#loadingMessage");
   let json;
   let numResults;
@@ -263,7 +309,7 @@ function showBooks(res) {
     );
     // loadingMessage.show();
     console.error(e.toLocaleString());
-    console.debug(res);
+    // console.debug(res);
     return;
   }
 
@@ -275,7 +321,8 @@ function showBooks(res) {
   if (numResults > 0) {
     if (pageName.length > 0) {
       message =
-        `La ricerca ha ottenuto ${numResults} risultati! Consultare l'elenco sottostante.`;
+        `La ricerca ha ottenuto ${numResults} risultati!
+        Consultare l'elenco sottostante.`;
       $("#success").html(message);
     }
 
@@ -330,10 +377,8 @@ function createItemNodes(json, resultsDiv) {
 
     populateResultNode(i, item, resultNode);
 
-    resultsDiv
-      .append(resultNode)
-      .append("<hr />");
-    resultNode.fadeIn(800);
+    // create container for excessive search results
+    showMore(resultsDiv, resultNode, item, i);
   });
 }
 
@@ -359,10 +404,11 @@ function createResults(json, resultsDiv) {
 
     populateResultNode(i, book, resultNode);
 
+    let chevron = $("<i></i>")
+      .addClass("fas fa-chevron-down");
+
     // now append review to item node
     if (review != null) {
-      let chevron = $("<i></i>")
-        .addClass("fas fa-chevron-down");
       let findMore = $("<a></a>")
         .css({fontSize: "14px"})
         .attr("data-toggle", "collapse")
@@ -426,12 +472,83 @@ function createResults(json, resultsDiv) {
       resultNode.append(detailsContainerReview);
     }
 
-    resultsDiv.append(resultNode);
-    resultsDiv.append("<hr />");
-    resultNode.fadeIn(800);
+    // create container for excessive search results
+    showMore(resultsDiv, resultNode, book, i);
   });
 
+  // enable clear button
+  $("button#clear").prop("disabled", false);
+}
 
+/**
+ *
+ * @param resultsDiv
+ * @param resultNode
+ * @param book
+ * @param i
+ */
+function showMore(resultsDiv, resultNode, book, i) {
+  let firstChevron = $("<i></i>")
+    .addClass("fas fa-chevron-down");
+  let secondChevron = firstChevron.clone();
+
+  let moreAnchor = pageName? pageName: book['voice']? "audiobooks": "books";
+
+  let expandOtherResults = $("<span></span>")
+    .css({
+      display: "block",
+      margin: "auto"
+    })
+    .append(
+      $("<a></a>")
+        .css({fontSize: "18px"})
+        .attr("data-toggle", "collapse")
+        .attr("href", `#more${moreAnchor}`)
+        .append(firstChevron)
+        .append("&nbsp;")
+        .append("Altri risultati")
+        .append("&nbsp;")
+        .append(secondChevron)
+        .click(function () {
+          firstChevron.toggleClass("fa-chevron-down fa-chevron-up");
+          secondChevron.toggleClass("fa-chevron-down fa-chevron-up");
+        })
+    )
+    .hide();
+  let otherResults = $("<div></div>")
+    .attr("id", `more${moreAnchor}`)
+    .addClass("row container panel-collapse collapse");
+
+  resultsDiv
+    .append(expandOtherResults)
+    .append(otherResults);
+
+  // determine where to append results
+  if (i < 3) { // show results
+    // console.log("Creating visible results...");
+    resultsDiv
+      .append(resultNode)
+      .append("<hr />");
+    resultNode.fadeIn(800);
+  }
+  else if (i === 3) {
+    // create extended box results
+    // console.log(`Appending result ${i} into extended box...`);
+    // append first result
+    otherResults
+      .append(resultNode)
+      .append("<hr />");
+    expandOtherResults.show();
+    resultNode.show();
+  }
+  else {
+    // console.log(`Appending result ${i} into extended box...`);
+    // append first result
+    otherResults
+      .append(resultNode)
+      .append("<hr />");
+    resultNode.show();
+  }
 }
 
 /**
@@ -552,7 +669,7 @@ function populateResultNode(i, item, resultNode) {
     .append("<br />")
     .append(`<span>di&nbsp;<em>${itemAuthor}</em></span>`)
     .append("<br />");
-  if (itemSource === 'audible' || itemSource === 'ilnarratore') {
+  if (item["voice"]) {
     detailsContainerNode
       .append(
         `<span>letto da&nbsp;<em>${item["voice"]}</em></span>`
@@ -568,6 +685,17 @@ function populateResultNode(i, item, resultNode) {
 }
 
 /**
+ * Clear search results
+ */
+function clearResults() {
+  searchField.val("");
+  $("div#resultsTitle").hide();
+  $("div#results").empty();
+  $("div#success").empty();
+  $("button#clear").prop("disabled", true);
+}
+
+/**
  *
  * Manage AJAX errors
  *
@@ -576,8 +704,8 @@ function populateResultNode(i, item, resultNode) {
  * @param error
  */
 function ajaxError(request, status, error) {
-  let $errorMessage = "An error occurred for request: " + request.toString();
-  $errorMessage += ": " + error + " (status " + status + ").";
+  let $errorMessage = `An error occurred for request: ${request.toString()}`;
+  $errorMessage += `: ${error} (status ${status}).`;
 
   console.error($errorMessage);
 }
