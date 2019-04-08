@@ -1,12 +1,14 @@
 // search page elements
 let sendButton = $("button[type = submit]#sendMessageButton");
+let deepButton = $("button#deepSearch");
 let searchField = $("input[type = text]#keyword");
 
 // page name
 let pageName;
 
 $(document).ready(function () {
-  determinePageName();
+    determinePageName();
+    sessionStorage.setItem("deepSearch", "hide");
 
   switch (pageName) {
     case "":
@@ -29,7 +31,8 @@ $(document).ready(function () {
       $("input[type = radio]").click(changePH);
 
       // async call to retrieve results
-      sendButton.click(searchBooks);
+      // sendButton.click(searchBooks);
+      // deepButton.click(searchBooks);
 
       // check search textfield
       searchField.keyup(disableSearchButton);
@@ -112,7 +115,10 @@ function changePH() {
 /**
  * Specific function to search for books.
  */
-function searchBooks() {
+function searchBooks(depth) {
+
+    depth == 'cache' ? sessionStorage.setItem('deepSearch', 'show') : sessionStorage.setItem('deepSearch', 'hide');
+    
   $("div#resultsTitle").hide();
   $("div#loadbox")
     .show()
@@ -120,11 +126,6 @@ function searchBooks() {
     .show();
   let search = $("input[name = search]:checked, #sentMessage").val();
   let keyword = searchField.val();
-  let join = true;
-  // console.debug(
-  //   `Searching for ${search.toString()} ${keyword.toString()}...`
-  // );
-  // console.debug(`Both? ${join}`);
 
   let endpoint = "";
   switch (pageName) {
@@ -136,15 +137,14 @@ function searchBooks() {
       break;
   }
 
-  // AJAX call
+    // AJAX call
   let searchUrl = baseSearchUrl + endpoint;
-  // console.debug("GET " + searchUrl + "...");
   $.ajax({
     url: searchUrl,
     data: {
       search: search,
       keyword: keyword,
-      join: join
+      depth: depth
     },
     beforeSend: prepareForResults,
     success: showBoth,
@@ -239,6 +239,8 @@ function showBoth(res) {
       successMessage.html(message);
     }
   }
+    sessionStorage.getItem("deepSearch") == 'show' ? deepButton.show() : deepButton.hide();
+
 }
 
 /**
@@ -428,6 +430,8 @@ function createResults(json, resultsDiv) {
     resultsDiv.append("<hr />");
     resultNode.fadeIn(800);
   });
+
+
 }
 
 /**
@@ -559,7 +563,8 @@ function populateResultNode(i, item, resultNode) {
     .append(`<span><strong>${itemPrice}</strong></span>`)
     .append("<br />");
 
-  resultNode.append(detailsContainerNode);
+    resultNode.append(detailsContainerNode);
+
 }
 
 /**
