@@ -16,22 +16,7 @@
 
     class SearchController
     {
-
-        public function searchBook(string $search, string $keyword, bool $ajax)
-        {
-            $this->search('book', $search, $keyword, $ajax);
-        }
-
-        public function searchAudioBook(string $search, string $keyword, bool $ajax)
-        {
-            $this->search('audioBook', $search, $keyword, $ajax);
-        }
-
-        public function searchReview(string $search, string $keyword, bool $ajax)
-        {
-            $this->search('review', $search, $keyword, $ajax);
-        }
-
+        
         // Cerca i nuovi ebook
         public function searchNews()
         {
@@ -39,7 +24,7 @@
             echo $mediator->getNewItems();
         }
 
-        public function searchBoth(string $search, string $keyword, bool $ajax)
+        public function searchEbooks(string $search, string $keyword, string $depth, bool $ajax)
         {
             $result = '';
             $join = '';
@@ -47,7 +32,7 @@
 
             try
             {
-                $result = $mediator->retrieve('join', $search, $keyword);
+                $result = $mediator->retrieve('ebook', $search, $keyword, $depth);
 
             }
             catch (Throwable $th)
@@ -77,7 +62,7 @@
             }
         }
 
-        public function searchEither(string $search, string $keyword, bool $ajax)
+        public function searchAudioBooks(string $search, string $keyword, string $depth, bool $ajax)
         {
             $result = '';
             $join = '';
@@ -85,7 +70,7 @@
 
             try
             {
-                $result = $mediator->retrieve('join1', $search, $keyword);
+                $result = $mediator->retrieve('audiobook', $search, $keyword, $depth);
 
             }
             catch (Throwable $th)
@@ -110,41 +95,6 @@
                     array(
                         'result' => $result,
                         'join' => $join
-                    )
-                );
-            }
-        }
-
-
-        public function search(string $table, string $search, string $keyword, bool $ajax)
-        {
-            $result = '';
-
-            try
-            {
-                $result = (new Mediator)->retrieve($table, $search, $keyword);
-            }
-            catch (Throwable $th)
-            {
-                user_error(
-                    "An error occurred: {$th->getMessage()}" .
-                    " in {$th->getFile()}" .
-                    " line {$th->getLine()}" .
-                    " (code {$th->getCode()})."
-                );
-            }
-
-            // show result in view
-            if ($ajax)
-            {
-                echo $result;
-            }
-            else
-            {
-                Flight::render(
-                    'index',
-                    array(
-                        'result' => $result
                     )
                 );
             }
