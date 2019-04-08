@@ -82,32 +82,7 @@
         Flight::render('about.php');
     });
 
-    Flight::route('/search', function () {
-        // retrieve request
-        $request = Flight::request();
-
-        // extract data from request
-        $table = $request->query['table'];
-        $search = $request->query['search'];
-        $keyword = $request->query['keyword'];
-
-        // manage data if they exist
-        if ($table && $search && $keyword)
-        {
-            (new SearchController)->search(
-                $table,
-                $search,
-                $keyword,
-                $request->ajax
-            );
-        }
-        else
-        {
-            Flight::redirect('/');
-        }
-    });
-
-    Flight::route('/search/news', function () {
+   Flight::route('/search/news', function () {
         (new SearchController)->searchNews();
     });
 
@@ -118,25 +93,14 @@
         // extract data from request
         $search = $request->query['search'];
         $keyword = $request->query['keyword'];
-        $join = $request->query['join'];
+        $depth = $request->query['depth'];
         $ajax = $request->ajax;
 
         // manage data if they exist
         if ($search && $keyword)
         {
             $controller = new SearchController;
-            switch ($join) // TODO check
-            {
-                case 'true':
-                    $controller->searchBoth($search, $keyword, $ajax);
-                    break;
-                case 'false':
-                    $controller->searchBook($search, $keyword, $ajax);
-                    break;
-                default:
-                    throw new \Exception("wtf");
-                    break;
-            }
+            $controller->searchEBooks($search, $keyword, $depth, $ajax);
         }
         else
         {
@@ -151,48 +115,14 @@
         // extract data from request
         $search = $request->query['search'];
         $keyword = $request->query['keyword'];
-        $join = $request->query['join'];
+        $depth = $request->query['depth'];
         $ajax = $request->ajax;
 
         // manage data if they exist
         if ($search && $keyword)
         {
             $controller = new SearchController;
-            switch ($join)
-            {
-                case 'true':
-                    $controller->searchEither($search, $keyword, $ajax);
-                    break;
-                case 'false':
-                    $controller->searchAudioBook($search, $keyword, $ajax);
-                    break;
-                default:
-                    throw new \Exception("wtf");
-                    break;
-            }
-        }
-        else
-        {
-            Flight::redirect('/');
-        }
-    });
-
-    Flight::route('/search/review', function () {
-        // retrieve request
-        $request = Flight::request();
-
-        // extract data from request
-        $search = $request->query['search'];
-        $keyword = $request->query['keyword'];
-
-        // manage data if they exist
-        if ($search && $keyword)
-        {
-            (new SearchController)->searchReview(
-                $search,
-                $keyword,
-                $request->ajax
-            );
+            $controller->searchAudioBooks($search, $keyword, $depth, $ajax);
         }
         else
         {
