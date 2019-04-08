@@ -116,9 +116,9 @@
             $queries['priceQueries'] = $priceQueries;
 
             return $queries;
-        }        
+        }
 
-        public function getBooks(String $keyword, $new = false): array
+        public function getBooks(string $keyword, $new = false): array
         {
             $this->bookScraper->setQueries($this->queries);
             $books = $this->bookScraper->getBooks(
@@ -132,6 +132,7 @@
             $effectiveBooks = array();
             foreach ($books as $book)
             {
+                $book = (object) $book;
                 if ($book->getTitle() !== '')
                 {
                     if ($new)
@@ -164,6 +165,7 @@
             );
             foreach ($books as $book)
             {
+                $book = (object) $book;
                 $book->setRecent(true);
                 $book->setSource('amazon');
             }
