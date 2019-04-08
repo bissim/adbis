@@ -48,14 +48,18 @@
             </div>
             <br />
             <div class="control-group" style="margin-top:5px;">
-              <button type="submit" class="btn btn-primary" id="sendMessageButton">Cerca</button>
+              <button type="submit" onclick="searchBooks('cache')" class="btn btn-primary" id="sendMessageButton">Cerca</button>
             </div>
             <br/>
             <div id="success"></div>
           </form>
-        </div>
+      <button onclick="searchBooks('scraping')" class="btn btn-primary" id="deepSearch" style="display:none">Cerca Altri Risultati</button>
+      <br /><br />
+      </div>
         <br />
       </div>
+
+
       <div id="resultsTitle" class="row" style="display:none;"><h3>Risultati di ricerca</h3></div>
       <div id="results" class="row" style="display:none;margin:20px 5px 10px 5px;"></div>
 
