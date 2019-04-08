@@ -65,36 +65,22 @@
         public function retrieve(
             string $table,
             string $search,
-            string $keyword
+            string $keyword,
+            string $depth
         ): string
         {
             try
             {
                 switch ($table)
                 {
-                    case 'book':
+                    case 'ebook':
                     {
-                        $result = $this->getBooks($search, $keyword);
+                        $result = $this->getEBooks($search, $keyword, $depth);
                         break;
                     }
-                    case 'audioBook':
+                    case 'audiobook':
                     {
-                        $result = $this->getAudioBooks($search, $keyword);
-                        break;
-                    }                    
-                    case 'review':
-                    {
-                        $result = $this->getReviews($search, $keyword);
-                        break;
-                    }
-                    case 'join':
-                    {
-                        $result = $this->getBoth($search, $keyword);
-                        break;
-                    }
-                    case 'join1':
-                    {
-                        $result = $this->getEither($search, $keyword);
+                        $result = $this->getAudioBooks($search, $keyword, $depth);
                         break;
                     }                    
                     default:
@@ -153,24 +139,6 @@
 
             shuffle($books);
             return $books;
-        }
-
-        /**
-         * @deprecated
-         * Retrieve records from review table whose
-         * <pre>is_recent</pre> attribute is set to <pre>1</pre>.
-         *
-         * @return array - Set of new reviews.
-         */
-        private function getNewReviews(): array
-        {
-            $reviews = $this->dbMng->getNewReviews();
-            if (empty($reviews))
-            {
-                $reviews = $this->wrapperMng->getNewReviews();
-                $this->dbMng->addReviews($reviews);
-            }
-            return $reviews;
         }
 
         /**
@@ -261,59 +229,6 @@
         }
 
         /**
-         * Retrieve audiobooks for specified keyword according to specified
-         * attribute: it can be <pre>title</pre> or <pre>author</pre> or
-         * <pre>voice</pre>.
-         *
-         * @param string $search - The search attribute.
-         * @param string $keyword - The search keyword.
-         *
-         * @return array - Set of audiobooks.
-         * @throws \Exception
-         */
-        private function getAudioBooks(string $search, string $keyword): array
-        {
-            $books = array();
-            $cachedAudioBooks = $this->dbMng->getAllAudioBooks();
-
-            foreach ($cachedAudioBooks as $book)
-                if (
-                    ($search === 'title' && $this->comp->compare($keyword, $book->getTitle())) ||
-                    ($search === 'author' && $this->comp->compare($keyword, $book->getAuthor())) ||
-                    ($search === 'voice' && $this->comp->compare($keyword, $book->getVoice()))
-                )
-                {
-                    array_push($books, $book);
-                }
-
-            $newBooks = array();
-
-            if (!$this->isVariousAudio($books, $search))
-            {
-                $scrapedAudioBooks = $this->wrapperMng->getAudioBooks($keyword);
-                $limit = count($books);
-                
-                foreach ($scrapedAudioBooks as $book)
-                if (
-                    ($search === 'title' && $this->comp->compare($keyword, $book->getTitle())) ||
-                    ($search === 'author' && $this->comp->compare($keyword, $book->getAuthor())) ||
-                    ($search === 'voice' && $this->comp->compare($keyword, $book->getVoice()))
-                )
-                {
-                    $flag = true;
-                    for ($i=0; $i<$limit; $i++)
-                        if ($book->equals($books[$i]))
-                            $flag = false;
-                    if($flag)
-                        array_push($newBooks, $book);
-                }
-                $this->dbMng->addAudioBooks($newBooks);
-            }
-
-            return array_merge($books, $newBooks);
-        }
-
-        /**
          * Retrieve books and related reviews for specified keyword
          * according to specified attribute: it can be <pre>title</pre>
          * or <pre>author</pre> or <pre>voice</pre>.
@@ -324,12 +239,12 @@
          * @return array - Set of books and related reviews.
          * @throws \Exception
          */
-        private function getBoth(string $search, string $keyword): array
+        private function getEBooks(string $search, string $keyword, string $depth): array
         {
             $books = $this->getBooks($search, $keyword);
             $reviews = array();
 
-            if (!$this->isVarious($books))
+            if ($depth == 'scraping' || empty($books))
             {
                 $newBooks = array();
                 $scrapedBooks = $this->wrapperMng->getBooks($keyword);
@@ -407,6 +322,36 @@
             return $reviews;
         }
         
+                /**
+         * Retrieve audiobooks for specified keyword according to specified
+         * attribute: it can be <pre>title</pre> or <pre>author</pre> or
+         * <pre>voice</pre>.
+         *
+         * @param string $search - The search attribute.
+         * @param string $keyword - The search keyword.
+         *
+         * @return array - Set of audiobooks.
+         * @throws \Exception
+         */
+        private function getCachedAudioBooks(string $search, string $keyword): array
+        {
+            $books = array();
+            $cachedAudioBooks = $this->dbMng->getAllAudioBooks();
+
+            foreach ($cachedAudioBooks as $book)
+                if (
+                    ($search === 'title' && $this->comp->compare($keyword, $book->getTitle())) ||
+                    ($search === 'author' && $this->comp->compare($keyword, $book->getAuthor())) ||
+                    ($search === 'voice' && $this->comp->compare($keyword, $book->getVoice()))
+                )
+                {
+                    array_push($books, $book);
+                }
+            
+            return $books;
+        }
+
+
         /**
          * Retrieve audiobooks and related reviews for specified keyword
          * according to specified attribute: it can be <pre>title</pre> or
@@ -418,12 +363,12 @@
          * @return array - Set of audiobooks and related reviews.
          * @throws \Exception
          */
-        private function getEither(string $search, string $keyword): array
+        private function getAudioBooks(string $search, string $keyword, string $depth): array
         {
-            $audiobooks = $this->getAudioBooks($search, $keyword);
+            $audiobooks = $this->getCachedAudioBooks($search, $keyword);
             $reviews = array();
 
-            if (!$this->isVariousAudio($audiobooks, $search))
+            if ($depth == 'scraping' || empty($audiobooks))
             {
                 $newBooks = array();
                 $scrapedAudioBooks = $this->wrapperMng->getAudioBooks($keyword);
@@ -475,84 +420,6 @@
             }
 
             return $items;
-        }
-
-        /**
-         * Check whether input book array has records with different titles,
-         * i.e. is various.
-         *
-         * @param array $books - The set to check for variety
-         *
-         * @return bool - true if set is various, false otherwise
-         */
-        private function isVarious(array $books): bool
-        {
-            $numBooks = count($books);
-            $variaty = 0;
-            $treshold = ($numBooks - 1) * $numBooks / 3;
-
-            for ($i = 0; $i < $numBooks; $i++)
-            {
-                for ($j = $i; $j < $numBooks; $j++)
-                {
-                    // skip diagonal of comparison matrix
-                    if ($i === $j) continue;
-
-                    if (
-                        !$this->comp->compare(
-                            $books[$i]->getTitle(),
-                            $books[$j]->getTitle()
-                        )
-                        &&
-                        $this->comp->compare(
-                            $books[$i]->getAuthor(),
-                            $books[$j]->getAuthor()
-                        )
-                    )
-                    {
-                        // we found two books with unsimilar title
-                        $variaty++;
-                    }
-                }
-            }
-
-            // we compared all books in array
-            // didn't find any mismatch
-            return ($variaty > $treshold);
-        }
-
-        private function isVariousAudio(array $books, string $search): bool
-        {
-            $numBooks = count($books);
-            $variaty = 0;
-            $treshold = ($numBooks - 1) * $numBooks / 3;
-
-            for ($i = 0; $i < $numBooks; $i++)
-            {
-                for ($j = $i; $j < $numBooks; $j++)
-                {
-                    // skip diagonal of comparison matrix
-                    if ($i === $j) continue;
-
-                    if (
-                            ($search==="author" && !$this->comp->compare(
-                            $books[$i]->getTitle(),
-                            $books[$j]->getTitle()))
-                        ||
-                            ($search==="voice" && !$this->comp->compare(
-                            $books[$i]->getAuthor(),
-                            $books[$j]->getAuthor()))
-                    )
-                    {
-                        // we found two books with unsimilar title
-                        $variaty++;
-                    }
-                }
-            }
-
-            // we compared all books in array
-            // didn't find any mismatch
-            return ($variaty > $treshold);
         }
 
     }
