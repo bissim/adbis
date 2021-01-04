@@ -29,9 +29,9 @@
         "url": "https://github.com/BlackrockDigital/startbootstrap-clean-blog.git"
     },
     "dependencies": {
-        "@fortawesome/fontawesome-free": "5.12.1",
-        "bootstrap": "4.4.1",
-        "jquery": "3.5.0"
+        "@fortawesome/fontawesome-free": "5.15.1",
+        "bootstrap": "4.5.3",
+        "jquery": "3.5.1"
     },
     "devDependencies": {
         "browser-sync": "^2.26.12",
